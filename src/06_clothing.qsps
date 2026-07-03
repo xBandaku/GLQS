@@ -189,12 +189,15 @@ if $ARGS[0] = 'store_detail':
 	!! Per-store category breakdown. Mirrors the store_buy dispatcher above,
 	!! but exposes each category the store carries as its own button instead
 	!! of buying everything in one shot.
+	!! Capture before any nested gs call - $ARGS is one shared array in QSP,
+	!! not scoped per gosub, so calling gs stat / gs themes below would
+	!! clobber ARGS[1] before we get to read it.
+	$glqs_store = $ARGS[1]
 	menu_off = 0
 	usehtml = 1
 	$location_type = 'event'
 	gs 'stat'
 	gs 'themes', 'indoors'
-	$glqs_store = $ARGS[1]
 
 	if $glqs_store = 'allure': $glqs_label = 'Allure'
 	if $glqs_store = 'bomba': $glqs_label = 'Bomba'

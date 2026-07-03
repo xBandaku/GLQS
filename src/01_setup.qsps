@@ -1,6 +1,6 @@
 # mod_GLQS_setup
 $mod_info[0] = 'GLQS'
-$mod_info[1] = '02300'
+$mod_info[1] = '02800'
 $mod_info[2] = 'xPandaku'
 $mod_info[3] = 'A mod for Girl Life that grants all clothing, maxes consumables, skills, attributes and school grades. By xPandaku.'
 

@@ -1,0 +1,263 @@
+!! FAME & REPUTATION SUBMENU
+if $ARGS[0] = 'fame_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Fame & Reputation</font></b></center>'
+	'<br>Maxes fame in acting, dance, painting, music, ballet, modelling, porn, stripping, kickboxing, running, volleyball, chess, teaching, media, sex, prostitution and flashing. Derived stats (performer, sex industry, slut, sport, intellectual, social) recalculate automatically from these.'
+	*nl
+
+	act 'Max All Fame (all regions, all activities)':
+		gs 'mod_GLQS_main', 'fame_maxall'
+		gt 'mod_GLQS_main', 'fame_menu'
+	end
+
+	act 'By Region': gt 'mod_GLQS_main', 'fame_region_menu'
+
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'fame_region_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Fame By Region</font></b></center>'
+	*nl
+	'Pick a region to max individual activities there, or max that whole region at once.'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="90%" cellpadding=4>'
+	$glqs_tbl += '<tr><td><b>Region</b></td><td><b>Performer</b></td><td><b>Sex Industry</b></td><td><b>Slut/Sex Rep</b></td><td><b>Sport</b></td></tr>'
+	$glqs_tbl += '<tr><td>Pavlovsk</td><td><<fame[''pav_performer'']>></td><td><<fame[''pav_sexind'']>></td><td><<fame[''pav_slut'']>></td><td><<fame[''pav_sport'']>></td></tr>'
+	$glqs_tbl += '<tr><td>City</td><td><<fame[''city_performer'']>></td><td><<fame[''city_sexind'']>></td><td><<fame[''city_slut'']>></td><td><<fame[''city_sport'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Old Town (Pushkin)</td><td><<fame[''pushkin_performer'']>></td><td><<fame[''pushkin_sexind'']>></td><td><<fame[''pushkin_slut'']>></td><td><<fame[''pushkin_sport'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Gadukino (Village)</td><td><<fame[''village_performer'']>></td><td><<fame[''village_sexind'']>></td><td><<fame[''village_slut'']>></td><td><<fame[''village_sport'']>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Pavlovsk': gt 'mod_GLQS_main', 'fame_detail', 'pav'
+	act 'City': gt 'mod_GLQS_main', 'fame_detail', 'city'
+	act 'Old Town (Pushkin)': gt 'mod_GLQS_main', 'fame_detail', 'pushkin'
+	act 'Gadukino (Village)': gt 'mod_GLQS_main', 'fame_detail', 'village'
+
+	act 'Return': gt 'mod_GLQS_main', 'fame_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'fame_detail':
+	!! Capture before any nested gs call - $ARGS is one shared array in QSP,
+	!! not scoped per gosub, so calling gs stat / gs themes below would
+	!! clobber ARGS[1] before we get to read it.
+	$glqs_region = $ARGS[1]
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+
+	if $glqs_region = 'pav': $glqs_label = 'Pavlovsk'
+	if $glqs_region = 'city': $glqs_label = 'City'
+	if $glqs_region = 'pushkin': $glqs_label = 'Old Town (Pushkin)'
+	if $glqs_region = 'village': $glqs_label = 'Gadukino (Village)'
+
+	'<center><b><font color="maroon"><<$glqs_label>></font></b></center>'
+	*nl
+	'Max a single activity, or max every activity in this region at once.'
+	*nl
+
+	$glqs_fame_tbl_acts[0] = 'acting'
+	$glqs_fame_tbl_acts[1] = 'dance'
+	$glqs_fame_tbl_acts[2] = 'painting'
+	$glqs_fame_tbl_acts[3] = 'music'
+	$glqs_fame_tbl_acts[4] = 'ballet'
+	$glqs_fame_tbl_acts[5] = 'modelling'
+	$glqs_fame_tbl_acts[6] = 'porn'
+	$glqs_fame_tbl_acts[7] = 'stripping'
+	$glqs_fame_tbl_acts[8] = 'kickboxing'
+	$glqs_fame_tbl_acts[9] = 'running'
+	$glqs_fame_tbl_acts[10] = 'volleyball'
+	$glqs_fame_tbl_acts[11] = 'chess'
+	$glqs_fame_tbl_acts[12] = 'teaching'
+	$glqs_fame_tbl_acts[13] = 'media'
+	$glqs_fame_tbl_acts[14] = 'sex'
+	$glqs_fame_tbl_acts[15] = 'prostitute'
+	$glqs_fame_tbl_acts[16] = 'flash'
+
+	$glqs_fame_tbl_labels[0] = 'Acting'
+	$glqs_fame_tbl_labels[1] = 'Dance'
+	$glqs_fame_tbl_labels[2] = 'Painting'
+	$glqs_fame_tbl_labels[3] = 'Music'
+	$glqs_fame_tbl_labels[4] = 'Ballet'
+	$glqs_fame_tbl_labels[5] = 'Modelling'
+	$glqs_fame_tbl_labels[6] = 'Porn'
+	$glqs_fame_tbl_labels[7] = 'Stripping'
+	$glqs_fame_tbl_labels[8] = 'Kickboxing'
+	$glqs_fame_tbl_labels[9] = 'Running'
+	$glqs_fame_tbl_labels[10] = 'Volleyball'
+	$glqs_fame_tbl_labels[11] = 'Chess'
+	$glqs_fame_tbl_labels[12] = 'Teaching'
+	$glqs_fame_tbl_labels[13] = 'Media'
+	$glqs_fame_tbl_labels[14] = 'Sex'
+	$glqs_fame_tbl_labels[15] = 'Prostitution'
+	$glqs_fame_tbl_labels[16] = 'Flashing'
+
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="60%" cellpadding=4>'
+	$glqs_tbl += '<tr><td><b>Activity</b></td><td><b>Fame</b></td></tr>'
+	glqs_i = 0
+	:glqs_fame_tbl_loop
+	if glqs_i <= 16:
+		glqs_val = fame[$glqs_region + '_' + $glqs_fame_tbl_acts[glqs_i]]
+		$glqs_tbl += '<tr><td>' + $glqs_fame_tbl_labels[glqs_i] + '</td><td><<glqs_val>></td></tr>'
+		glqs_i += 1
+		jump 'glqs_fame_tbl_loop'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+	killvar 'glqs_i'
+	killvar 'glqs_val'
+	killvar '$glqs_fame_tbl_acts'
+	killvar '$glqs_fame_tbl_labels'
+
+	act 'Acting': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'acting' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Dance': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'dance' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Painting': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'painting' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Music': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'music' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Ballet': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'ballet' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Modelling': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'modelling' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Porn': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'porn' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Stripping': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'stripping' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Kickboxing': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'kickboxing' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Running': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'running' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Volleyball': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'volleyball' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Chess': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'chess' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Teaching': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'teaching' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Media': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'media' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Sex': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'sex' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Prostitution': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'prostitute' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	act 'Flashing': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'flash' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+
+	*nl
+	act 'Max All (this region)':
+		gs 'mod_GLQS_main', 'fame_maxregion', $glqs_region
+		gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'fame_region_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'fame_apply':
+	!! Fame is not stored flat - the visible fame region_act value is rebuilt
+	!! nightly by fame.calculate from the region_act_core and region_act_local
+	!! components, so we set those instead of the visible value directly
+	!! (setting the visible value only would be overwritten at the next
+	!! in-game night). sex/prostitute/flash skip the core/local system
+	!! entirely per fame.qsrc and are set directly.
+	!! ARGS[1] = region code, ARGS[2] = activity code
+	!! Captured to locals immediately - mod_GLQS_main is one shared QSP
+	!! location, so a nested gs call back into it overwrites $ARGS for the
+	!! rest of this call. Re-reading $ARGS after a nested gs is what broke
+	!! grades back in v0.7 (see changelog) and broke this the same way.
+	$glqs_fa_region = $ARGS[1]
+	$glqs_fa_act = $ARGS[2]
+	if $glqs_fa_act = 'sex' or $glqs_fa_act = 'prostitute' or $glqs_fa_act = 'flash':
+		fame[$glqs_fa_region + '_' + $glqs_fa_act] = 1000
+	else
+		fame[$glqs_fa_region + '_' + $glqs_fa_act + '_core'] = 1000
+		fame[$glqs_fa_region + '_' + $glqs_fa_act + '_local'] = 1000
+	end
+	killvar '$glqs_fa_region'
+	killvar '$glqs_fa_act'
+end
+
+
+if $ARGS[0] = 'fame_maxcat':
+	!! ARGS[1] = region code, ARGS[2] = activity code
+	$glqs_fmc_region = $ARGS[1]
+	$glqs_fmc_act = $ARGS[2]
+	gs 'mod_GLQS_main', 'fame_apply', $glqs_fmc_region, $glqs_fmc_act
+	if $glqs_fmc_act <> 'sex' and $glqs_fmc_act <> 'prostitute' and $glqs_fmc_act <> 'flash':
+		gs 'fame', 'calculate', $glqs_fmc_act
+	end
+	gs 'fame', 'calculateGroups'
+	killvar '$glqs_fmc_region'
+	killvar '$glqs_fmc_act'
+end
+
+
+if $ARGS[0] = 'fame_maxregion':
+	!! ARGS[1] = region code
+	$glqs_fmr_region = $ARGS[1]
+	$glqs_fame_acts[0] = 'acting'
+	$glqs_fame_acts[1] = 'dance'
+	$glqs_fame_acts[2] = 'painting'
+	$glqs_fame_acts[3] = 'music'
+	$glqs_fame_acts[4] = 'ballet'
+	$glqs_fame_acts[5] = 'modelling'
+	$glqs_fame_acts[6] = 'porn'
+	$glqs_fame_acts[7] = 'stripping'
+	$glqs_fame_acts[8] = 'kickboxing'
+	$glqs_fame_acts[9] = 'running'
+	$glqs_fame_acts[10] = 'volleyball'
+	$glqs_fame_acts[11] = 'chess'
+	$glqs_fame_acts[12] = 'teaching'
+	$glqs_fame_acts[13] = 'media'
+	$glqs_fame_acts[14] = 'sex'
+	$glqs_fame_acts[15] = 'prostitute'
+	$glqs_fame_acts[16] = 'flash'
+
+	glqs_a = 0
+	:glqs_fame_maxregion_loop
+	if glqs_a <= 16:
+		gs 'mod_GLQS_main', 'fame_apply', $glqs_fmr_region, $glqs_fame_acts[glqs_a]
+		glqs_a += 1
+		jump 'glqs_fame_maxregion_loop'
+	end
+	killvar 'glqs_a'
+	killvar '$glqs_fame_acts'
+	killvar '$glqs_fmr_region'
+
+	gs 'fame', 'calculate', 'acting'
+	gs 'fame', 'calculate', 'dance'
+	gs 'fame', 'calculate', 'painting'
+	gs 'fame', 'calculate', 'music'
+	gs 'fame', 'calculate', 'ballet'
+	gs 'fame', 'calculate', 'modelling'
+	gs 'fame', 'calculate', 'porn'
+	gs 'fame', 'calculate', 'stripping'
+	gs 'fame', 'calculate', 'kickboxing'
+	gs 'fame', 'calculate', 'running'
+	gs 'fame', 'calculate', 'volleyball'
+	gs 'fame', 'calculate', 'chess'
+	gs 'fame', 'calculate', 'teaching'
+	gs 'fame', 'calculate', 'media'
+	gs 'fame', 'calculateGroups'
+end
+
+
+if $ARGS[0] = 'fame_maxall':
+	$glqs_fame_regions[0] = 'pav'
+	$glqs_fame_regions[1] = 'city'
+	$glqs_fame_regions[2] = 'pushkin'
+	$glqs_fame_regions[3] = 'village'
+
+	glqs_r = 0
+	:glqs_fame_maxall_loop
+	if glqs_r <= 3:
+		gs 'mod_GLQS_main', 'fame_maxregion', $glqs_fame_regions[glqs_r]
+		glqs_r += 1
+		jump 'glqs_fame_maxall_loop'
+	end
+	killvar 'glqs_r'
+	killvar '$glqs_fame_regions'
+end

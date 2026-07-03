@@ -1,6 +1,21 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.23 - Current</b>'
+'<b>Version 0.28 - Current</b>'
+'- Fixed: Fame By Region (individual activity buttons, Max All This Region, and the live table) still did not apply. Root cause: the region code was captured from ARGS after calling stat/themes, which clobber the shared ARGS array just like any nested gs call, and a stray killvar was clearing the captured region before the player could click a button. Same fix applied to the clothing per-store screen and the tattoo/piercing pickers, which had the same latent bug.'
+*nl
+'<b>Version 0.27</b>'
+'- Fixed: Fame maxing (individual activity, Max All This Region, Max All Fame) silently did nothing and the live table always read 0. Root cause: same ARGS clobbering bug as the v0.7 grades fix - re-reading ARGS after a nested gs call back into mod_GLQS_main picked up the callees ARGS instead. Fixed by capturing region/activity into local variables before any nested call.'
+*nl
+'<b>Version 0.26</b>'
+'- Added: Fame & Reputation now shows live values - a per-region overview table (Performer, Sex Industry, Slut/Sex Rep, Sport) on the region picker, and a full per-activity fame table on each region screen, matching the Skills & Attributes style.'
+*nl
+'<b>Version 0.25</b>'
+'- Added: Fame & Reputation submenu now has a By Region breakdown (Pavlovsk, City, Old Town, Gadukino) with an individual Max button per activity, plus a Max All (this region) option, alongside the existing Max All Fame (everything) button.'
+*nl
+'<b>Version 0.24</b>'
+'- Added: Fame & Reputation submenu with a Max All Fame button covering every activity (acting, dance, painting, music, ballet, modelling, porn, stripping, kickboxing, running, volleyball, chess, teaching, media, sex, prostitution, flashing) across all four regions.'
+*nl
+'<b>Version 0.23</b>'
 '- Added: Every submenu now has a Return to Top Menu button that jumps straight back to the main Quick Setup screen, in addition to any existing one-level-back navigation.'
 *nl
 '<b>Version 0.22</b>'

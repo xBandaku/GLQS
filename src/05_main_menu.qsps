@@ -28,6 +28,8 @@ if $ARGS[0] = 'start':
 
 	act 'Body Mods': gt 'mod_GLQS_main', 'bodymod_menu'
 
+	act 'Fame & Reputation': gt 'mod_GLQS_main', 'fame_menu'
+
 	act 'Return':
 		$menu_loc = $shopreturn
 		$menu_arg = $shoparg
