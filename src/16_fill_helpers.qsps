@@ -1,0 +1,97 @@
+!! FILL HELPERS: per-category item granting loops
+if $ARGS[0] = 'fill_clo':
+	gs 'clothing', 'totals', $ARGS[1]
+	glqs_i = 1
+	:glqs_clo_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>[glqs_i] = 1')
+		gs 'clothing_attributes', $ARGS[1], glqs_i
+		dyneval('<<$ARGS[1]>>_h[glqs_i] = CloMaxStrength')
+		glqs_i += 1
+		jump 'glqs_clo_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_shoe':
+	gs 'shoes', 'totals', $ARGS[1] + '_shoe'
+	glqs_i = 1
+	:glqs_shoe_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_shoe[glqs_i] = 1')
+		gs 'shoe_attributes', $ARGS[1], glqs_i
+		dyneval('<<$ARGS[1]>>_shoe_h[glqs_i] = ShoMaxStrength')
+		glqs_i += 1
+		jump 'glqs_shoe_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_bra':
+	gs 'bras', 'totals', $ARGS[1] + '_bras'
+	glqs_i = 1
+	:glqs_bra_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_bras[glqs_i] = 1')
+		gs 'underwear_attributes', $ARGS[1] + '_bras', glqs_i
+		dyneval('<<$ARGS[1]>>_bras_h[glqs_i] = BraMaxStrength')
+		glqs_i += 1
+		jump 'glqs_bra_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_panty':
+	gs 'panties', 'totals', $ARGS[1] + '_panties'
+	glqs_i = 1
+	:glqs_panty_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_panties[glqs_i] = 1')
+		gs 'underwear_attributes', $ARGS[1] + '_panties', glqs_i
+		dyneval('<<$ARGS[1]>>_panties_h[glqs_i] = PanMaxStrength')
+		glqs_i += 1
+		jump 'glqs_panty_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_body':
+	gs 'underwear_bodysuits', 'totals', $ARGS[1] + '_bodysuits'
+	glqs_i = 1
+	:glqs_body_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_bodysuits[glqs_i] = 1')
+		gs 'underwear_attributes', $ARGS[1] + '_bodysuits', glqs_i
+		dyneval('<<$ARGS[1]>>_bodysuits_h[glqs_i] = BraMaxStrength')
+		glqs_i += 1
+		jump 'glqs_body_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_coat':
+	gs 'coats', 'totals', $ARGS[1] + '_coats'
+	glqs_i = 1
+	:glqs_coat_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_coats[glqs_i] = 1')
+		gs 'coat_attributes', $ARGS[1], glqs_i
+		dyneval('<<$ARGS[1]>>_coats_h[glqs_i] = CoatMaxStrength')
+		glqs_i += 1
+		jump 'glqs_coat_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_purse':
+	gs 'purses', 'totals', $ARGS[1] + '_purses'
+	glqs_i = 1
+	:glqs_purse_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_purses[glqs_i] = 1')
+		glqs_i += 1
+		jump 'glqs_purse_loop'
+	end
+	killvar 'glqs_i'
+end
+

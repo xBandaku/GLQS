@@ -1,0 +1,19 @@
+# mod_GLQS
+if func('homes_properties', 'is_current_home', $curloc) and $locclass = 'bedr' and cheatVars['cheatsp'] = 1:
+	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+end
+
+if $loc = 'uni_dorm' and $curloc = 'uni_dorm' and $loc_arg = 'dorm_room' and cheatVars['cheatsp'] = 1:
+	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+end
+
+if $loc = 'HotelRoom' and $curloc = 'HotelRoom' and $loc_arg = 'therapist' and cheatVars['cheatsp'] = 1:
+	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+end
+
+if $ARGS[0] = 'permanent':
+	$cheatmenu['table_start']
+	'Quick Setup Mod: <a href="exec: cheatVars[''cheatsp''] = iif(cheatVars[''cheatsp''], 0, 1) & dynamic $cheatmenu[$cheatmenu[''this_menu'']]"><<iif(cheatVars[''cheatsp''], ''Enabled'', ''Disabled'')>></a>'
+	$cheatmenu['table_end']
+end
+--- mod_GLQS ---------------------------------

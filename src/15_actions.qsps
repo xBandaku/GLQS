@@ -1,0 +1,253 @@
+!! ACTION HANDLERS: consumables / stats / clothing
+if $ARGS[0] = 'consumables':
+	glqs_amt = iif(ARGS[1] > 0, ARGS[1], 10000)
+	!! --- Contraceptives ---
+	mc_inventory['equipped_condoms'] = glqs_amt
+	mc_inventory['normal_condoms'] = glqs_amt
+	mc_inventory['contraceptive_pill'] = glqs_amt
+	mc_inventory['pregnancy_test'] = glqs_amt
+	mc_inventory['morning_after_pill'] = glqs_amt
+	!! --- Medical / Hygiene ---
+	mc_inventory['painkillers'] = glqs_amt
+	mc_inventory['vitamins'] = glqs_amt
+	mc_inventory['antibiotics'] = glqs_amt
+	mc_inventory['tampons'] = glqs_amt
+	mc_inventory['sanitary_pads'] = glqs_amt
+	mc_inventory['shampoo'] = glqs_amt
+	mc_inventory['mouthwash'] = glqs_amt
+	mc_inventory['deodorant'] = glqs_amt
+	mc_inventory['razor'] = glqs_amt
+	mc_inventory['suncream'] = glqs_amt
+	mc_inventory['chafing_cream'] = glqs_amt
+	mc_inventory['weight_loss_pill'] = glqs_amt
+	mc_inventory['nipple_cream'] = glqs_amt
+	!! --- Beauty ---
+	mc_inventory['lipbalm'] = glqs_amt
+	mc_inventory['cosmetics'] = glqs_amt
+	mc_inventory['moisturiser'] = glqs_amt
+	mc_inventory['travel_makeup'] = glqs_amt
+	mc_inventory['makeup_wipes'] = glqs_amt
+	mc_inventory['scrunchies'] = glqs_amt
+	mc_inventory['kirbygrips'] = glqs_amt
+	mc_inventory['eyelash_fake'] = glqs_amt
+	mc_inventory['eyelash_mink'] = glqs_amt
+	!! --- Sexual ---
+	mc_inventory['lubricant'] = glqs_amt
+	mc_inventory['breastcream'] = glqs_amt
+	mc_inventory['aphrodisiac'] = glqs_amt
+	!! --- Drugs ---
+	mc_inventory['mentats'] = glqs_amt
+	mc_inventory['steroids'] = glqs_amt
+	!! --- Food ---
+	mc_inventory['food_basic'] = glqs_amt
+	mc_inventory['food_diet'] = glqs_amt
+	mc_inventory['food_biscuits'] = glqs_amt
+	!! --- Misc consumables ---
+	mc_inventory['cigarettes'] = glqs_amt
+	mc_inventory['sewing_fabric'] = glqs_amt
+	killvar 'glqs_amt'
+	!! --- Unique items (max 1) ---
+	mc_inventory['comb'] = 1
+	mc_inventory['travel_mirror'] = 1
+	mc_inventory['umbrella'] = 1
+	mc_inventory['sewing_kit'] = 1
+	mc_inventory['enema_kit'] = 1
+	mc_inventory['breast_pump'] = 1
+	mc_inventory['ice_skates'] = 1
+	mc_inventory['ski'] = 1
+	mc_inventory['skipping_rope'] = 1
+	mc_inventory['hula_hoop'] = 1
+	mc_inventory['book_yoga'] = 1
+	mc_inventory['refill_bottle'] = 1
+	!! --- Sex toys (unique) ---
+	mc_inventory['vibe'] = 1
+	mc_inventory['buttplug'] = 1
+	mc_inventory['strapon'] = 1
+	mc_inventory['dildo_suction'] = 1
+	mc_inventory['dildo_small'] = 1
+	mc_inventory['dildo_normal'] = 1
+	mc_inventory['dildo_big'] = 1
+	mc_inventory['dildo_large'] = 1
+	mc_inventory['dildo_huge'] = 1
+	mc_inventory['dildo_enormous'] = 1
+	mc_inventory['dildo_gigantic'] = 1
+	!! --- Magazines (unique) ---
+	mc_inventory['mag_fashion'] = 1
+	mc_inventory['mag_computer'] = 1
+	mc_inventory['mag_biography'] = 1
+	mc_inventory['mag_cooking'] = 1
+	mc_inventory['mag_knitting'] = 1
+	mc_inventory['mag_fitness'] = 1
+	mc_inventory['mag_porn'] = 1
+end
+
+!! ===== STATS =====
+if $ARGS[0] = 'stats':
+
+
+
+
+
+	gs 'shortgs', 'setStat', 'stren', 100
+	gs 'shortgs', 'setStat', 'agil', 100
+	gs 'shortgs', 'setStat', 'vital', 100
+	gs 'shortgs', 'setStat', 'intel', 100
+	gs 'shortgs', 'setStat', 'react', 100
+	gs 'shortgs', 'setStat', 'sprt', 100
+	gs 'shortgs', 'setStat', 'chrsm', 100
+	gs 'shortgs', 'setStat', 'prcptn', 100
+	gs 'shortgs', 'setStat', 'magik', 100
+	gs 'shortgs', 'setStat', 'inhib', 100
+	willpowermax = 150
+
+
+
+	!! --- Mental Skills (direct setStat - no cheat menu redirect) ---
+	gs 'shortgs', 'setStat', 'splcstng', 100
+	gs 'shortgs', 'setStat', 'humint', 100
+	gs 'shortgs', 'setStat', 'persuas', 100
+	gs 'shortgs', 'setStat', 'observ', 100
+	!! --- Combat Skills ---
+	gs 'shortgs', 'setStat', 'jab', 100
+	gs 'shortgs', 'setStat', 'punch', 100
+	gs 'shortgs', 'setStat', 'kick', 100
+	gs 'shortgs', 'setStat', 'def', 100
+	gs 'shortgs', 'setStat', 'shoot', 100
+	gs 'shortgs', 'setStat', 'bushcraft', 100
+	!! --- Sport Skills ---
+	gs 'shortgs', 'setStat', 'run', 100
+	gs 'shortgs', 'setStat', 'vball', 100
+	gs 'shortgs', 'setStat', 'ftbll', 100
+	gs 'shortgs', 'setStat', 'bkbll', 100
+	gs 'shortgs', 'setStat', 'wrstlng', 100
+	gs 'shortgs', 'setStat', 'icesktng', 100
+	gs 'shortgs', 'setStat', 'gaming', 100
+	gs 'shortgs', 'setStat', 'chess', 100
+	gs 'shortgs', 'setStat', 'pool', 100
+	!! --- Beauty Skills ---
+	gs 'shortgs', 'setStat', 'makupskl', 100
+	gs 'shortgs', 'setStat', 'danc', 100
+	gs 'shortgs', 'setStat', 'dancero', 100
+	gs 'shortgs', 'setStat', 'dancpol', 100
+	gs 'shortgs', 'setStat', 'cheer', 100
+	gs 'shortgs', 'setStat', 'heels', 100
+	!! --- Artistic Skills ---
+	gs 'shortgs', 'setStat', 'vokal', 100
+	gs 'shortgs', 'setStat', 'instrmusic', 100
+	gs 'shortgs', 'setStat', 'photoskl', 100
+	gs 'shortgs', 'setStat', 'artskls', 100
+	gs 'shortgs', 'setStat', 'perform', 100
+	gs 'shortgs', 'setStat', 'musicprod', 100
+	!! --- Work Skills ---
+	gs 'shortgs', 'setStat', 'compskl', 100
+	gs 'shortgs', 'setStat', 'comphckng', 100
+	gs 'shortgs', 'setStat', 'hndiwrk', 100
+	gs 'shortgs', 'setStat', 'sewng', 100
+	gs 'shortgs', 'setStat', 'servng', 100
+	gs 'shortgs', 'setStat', 'medcn', 100
+	gs 'shortgs', 'setStat', 'cleaning', 100
+	gs 'shortgs', 'setStat', 'mdlng', 100
+
+
+	pcs_vball_block = 100
+	pcs_vball_rec = 100
+	pcs_vball_serve = 100
+	pcs_vball_set = 100
+	pcs_vball_spike = 100
+
+
+
+end
+
+!! ===== CLOTHING =====
+if $ARGS[0] = 'clothing':
+	gs 'mod_GLQS_main', 'fill_clo', 'allure_swimsuit'
+	gs 'mod_GLQS_main', 'fill_clo', 'allure_bikinis'
+	gs 'mod_GLQS_main', 'fill_clo', 'bomba_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'bomba_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'cats_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'cats_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'coco_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'coco_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'danilovich_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'danilovich_swimsuit'
+	gs 'mod_GLQS_main', 'fill_clo', 'dolls_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'dolls_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'fancy_burlesque'
+	gs 'mod_GLQS_main', 'fill_clo', 'fashionista_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'fashionista_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'flamingos_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'flamingos_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'salacious_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'salacious_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_office'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_maid'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_server'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_school'
+	gs 'mod_GLQS_main', 'fill_clo', 'market_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'materinstvo_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'moncheri_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'moncheri_gown'
+	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_cosplay'
+	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_swimsuit'
+	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_bikinis'
+	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_swimsuit'
+	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_bikinis'
+	gs 'mod_GLQS_main', 'fill_clo', 'eroto_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'eroto_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'eroto_strip'
+	gs 'mod_GLQS_main', 'fill_clo', 'misc'
+	gs 'mod_GLQS_main', 'fill_shoe', 'bomba'
+	gs 'mod_GLQS_main', 'fill_shoe', 'cats'
+	gs 'mod_GLQS_main', 'fill_shoe', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_shoe', 'dolls'
+	gs 'mod_GLQS_main', 'fill_shoe', 'eroto'
+	gs 'mod_GLQS_main', 'fill_shoe', 'gm'
+	gs 'mod_GLQS_main', 'fill_shoe', 'moncheri'
+	gs 'mod_GLQS_main', 'fill_shoe', 'scandalicious'
+	gs 'mod_GLQS_main', 'fill_bra', 'cats'
+	gs 'mod_GLQS_main', 'fill_bra', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_bra', 'eroto'
+	gs 'mod_GLQS_main', 'fill_bra', 'fashionista'
+	gs 'mod_GLQS_main', 'fill_bra', 'gm'
+	gs 'mod_GLQS_main', 'fill_bra', 'lusso'
+	gs 'mod_GLQS_main', 'fill_bra', 'salacious'
+	gs 'mod_GLQS_main', 'fill_panty', 'cats'
+	gs 'mod_GLQS_main', 'fill_panty', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_panty', 'eroto'
+	gs 'mod_GLQS_main', 'fill_panty', 'fashionista'
+	gs 'mod_GLQS_main', 'fill_panty', 'gm'
+	gs 'mod_GLQS_main', 'fill_panty', 'lusso'
+	gs 'mod_GLQS_main', 'fill_panty', 'salacious'
+	gs 'mod_GLQS_main', 'fill_body', 'lusso'
+	gs 'mod_GLQS_main', 'fill_body', 'moncheri'
+	gs 'mod_GLQS_main', 'fill_body', 'salacious'
+	gs 'mod_GLQS_main', 'fill_body', 'scandalicious'
+	gs 'mod_GLQS_main', 'fill_coat', 'bomba'
+	gs 'mod_GLQS_main', 'fill_coat', 'cats'
+	gs 'mod_GLQS_main', 'fill_coat', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_coat', 'dolls'
+	gs 'mod_GLQS_main', 'fill_coat', 'gm'
+	gs 'mod_GLQS_main', 'fill_coat', 'moncheri'
+	gs 'mod_GLQS_main', 'fill_purse', 'bomba'
+	gs 'mod_GLQS_main', 'fill_purse', 'cats'
+	gs 'mod_GLQS_main', 'fill_purse', 'coco'
+	gs 'mod_GLQS_main', 'fill_purse', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_purse', 'dolls'
+	gs 'mod_GLQS_main', 'fill_purse', 'fashionista'
+	gs 'mod_GLQS_main', 'fill_purse', 'flamingos'
+	gs 'mod_GLQS_main', 'fill_purse', 'gm'
+	gs 'mod_GLQS_main', 'fill_purse', 'moncheri'
+	gs 'mod_GLQS_main', 'fill_purse', 'nerdvana'
+end
+
+!! ===== FILL HELPERS =====
+!! Each helper sets the item owned flag AND repairs it to full durability by
+!! setting the companion _h[] array to max strength (matches what the games
+!! own cheat_repair functions do, so items never need tailor repair/resize.
+

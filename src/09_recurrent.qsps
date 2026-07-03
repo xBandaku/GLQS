@@ -1,0 +1,109 @@
+!! RECURRENT CHEATS SUBMENU + ON/OFF HANDLERS
+if $ARGS[0] = 'recurrent':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Recurrent Cheats</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Willpower cost always zero</td><td><<iif(cheatVars[''willpower''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Infinite willpower</td><td><<iif(cheatVars[''inf_willpower''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Always combed</td><td><<iif(cheatVars[''always_brushed''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Cosmetics never smeared</td><td><<iif(cheatVars[''makeup_smear''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never sweat</td><td><<iif(cheatVars[''no_sweat''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never eat</td><td><<iif(cheatVars[''hunger''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never drink</td><td><<iif(cheatVars[''thirst''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never sleep</td><td><<iif(cheatVars[''sleep''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never unhappy</td><td><<iif(cheatVars[''mood''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never shave legs</td><td><<iif(cheatVars[''no_leghair''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never lose or gain weight</td><td><<iif(cheatVars[''fat''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Bust and butt unaffected by weight</td><td><<iif(cheatVars[''body_staticAssets''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Allow any clothing for school</td><td><<iif(cheatVars[''school_clothing''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never get addicted</td><td><<iif(cheatVars[''drugs_immune''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Enable sleeping with vibrator inserted</td><td><<iif(cheatVars[''sleep_vib''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Clothes never dirty</td><td><<iif(cheatVars[''clothes_dirt''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Set arousal to always be at 50 or more</td><td><<iif(cheatVars[''always_horny''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Succubus clothing invulnerability</td><td><<iif(cheatVars[''suc_bimbo''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Clothing archetypes (normal game behavior)</td><td><<iif(cheatVars[''bimbo''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Periods and pregnancies</td><td><<iif(cheatVars[''no_periods''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Impregnation</td><td><<iif(cheatVars[''no_pregnancy''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Lactation</td><td><<iif(cheatVars[''no_lactation''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Cum leaking</td><td><<iif(cheatVars[''no_cum_leak''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>STDs</td><td><<iif(cheatVars[''std''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Enable All':
+		gs 'mod_GLQS_main', 'recurrent_on'
+		gt 'mod_GLQS_main', 'recurrent'
+	end
+
+	act 'Disable All':
+		gs 'mod_GLQS_main', 'recurrent_off'
+		gt 'mod_GLQS_main', 'recurrent'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'recurrent_on':
+	cheatVars['willpower'] = 1
+	cheatVars['inf_willpower'] = 1
+	cheatVars['always_brushed'] = 1
+	cheatVars['makeup_smear'] = 1
+	cheatVars['no_sweat'] = 1
+	cheatVars['hunger'] = 1
+	cheatVars['thirst'] = 1
+	cheatVars['sleep'] = 1
+	cheatVars['mood'] = 1
+	cheatVars['no_leghair'] = 1
+	cheatVars['fat'] = 1
+	cheatVars['body_staticAssets'] = 1
+	cheatVars['school_clothing'] = 1
+	cheatVars['drugs_immune'] = 1
+	cheatVars['sleep_vib'] = 1
+	cheatVars['clothes_dirt'] = 1
+	cheatVars['always_horny'] = 1
+	cheatVars['suc_bimbo'] = 1
+	cheatVars['bimbo'] = 0
+	cheatVars['no_periods'] = 0
+	cheatVars['no_pregnancy'] = 0
+	cheatVars['no_lactation'] = 0
+	cheatVars['no_cum_leak'] = 0
+	cheatVars['std'] = 0
+end
+
+
+if $ARGS[0] = 'recurrent_off':
+	cheatVars['willpower'] = 0
+	cheatVars['inf_willpower'] = 0
+	cheatVars['always_brushed'] = 0
+	cheatVars['makeup_smear'] = 0
+	cheatVars['no_sweat'] = 0
+	cheatVars['hunger'] = 0
+	cheatVars['thirst'] = 0
+	cheatVars['sleep'] = 0
+	cheatVars['mood'] = 0
+	cheatVars['no_leghair'] = 0
+	cheatVars['fat'] = 0
+	cheatVars['body_staticAssets'] = 0
+	cheatVars['school_clothing'] = 0
+	cheatVars['drugs_immune'] = 0
+	cheatVars['sleep_vib'] = 0
+	cheatVars['clothes_dirt'] = 0
+	cheatVars['always_horny'] = 0
+	cheatVars['suc_bimbo'] = 0
+	cheatVars['bimbo'] = 0
+	cheatVars['no_periods'] = 0
+	cheatVars['no_pregnancy'] = 0
+	cheatVars['no_lactation'] = 0
+	cheatVars['no_cum_leak'] = 0
+	cheatVars['std'] = 0
+end
+
+

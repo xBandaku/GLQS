@@ -1,0 +1,52 @@
+!! MONEY SUBMENU
+if $ARGS[0] = 'money_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Money</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Cash on hand</td><td><<money>> RUB</td></tr>'
+	$glqs_tbl += '<tr><td>Bank account</td><td><<iif(bankAccount = 1, ''Open'', ''Not opened'')>></td></tr>'
+	if bankAccount = 1:
+		$glqs_tbl += '<tr><td>Bank balance</td><td><<karta - bankDebtLimit>> RUB</td></tr>'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	if bankAccount = 0:
+		act 'Open Bank Account (free)':
+			bankAccount = 1
+			bankShortCutMoney = 1000
+			bankDebtLimit = 0
+			gt 'mod_GLQS_main', 'money_menu'
+		end
+	end
+
+	act 'Give 1,000,000 Cash':
+		money += 1000000
+		gt 'mod_GLQS_main', 'money_menu'
+	end
+
+	if bankAccount = 1:
+		act 'Give 1,000,000 to Bank':
+			karta += 1000000
+			gt 'mod_GLQS_main', 'money_menu'
+		end
+
+		act 'Give 1,000,000 to Both':
+			money += 1000000
+			karta += 1000000
+			gt 'mod_GLQS_main', 'money_menu'
+		end
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+
+

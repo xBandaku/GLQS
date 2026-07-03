@@ -1,0 +1,60 @@
+!! CONSUMABLES SUBMENU
+if $ARGS[0] = 'consumables_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Consumables</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td><b>Contraceptives</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Condoms (equipped)</td><td><<mc_inventory[''equipped_condoms'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Condoms (normal)</td><td><<mc_inventory[''normal_condoms'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Birth control pills</td><td><<mc_inventory[''contraceptive_pill'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Pregnancy tests</td><td><<mc_inventory[''pregnancy_test'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Morning after pill</td><td><<mc_inventory[''morning_after_pill'']>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Medical / Hygiene</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Painkillers</td><td><<mc_inventory[''painkillers'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Vitamins</td><td><<mc_inventory[''vitamins'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Antibiotics</td><td><<mc_inventory[''antibiotics'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Tampons</td><td><<mc_inventory[''tampons'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Sanitary pads</td><td><<mc_inventory[''sanitary_pads'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Shampoo</td><td><<mc_inventory[''shampoo'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Mouthwash</td><td><<mc_inventory[''mouthwash'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Deodorant</td><td><<mc_inventory[''deodorant'']>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Beauty</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Lipbalm</td><td><<mc_inventory[''lipbalm'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Cosmetics</td><td><<mc_inventory[''cosmetics'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Moisturiser</td><td><<mc_inventory[''moisturiser'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Scrunchies</td><td><<mc_inventory[''scrunchies'']>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Drugs</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Neuroboosters (Mentats)</td><td><<mc_inventory[''mentats'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Steroids</td><td><<mc_inventory[''steroids'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Aphrodisiac</td><td><<mc_inventory[''aphrodisiac'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Breast cream</td><td><<mc_inventory[''breastcream'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Lubricant</td><td><<mc_inventory[''lubricant'']>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Set All to 10,000':
+		gs 'mod_GLQS_main', 'consumables', 10000
+		gt 'mod_GLQS_main', 'consumables_menu'
+	end
+
+	act 'Set All to 1,000':
+		gs 'mod_GLQS_main', 'consumables', 1000
+		gt 'mod_GLQS_main', 'consumables_menu'
+	end
+
+	act 'Set All to 100':
+		gs 'mod_GLQS_main', 'consumables', 100
+		gt 'mod_GLQS_main', 'consumables_menu'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+

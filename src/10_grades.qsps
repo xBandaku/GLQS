@@ -1,0 +1,52 @@
+!! SCHOOL GRADES SUBMENU
+if $ARGS[0] = 'grades':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">School Grades</font></b></center>'
+	'<br>Only applies on school start. Grades reset weekly based on class attendance.'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Math</td><td><<class[''school_math_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Russian</td><td><<class[''school_rus_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Literature</td><td><<class[''school_lit_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Art</td><td><<class[''school_art_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Biology</td><td><<class[''school_bio_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>English</td><td><<class[''school_eng_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Geography</td><td><<class[''school_geo_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Science</td><td><<class[''school_sci_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>History</td><td><<class[''school_his_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Shop</td><td><<class[''school_shop_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Computer</td><td><<class[''school_comp_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Music</td><td><<class[''school_mus_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>P.E.</td><td><<class[''school_pe_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Absences</td><td><<gschoolVars[''absence_count'']>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Set All Grades to 100':
+		gs 'grades', 'grade_award', 'school', 'math', 100
+		gs 'grades', 'grade_award', 'school', 'rus', 100
+		gs 'grades', 'grade_award', 'school', 'lit', 100
+		gs 'grades', 'grade_award', 'school', 'art', 100
+		gs 'grades', 'grade_award', 'school', 'bio', 100
+		gs 'grades', 'grade_award', 'school', 'eng', 100
+		gs 'grades', 'grade_award', 'school', 'geo', 100
+		gs 'grades', 'grade_award', 'school', 'sci', 100
+		gs 'grades', 'grade_award', 'school', 'his', 100
+		gs 'grades', 'grade_award', 'school', 'shop', 100
+		gs 'grades', 'grade_award', 'school', 'comp', 100
+		gs 'grades', 'grade_award', 'school', 'mus', 100
+		gs 'grades', 'grade_award', 'school', 'pe', 100
+		gschoolVars['absence_count'] = 0
+		gt 'mod_GLQS_main', 'grades'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+
