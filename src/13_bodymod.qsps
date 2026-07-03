@@ -30,7 +30,7 @@ if $ARGS[0] = 'bodymod_menu':
 
 	act 'Choose a Piercing': gt 'mod_GLQS_main', 'piercing_slot_menu'
 
-	act 'Return': gt 'mod_GLQS_main', 'start'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
@@ -66,6 +66,7 @@ if $ARGS[0] = 'tattoo_zone_menu':
 	act 'Wrist <<iif(pcs_tattoos[''wrist''] > 0, ''['' + pcs_tattoos[''wrist''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'wrist'
 
 	act 'Return': gt 'mod_GLQS_main', 'bodymod_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
@@ -104,6 +105,7 @@ if $ARGS[0] = 'tattoo_design_menu':
 
 	killvar '$glqs_zone'
 	act 'Back to Zones': gt 'mod_GLQS_main', 'tattoo_zone_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
@@ -129,6 +131,7 @@ if $ARGS[0] = 'piercing_slot_menu':
 	act 'Pussy <<iif(pcs_piercings[''pussy''] > 0, ''['' + pcs_piercings[''pussy''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'pussy'
 
 	act 'Return': gt 'mod_GLQS_main', 'bodymod_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
@@ -167,6 +170,7 @@ if $ARGS[0] = 'piercing_design_menu':
 
 	killvar '$glqs_slot'
 	act 'Back to Slots': gt 'mod_GLQS_main', 'piercing_slot_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 

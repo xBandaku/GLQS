@@ -1,6 +1,9 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.22 - Current</b>'
+'<b>Version 0.23 - Current</b>'
+'- Added: Every submenu now has a Return to Top Menu button that jumps straight back to the main Quick Setup screen, in addition to any existing one-level-back navigation.'
+*nl
+'<b>Version 0.22</b>'
 '- Added: Buy By Store submenu now breaks each store down into individual category buttons (e.g. Panties, Bras, Outfits, Shoes) instead of one buy-everything action, plus a Buy All (this store) option.'
 '- Fixed: Store category submenu used single-line if statements with a trailing end, which QSP does not allow - it desynced block parsing for the rest of mod_GLQS_main and caused an Unknown action error. Removed the invalid end from every single-line if.'
 *nl

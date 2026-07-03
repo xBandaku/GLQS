@@ -17,7 +17,7 @@ if $ARGS[0] = 'clothing_menu':
 
 	act 'Buy By Store': gt 'mod_GLQS_main', 'store_menu'
 
-	act 'Return': gt 'mod_GLQS_main', 'start'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
@@ -53,6 +53,7 @@ if $ARGS[0] = 'store_menu':
 	act 'Misc': gt 'mod_GLQS_main', 'store_detail', 'misc'
 
 	act 'Return': gt 'mod_GLQS_main', 'clothing_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
@@ -345,6 +346,7 @@ if $ARGS[0] = 'store_detail':
 	*nl
 	act 'Buy All (this store)': gs 'mod_GLQS_main', 'store_buy', $glqs_store & gt 'mod_GLQS_main', 'store_detail', $glqs_store
 	act 'Return': gt 'mod_GLQS_main', 'store_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 

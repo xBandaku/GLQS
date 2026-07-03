@@ -37,7 +37,7 @@ if $ARGS[0] = 'health_menu':
 		gt 'mod_GLQS_main', 'health_menu'
 	end
 
-	act 'Return': gt 'mod_GLQS_main', 'start'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
