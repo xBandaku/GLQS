@@ -114,34 +114,40 @@ way) - grep the reference source for how the screen is invoked.
 ## Reference: the base game's own source
 
 `reference/` (gitignored, not tracked) holds two shallow clones of the game's real
-developer source, https://gitlab.com/kevinsmartstfg/girl-life, one per installed
-build:
+developer source, https://gitlab.com/kevinsmartstfg/girl-life:
 
-- **`reference/0.9.8.3/`** — checked out at tag `0.9.8.3`, exactly matching the
-  `.qsp` installed in the `Girl Life` (stable) game folder (`Girl Life 0.9.8.3.qsp`).
 - **`reference/nightly/`** — `master` branch HEAD, matching the `Dev Life` folder's
   newer nightly build (its filename embeds the exact commit hash it was built from,
   e.g. `dev_glife-...-<hash>.qsp` — confirm `git -C reference/nightly log -1
   --format=%H` still equals that hash before trusting a lookup for Dev-Life-only
   behavior; `master` moves fast so this drifts and needs a re-clone periodically).
-
-When a lookup could go either way, prefer `0.9.8.3/` for anything about the stable
-`Girl Life` build and `nightly/` for anything specific to `Dev Life` behavior; for
-most subsystem/variable-name lookups the two agree closely enough that either works.
+  **This is the primary and default reference for all lookups going forward** —
+  grep here first and only, unless a task is specifically and only about the
+  stable `Girl Life` build.
+- **`reference/0.9.8.3/`** — checked out at tag `0.9.8.3`, matching the `.qsp`
+  installed in the `Girl Life` (stable) game folder (`Girl Life 0.9.8.3.qsp`). Kept
+  on disk but no longer checked by default — the two builds have diverged in real,
+  substantive ways in places (e.g. an archetype-system rewrite affecting
+  `BimboCloth`/`CalcAppearance`, and character creation being restructured
+  entirely from `intro_sg_select`/`intro_city_select` into
+  `intro_character_creation` on nightly), so do not assume a lookup here still
+  matches nightly. Only consult this if a task is explicitly about stable-only
+  behavior.
 
 This replaced an earlier approach of decompiling the installed `.qsp` with
 `qsp-cli` into one flat `glife_dev_build.qsps` file — the real source here is much
 better organized (one `.qsrc` file per location/system under `locations/`, original
 comments intact) and doesn't need re-decompiling by hand.
 
-**Before assuming a variable name, array name, or subsystem exists, grep this
-first** — most of the bug-fix version bumps in `02_readme.qsps`'s changelog (grades,
-attributes, consumables) were guessed variable names that turned out wrong.
-Confirming against the real source before writing a `src/` fragment avoids that
-cycle. E.g. `grep -rn "pav_.*_contribution" reference/0.9.8.3/locations/fame.qsrc` to
-check the fame-spread system, `cat reference/0.9.8.3/locations/homes_properties.qsrc`
-for the property system, or search for an item's in-game display string across
-`reference/0.9.8.3/locations/*.qsrc` to find its `mc_inventory[...]` key.
+**Before assuming a variable name, array name, or subsystem exists, grep
+`reference/nightly/` first** — most of the bug-fix version bumps in
+`02_readme.qsps`'s changelog (grades, attributes, consumables) were guessed
+variable names that turned out wrong. Confirming against the real source before
+writing a `src/` fragment avoids that cycle. E.g. `grep -rn "pav_.*_contribution"
+reference/nightly/locations/fame.qsrc` to check the fame-spread system, `cat
+reference/nightly/locations/homes_properties.qsrc` for the property system, or
+search for an item's in-game display string across `reference/nightly/locations/*.qsrc`
+to find its `mc_inventory[...]` key.
 
 To refresh either clone if a lookup seems stale or the installed builds update:
 `cd reference/<0.9.8.3-or-nightly> && git fetch --depth 1 origin <tag-or-branch> &&
