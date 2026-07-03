@@ -74,6 +74,31 @@ These exist because they caused real, hard-to-diagnose failures during developme
 When lint fails, fix the referenced `src/` fragment, not `build/GLQS.qsps` (that's
 generated output and gets overwritten every build).
 
+## Reference: the base game's own source
+
+`reference/glife_dev_build.qsps` (gitignored, not tracked) is the *decompiled*
+source of the actual Girl Life game (Dev Life build), produced with:
+
+```
+qsp-cli "path/to/glife Dev Build.qsp"
+```
+
+(`qsp-cli` converts in both directions based on file extension — `.qsps -> .qsp`
+compiles, `.qsp -> .qsps` decompiles. Note its `--directory` flag does not reliably
+redirect output when given an absolute source path outside the cwd; it may write
+next to the source file instead, so double check where the output landed.)
+
+**Before assuming a variable name, array name, or subsystem exists, grep this file
+first** — most of the bug-fix version bumps in `02_readme.qsps`'s changelog (grades,
+attributes, consumables) were guessed variable names that turned out wrong.
+Confirming against the real source before writing a `src/` fragment avoids that
+cycle. E.g. `grep -n "^# homes_properties" reference/glife_dev_build.qsps` to find
+the property system, or search for an item's in-game display string to find its
+`mc_inventory[...]` key.
+
+Regenerate this file if the Dev Life build updates and a lookup seems stale (compare
+`glife Dev Build.qsp`'s modified date against `reference/glife_dev_build.qsps`'s).
+
 ## Adding functionality
 
 **New submenu inside `mod_GLQS_main`:** add an `if $ARGS[0] = 'name': ... end` block
