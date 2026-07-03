@@ -1,0 +1,80 @@
+# mod_GLQS_readme
+*clr & cla
+'<b>Version 0.21 - Current</b>'
+'- Added: Per-category [Max] link next to each relationship category header (Family, Popular Kids, Athletes, Nerds, Gopniks, Outcasts, Teachers, Others), respecting the gender filter.'
+'- Changed: Tattoo/piercing image galleries now use a wrapping grid layout instead of stacking vertically.'
+*nl
+'<b>Version 0.20</b>'
+'- Changed: Body Mods now lets you pick a zone/slot and browse actual tattoo and piercing designs by image, instead of a single Give All button. Electrolysis unchanged.'
+*nl
+'<b>Version 0.19</b>'
+'- Fixed: Apostrophes inside !! comments (e.g. games, cheat_repair) broke the parser - the game engine does not fully suppress quote-parsing inside comments, so a lone apostrophe opened an unterminated string that corrupted all block-nesting after it. Removed all apostrophes from comments.'
+'- Changed: Individual store buttons in Clothing & Accessories moved behind a Buy By Store submenu.'
+*nl
+'<b>Version 0.18</b>'
+'- Added: Per-store buy-out buttons in Clothing & Accessories.'
+'- Fixed: Clothing no longer needs tailor repair/resize. Root cause was the companion _h[] durability array never being set, defaulting to 0.'
+'- Added: Body Mods submenu (free electrolysis, tattoo every zone, piercing every slot).'
+*nl
+'<b>Version 0.17</b>'
+'- Added: Money submenu (open bank account, give cash/bank funds).'
+'- Added: Relationships submenu showing and maxing key NPC relationships.'
+'- Added: Health & Energy submenu with full restore.'
+*nl
+'<b>Version 0.16.1</b>'
+'- Added: Consumables submenu now has Set All to 10,000 / 1,000 / 100 options.'
+*nl
+'<b>Version 0.15</b>'
+'- Removed: Do Everything option.'
+*nl
+'<b>Version 0.14</b>'
+'- Fixed: Max All Skills & Attributes was redirecting to the cheat menu. setSkills and setAttrs both end with gt cheatmenu_din which hijacks navigation. Replaced with direct setStat calls for every skill and attribute.'
+*nl
+'<b>Version 0.13</b>'
+'- Added: Clothing, Consumables and Skills & Attributes all now open their own submenus showing live data before applying changes.'
+*nl
+'<b>Version 0.12</b>'
+'- Changed: Grades moved to its own submenu showing live grade values.'
+*nl
+'<b>Version 0.11</b>'
+'- Fixed: Grades re-added. Root cause: grade_cap=0 clamped all grade_award calls to 0 in nested gs context. Fixed with 13 flat direct calls.'
+*nl
+'<b>Version 0.9</b>'
+'- Fixed: Consumables completely rewritten using correct mc_inventory[''name''] system.'
+'- All old variable names (prezikcount, tampon, etc.) were legacy/wrong - replaced with 67 correct mc_inventory keys.'
+'- Added full coverage: beauty, medical, contraceptives, drugs, food, sex toys, magazines, unique equipment.'
+*nl
+'<b>Version 0.8</b>'
+'- Dropped: Grades support removed. The grade system requires school initialization (createclass/grade_cap) that cannot be reliably set from a mod context.'
+*nl
+'<b>Version 0.7</b>'
+'- Fixed: Grade variables now set class cap to 100 before assigning grade directly.'
+'- Fixed: ARGS[1] was being clobbered by inner gs calls inside fill_grade loop.'
+*nl
+'<b>Version 0.6</b>'
+'- Fixed: Syntax error caused by inline !! comments after code (QSP only supports !! at start of a line).'
+'- Fixed: Em dash characters in comments caused parser crash.'
+'- Fixed: Attributes now use gs ''shortgs'', ''setStat'' directly (setAttrs needed $att_name[] pre-populated at startup).'
+'- Fixed: Grade storage uses class[''school_X_grade''] not gschoolVars. Grades are 0-100 not 1-5.'
+'- Fixed: Inhibition raw value is inverted - 100 = uninhibited, 0 = fully inhibited.'
+*nl
+'<b>Version 0.5</b>'
+'- Fixed: Inline !! comments partially addressed. Attribute variable names corrected from game source.'
+*nl
+'<b>Version 0.4</b>'
+'- Fixed: Skill and attribute variable names corrected using cheatmenu_din source code.'
+'- Added: Skills, attributes and grades option (grades still broken at this point).'
+*nl
+'<b>Version 0.3</b>'
+'- Added: Max Skills / Attributes / Grades option (all variable names wrong, fixed in later versions).'
+*nl
+'<b>Version 0.2</b>'
+'- Fixed: Clothing now unlocks from ALL stores, not just visited ones.'
+'- Root cause: arrsize() returns 0 for unvisited store arrays. Fixed by using each category totals subroutine.'
+*nl
+'<b>Version 0.1 - Initial Release</b>'
+'- All clothing and accessories from every store.'
+'- 10,000 of all consumables (variable names were wrong, fixed in 0.9).'
+*nl
+act 'Return': gt 'mod_setting'
+--- mod_GLQS_readme ---------------------------------

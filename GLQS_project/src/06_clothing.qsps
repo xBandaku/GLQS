@@ -1,0 +1,186 @@
+!! CLOTHING MENU + STORE SUBMENU + STORE_BUY DISPATCHER
+if $ARGS[0] = 'clothing_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Clothing & Accessories</font></b></center>'
+	*nl
+	'Buy out everything, or pick a single store from the submenu below. Items are granted at full durability so no tailor resize is needed.'
+	*nl
+
+	act 'Give Everything (all stores)':
+		gs 'mod_GLQS_main', 'clothing'
+		gt 'mod_GLQS_main', 'clothing_menu'
+	end
+
+	act 'Buy By Store': gt 'mod_GLQS_main', 'store_menu'
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'store_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Buy By Store</font></b></center>'
+	*nl
+	'Pick a store to buy out just that store''s stock.'
+	*nl
+
+	act 'Allure': gs 'mod_GLQS_main', 'store_buy', 'allure' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Bomba': gs 'mod_GLQS_main', 'store_buy', 'bomba' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Pussy-Cats': gs 'mod_GLQS_main', 'store_buy', 'cats' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Coco Carmen': gs 'mod_GLQS_main', 'store_buy', 'coco' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Danilovich': gs 'mod_GLQS_main', 'store_buy', 'danilovich' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Patchwork Dolls': gs 'mod_GLQS_main', 'store_buy', 'dolls' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Fancy Pancy': gs 'mod_GLQS_main', 'store_buy', 'fancy' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Fashionista': gs 'mod_GLQS_main', 'store_buy', 'fashionista' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Flamingos': gs 'mod_GLQS_main', 'store_buy', 'flamingos' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Salacious (Exhibitionist)': gs 'mod_GLQS_main', 'store_buy', 'salacious' & gt 'mod_GLQS_main', 'store_menu'
+	act 'G&M (all sub-lines)': gs 'mod_GLQS_main', 'store_buy', 'gm' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Market': gs 'mod_GLQS_main', 'store_buy', 'market' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Materinstvo': gs 'mod_GLQS_main', 'store_buy', 'materinstvo' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Mon Cheri': gs 'mod_GLQS_main', 'store_buy', 'moncheri' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Nerdvana': gs 'mod_GLQS_main', 'store_buy', 'nerdvana' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Scandalicious': gs 'mod_GLQS_main', 'store_buy', 'scandalicious' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Eroto (Sex Shop)': gs 'mod_GLQS_main', 'store_buy', 'eroto' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Lusso (underwear only)': gs 'mod_GLQS_main', 'store_buy', 'lusso' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Misc': gs 'mod_GLQS_main', 'store_buy', 'misc' & gt 'mod_GLQS_main', 'store_menu'
+
+	act 'Return': gt 'mod_GLQS_main', 'clothing_menu'
+end
+
+
+if $ARGS[0] = 'store_buy':
+	!! Buys out every category a given store/brand carries, matching the games
+	!! actual catalog (not every store sells every category).
+	!! Uses separate if-blocks per store rather than one elseif chain.
+	if $ARGS[1] = 'allure':
+		gs 'mod_GLQS_main', 'fill_clo', 'allure_swimsuit'
+		gs 'mod_GLQS_main', 'fill_clo', 'allure_bikinis'
+	end
+	if $ARGS[1] = 'bomba':
+		gs 'mod_GLQS_main', 'fill_clo', 'bomba_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'bomba_dress'
+		gs 'mod_GLQS_main', 'fill_shoe', 'bomba'
+		gs 'mod_GLQS_main', 'fill_coat', 'bomba'
+		gs 'mod_GLQS_main', 'fill_purse', 'bomba'
+	end
+	if $ARGS[1] = 'cats':
+		gs 'mod_GLQS_main', 'fill_clo', 'cats_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'cats_dress'
+		gs 'mod_GLQS_main', 'fill_shoe', 'cats'
+		gs 'mod_GLQS_main', 'fill_bra', 'cats'
+		gs 'mod_GLQS_main', 'fill_panty', 'cats'
+		gs 'mod_GLQS_main', 'fill_coat', 'cats'
+		gs 'mod_GLQS_main', 'fill_purse', 'cats'
+	end
+	if $ARGS[1] = 'coco':
+		gs 'mod_GLQS_main', 'fill_clo', 'coco_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'coco_dress'
+		gs 'mod_GLQS_main', 'fill_purse', 'coco'
+	end
+	if $ARGS[1] = 'danilovich':
+		gs 'mod_GLQS_main', 'fill_clo', 'danilovich_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'danilovich_swimsuit'
+		gs 'mod_GLQS_main', 'fill_shoe', 'danilovich'
+		gs 'mod_GLQS_main', 'fill_bra', 'danilovich'
+		gs 'mod_GLQS_main', 'fill_panty', 'danilovich'
+		gs 'mod_GLQS_main', 'fill_coat', 'danilovich'
+		gs 'mod_GLQS_main', 'fill_purse', 'danilovich'
+	end
+	if $ARGS[1] = 'dolls':
+		gs 'mod_GLQS_main', 'fill_clo', 'dolls_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'dolls_dress'
+		gs 'mod_GLQS_main', 'fill_shoe', 'dolls'
+		gs 'mod_GLQS_main', 'fill_coat', 'dolls'
+		gs 'mod_GLQS_main', 'fill_purse', 'dolls'
+	end
+	if $ARGS[1] = 'fancy':
+		gs 'mod_GLQS_main', 'fill_clo', 'fancy_burlesque'
+	end
+	if $ARGS[1] = 'fashionista':
+		gs 'mod_GLQS_main', 'fill_clo', 'fashionista_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'fashionista_dress'
+		gs 'mod_GLQS_main', 'fill_bra', 'fashionista'
+		gs 'mod_GLQS_main', 'fill_panty', 'fashionista'
+		gs 'mod_GLQS_main', 'fill_purse', 'fashionista'
+	end
+	if $ARGS[1] = 'flamingos':
+		gs 'mod_GLQS_main', 'fill_clo', 'flamingos_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'flamingos_dress'
+		gs 'mod_GLQS_main', 'fill_purse', 'flamingos'
+	end
+	if $ARGS[1] = 'salacious':
+		gs 'mod_GLQS_main', 'fill_clo', 'salacious_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'salacious_dress'
+		gs 'mod_GLQS_main', 'fill_bra', 'salacious'
+		gs 'mod_GLQS_main', 'fill_panty', 'salacious'
+		gs 'mod_GLQS_main', 'fill_body', 'salacious'
+	end
+	if $ARGS[1] = 'gm':
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_dress'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_office'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_maid'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_server'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_school'
+		gs 'mod_GLQS_main', 'fill_shoe', 'gm'
+		gs 'mod_GLQS_main', 'fill_bra', 'gm'
+		gs 'mod_GLQS_main', 'fill_panty', 'gm'
+		gs 'mod_GLQS_main', 'fill_coat', 'gm'
+		gs 'mod_GLQS_main', 'fill_purse', 'gm'
+	end
+	if $ARGS[1] = 'market':
+		gs 'mod_GLQS_main', 'fill_clo', 'market_outfits'
+	end
+	if $ARGS[1] = 'materinstvo':
+		gs 'mod_GLQS_main', 'fill_clo', 'materinstvo_dress'
+	end
+	if $ARGS[1] = 'moncheri':
+		gs 'mod_GLQS_main', 'fill_clo', 'moncheri_dress'
+		gs 'mod_GLQS_main', 'fill_clo', 'moncheri_gown'
+		gs 'mod_GLQS_main', 'fill_shoe', 'moncheri'
+		gs 'mod_GLQS_main', 'fill_body', 'moncheri'
+		gs 'mod_GLQS_main', 'fill_coat', 'moncheri'
+		gs 'mod_GLQS_main', 'fill_purse', 'moncheri'
+	end
+	if $ARGS[1] = 'nerdvana':
+		gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_cosplay'
+		gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_swimsuit'
+		gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_bikinis'
+		gs 'mod_GLQS_main', 'fill_purse', 'nerdvana'
+	end
+	if $ARGS[1] = 'scandalicious':
+		gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_dress'
+		gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_swimsuit'
+		gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_bikinis'
+		gs 'mod_GLQS_main', 'fill_shoe', 'scandalicious'
+		gs 'mod_GLQS_main', 'fill_body', 'scandalicious'
+	end
+	if $ARGS[1] = 'eroto':
+		gs 'mod_GLQS_main', 'fill_clo', 'eroto_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'eroto_dress'
+		gs 'mod_GLQS_main', 'fill_clo', 'eroto_strip'
+		gs 'mod_GLQS_main', 'fill_shoe', 'eroto'
+		gs 'mod_GLQS_main', 'fill_bra', 'eroto'
+		gs 'mod_GLQS_main', 'fill_panty', 'eroto'
+	end
+	if $ARGS[1] = 'lusso':
+		gs 'mod_GLQS_main', 'fill_bra', 'lusso'
+		gs 'mod_GLQS_main', 'fill_panty', 'lusso'
+		gs 'mod_GLQS_main', 'fill_body', 'lusso'
+	end
+	if $ARGS[1] = 'misc':
+		gs 'mod_GLQS_main', 'fill_clo', 'misc'
+	end
+end
+
+

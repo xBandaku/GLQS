@@ -1,0 +1,523 @@
+!! RELATIONSHIPS SUBMENU + MAX_CATEGORY DISPATCHER
+if $ARGS[0] = 'rel_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Relationships</font></b></center>'
+	'Values 0-100. Only affects characters you have met. Each category has its own [Max] link.'
+	*nl
+	'Filter: '
+	*p iif(glqs_rel_filter = 0, '<b>All</b>', '<a href="exec: glqs_rel_filter = 0 & gt ''mod_GLQS_main'', ''rel_menu''">All</a>')
+	*p ' | '
+	*p iif(glqs_rel_filter = 1, '<b>Male Only</b>', '<a href="exec: glqs_rel_filter = 1 & gt ''mod_GLQS_main'', ''rel_menu''">Male Only</a>')
+	*p ' | '
+	*pl iif(glqs_rel_filter = 2, '<b>Female Only</b>', '<a href="exec: glqs_rel_filter = 2 & gt ''mod_GLQS_main'', ''rel_menu''">Female Only</a>')
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=3>'
+	$glqs_tbl += '<tr><td colspan="2"><b>Family</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''family'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Dad (M)</td><td><<npc_rel[''A28'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Mother (F)</td><td><<npc_rel[''A29'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Sister (F)</td><td><<npc_rel[''A33'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Kolka (M)</td><td><<npc_rel[''A34'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Popular Kids</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''popular'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Dimka (M)</td><td><<npc_rel[''A1'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Igor (M)</td><td><<npc_rel[''A4'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Katja (F)</td><td><<npc_rel[''A14'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Vicky (F)</td><td><<npc_rel[''A15'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Inna (F)</td><td><<npc_rel[''A17'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Bella (F)</td><td><<npc_rel[''A22'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Sonia (F)</td><td><<npc_rel[''A25'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Stasya (F)</td><td><<npc_rel[''A139'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lizaveta (F)</td><td><<npc_rel[''A140'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Marcus (M)</td><td><<npc_rel[''A146'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Andrey (M)</td><td><<npc_rel[''A147'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Mefodiy (M)</td><td><<npc_rel[''A148'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Athletes</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''athletes'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Ivan (M)</td><td><<npc_rel[''A3'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Fedor (M)</td><td><<npc_rel[''A5'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Svyatoslav (M)</td><td><<npc_rel[''A8'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lariska (F)</td><td><<npc_rel[''A13'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Christina (F)</td><td><<npc_rel[''A18'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lina (F)</td><td><<npc_rel[''A19'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Albina (F)</td><td><<npc_rel[''A23'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Ronnie (F)</td><td><<npc_rel[''A141'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Lazar (M)</td><td><<npc_rel[''A149'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Erast (M)</td><td><<npc_rel[''A150'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Vanya (M)</td><td><<npc_rel[''A165'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Nerds</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''nerds'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Artem (M)</td><td><<npc_rel[''A2'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Petka (M)</td><td><<npc_rel[''A6'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Julia (F)</td><td><<npc_rel[''A12'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Natasha (F)</td><td><<npc_rel[''A16'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Evgeny (M)</td><td><<npc_rel[''A151'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Feofan (M)</td><td><<npc_rel[''A152'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Gerasim (M)</td><td><<npc_rel[''A153'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Nat (F)</td><td><<npc_rel[''A240'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Gopniks</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''gopniks'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Vitek (M)</td><td><<npc_rel[''A9'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Dan (M)</td><td><<npc_rel[''A10'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Shulga (M)</td><td><<npc_rel[''A11'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lena (F)</td><td><<npc_rel[''A20'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lera (F)</td><td><<npc_rel[''A21'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Pauline (F)</td><td><<npc_rel[''A24'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Alyona (F)</td><td><<npc_rel[''A143'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Nush (F)</td><td><<npc_rel[''A144'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Katyusha (F)</td><td><<npc_rel[''A145'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Radomir (M)</td><td><<npc_rel[''A154'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Lavrenti (M)</td><td><<npc_rel[''A155'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Arkadi (M)</td><td><<npc_rel[''A156'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Roman (M)</td><td><<npc_rel[''A157'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Valentin (M)</td><td><<npc_rel[''A158'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Niko (M)</td><td><<npc_rel[''A189'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Outcasts</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''outcasts'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Lesco (M)</td><td><<npc_rel[''A7'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Petia (M)</td><td><<npc_rel[''A159'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Teachers</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''teachers'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Anatoly E. (M)</td><td><<npc_rel[''A26'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Coach (M)</td><td><<npc_rel[''A69'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Makar (M)</td><td><<npc_rel[''A128'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Serafim (M)</td><td><<npc_rel[''A129'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Ilya (M)</td><td><<npc_rel[''A130'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Viktor (M)</td><td><<npc_rel[''A131'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Ruslan (M)</td><td><<npc_rel[''A132'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Rolan (M)</td><td><<npc_rel[''A133'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Aleksandrina (F)</td><td><<npc_rel[''A134'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Yeva (F)</td><td><<npc_rel[''A135'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Olga (F)</td><td><<npc_rel[''A136'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Raven (F)</td><td><<npc_rel[''A137'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Arina (F)</td><td><<npc_rel[''A138'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Others</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''others'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Mira (F)</td><td><<npc_rel[''A60'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Kat (F)</td><td><<npc_rel[''A219'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Vika (F)</td><td><<npc_rel[''A220'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Marisha (F)</td><td><<npc_rel[''A93'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Nika (F)</td><td><<npc_rel[''A43'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Fabiyan (M)</td><td><<npc_rel[''A41'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Ashot (M)</td><td><<npc_rel[''A42'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Eugene (F)</td><td><<npc_rel[''A89'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Pavlin (M)</td><td><<npc_rel[''A217'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Martin (M)</td><td><<npc_rel[''A216'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Sergey (M)</td><td><<npc_rel[''A112'']>></td></tr>'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Max All (filtered)':
+		gs 'mod_GLQS_main', 'max_category', 'family'
+		gs 'mod_GLQS_main', 'max_category', 'popular'
+		gs 'mod_GLQS_main', 'max_category', 'athletes'
+		gs 'mod_GLQS_main', 'max_category', 'nerds'
+		gs 'mod_GLQS_main', 'max_category', 'gopniks'
+		gs 'mod_GLQS_main', 'max_category', 'outcasts'
+		gs 'mod_GLQS_main', 'max_category', 'teachers'
+		gs 'mod_GLQS_main', 'max_category', 'others'
+		gt 'mod_GLQS_main', 'rel_menu'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+if $ARGS[0] = 'max_category':
+	if $ARGS[1] = 'family':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A28'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A29'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A33'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A34'] = 100
+		end
+	end
+	if $ARGS[1] = 'popular':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A1'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A4'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A14'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A15'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A17'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A22'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A25'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A139'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A140'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A146'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A147'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A148'] = 100
+		end
+	end
+	if $ARGS[1] = 'athletes':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A3'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A5'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A8'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A13'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A18'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A19'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A23'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A141'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A149'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A150'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A165'] = 100
+		end
+	end
+	if $ARGS[1] = 'nerds':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A2'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A6'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A12'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A16'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A151'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A152'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A153'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A240'] = 100
+		end
+	end
+	if $ARGS[1] = 'gopniks':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A9'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A10'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A11'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A20'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A21'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A24'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A143'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A144'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A145'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A154'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A155'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A156'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A157'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A158'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A189'] = 100
+		end
+	end
+	if $ARGS[1] = 'outcasts':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A7'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A159'] = 100
+		end
+	end
+	if $ARGS[1] = 'teachers':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A26'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A69'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A128'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A129'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A130'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A131'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A132'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A133'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A134'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A135'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A136'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A137'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A138'] = 100
+		end
+	end
+	if $ARGS[1] = 'others':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A60'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A219'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A220'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A93'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A43'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A41'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A42'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A89'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A217'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A216'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A112'] = 100
+		end
+	end
+end
+
+
+

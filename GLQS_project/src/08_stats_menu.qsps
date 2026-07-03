@@ -1,0 +1,53 @@
+!! SKILLS & ATTRIBUTES SUBMENU
+if $ARGS[0] = 'stats_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Skills & Attributes</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td><b>Attributes</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Strength</td><td><<stren_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Agility</td><td><<agil_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Endurance</td><td><<vital_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Intelligence</td><td><<intel_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Reaction</td><td><<react_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Spirit</td><td><<sprt_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Charisma</td><td><<chrsm_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Perception</td><td><<prcptn_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Magic</td><td><<magik_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Inhibition (0=uninhibited)</td><td><<inhib_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Willpower max</td><td><<willpowermax>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Skills (visible level)</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>People Skills</td><td><<humint_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Persuasion</td><td><<persuas_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Observation</td><td><<observ_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Jabs</td><td><<jab_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Power Strikes</td><td><<punch_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Kicks</td><td><<kick_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Defence</td><td><<def_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Running</td><td><<run_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Volleyball</td><td><<vball_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Football</td><td><<ftbll_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Modern Dancing</td><td><<danc_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Singing</td><td><<vokal_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Computer Skill</td><td><<compskl_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Tailoring</td><td><<sewng_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Medicine</td><td><<medcn_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Makeup</td><td><<makupskl_lvl>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Max All Skills & Attributes':
+		gs 'mod_GLQS_main', 'stats'
+		gt 'mod_GLQS_main', 'stats_menu'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+

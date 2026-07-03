@@ -1,0 +1,43 @@
+!! HEALTH & ENERGY SUBMENU
+if $ARGS[0] = 'health_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Health & Energy</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Health</td><td><<pcs_health>> / <<healthmax>></td></tr>'
+	$glqs_tbl += '<tr><td>Stamina</td><td><<pcs_stam>> / <<stammax>></td></tr>'
+	$glqs_tbl += '<tr><td>Willpower</td><td><<pcs_willpwr>> / <<willpowermax>></td></tr>'
+	$glqs_tbl += '<tr><td>Mana</td><td><<pcs_mana>></td></tr>'
+	$glqs_tbl += '<tr><td>Sleep</td><td><<pcs_sleep>></td></tr>'
+	$glqs_tbl += '<tr><td>Mood</td><td><<pcs_mood>></td></tr>'
+	$glqs_tbl += '<tr><td>Hunger</td><td><<pcs_energy>></td></tr>'
+	$glqs_tbl += '<tr><td>Hydration</td><td><<pcs_hydra>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Full Restore Everything':
+		pcs_health = healthmax
+		pcs_stam = stammax
+		pcs_willpwr = willpowermax
+		pcs_mana = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+		pcs_sleep = 100
+		pcs_mood = 100
+		pcs_energy = 200
+		pcs_hydra = 200
+		vgape = 0
+		agape = 0
+		nippain = 0
+		gs 'stat'
+		gt 'mod_GLQS_main', 'health_menu'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+

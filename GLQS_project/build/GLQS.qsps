@@ -1,0 +1,1747 @@
+# mod_GLQS_setup
+$mod_info[0] = 'GLQS'
+$mod_info[1] = '02100'
+$mod_info[2] = 'xPandaku'
+$mod_info[3] = 'A mod for Girl Life that grants all clothing, maxes consumables, skills, attributes and school grades. By xPandaku.'
+
+if $curloc = 'mod_GLQS_setup':
+	usehtml = 1
+	'<center><h1><font color=red>ACCESS DENIED</font></h1></center>'
+	'GLQS is a mod for <b>Girl Life - English Community Version</b> and cannot be played individually.'
+end
+--- mod_GLQS_setup ---------------------------------
+
+# mod_GLQS_readme
+*clr & cla
+'<b>Version 0.21 - Current</b>'
+'- Added: Per-category [Max] link next to each relationship category header (Family, Popular Kids, Athletes, Nerds, Gopniks, Outcasts, Teachers, Others), respecting the gender filter.'
+'- Changed: Tattoo/piercing image galleries now use a wrapping grid layout instead of stacking vertically.'
+*nl
+'<b>Version 0.20</b>'
+'- Changed: Body Mods now lets you pick a zone/slot and browse actual tattoo and piercing designs by image, instead of a single Give All button. Electrolysis unchanged.'
+*nl
+'<b>Version 0.19</b>'
+'- Fixed: Apostrophes inside !! comments (e.g. games, cheat_repair) broke the parser - the game engine does not fully suppress quote-parsing inside comments, so a lone apostrophe opened an unterminated string that corrupted all block-nesting after it. Removed all apostrophes from comments.'
+'- Changed: Individual store buttons in Clothing & Accessories moved behind a Buy By Store submenu.'
+*nl
+'<b>Version 0.18</b>'
+'- Added: Per-store buy-out buttons in Clothing & Accessories.'
+'- Fixed: Clothing no longer needs tailor repair/resize. Root cause was the companion _h[] durability array never being set, defaulting to 0.'
+'- Added: Body Mods submenu (free electrolysis, tattoo every zone, piercing every slot).'
+*nl
+'<b>Version 0.17</b>'
+'- Added: Money submenu (open bank account, give cash/bank funds).'
+'- Added: Relationships submenu showing and maxing key NPC relationships.'
+'- Added: Health & Energy submenu with full restore.'
+*nl
+'<b>Version 0.16.1</b>'
+'- Added: Consumables submenu now has Set All to 10,000 / 1,000 / 100 options.'
+*nl
+'<b>Version 0.15</b>'
+'- Removed: Do Everything option.'
+*nl
+'<b>Version 0.14</b>'
+'- Fixed: Max All Skills & Attributes was redirecting to the cheat menu. setSkills and setAttrs both end with gt cheatmenu_din which hijacks navigation. Replaced with direct setStat calls for every skill and attribute.'
+*nl
+'<b>Version 0.13</b>'
+'- Added: Clothing, Consumables and Skills & Attributes all now open their own submenus showing live data before applying changes.'
+*nl
+'<b>Version 0.12</b>'
+'- Changed: Grades moved to its own submenu showing live grade values.'
+*nl
+'<b>Version 0.11</b>'
+'- Fixed: Grades re-added. Root cause: grade_cap=0 clamped all grade_award calls to 0 in nested gs context. Fixed with 13 flat direct calls.'
+*nl
+'<b>Version 0.9</b>'
+'- Fixed: Consumables completely rewritten using correct mc_inventory[''name''] system.'
+'- All old variable names (prezikcount, tampon, etc.) were legacy/wrong - replaced with 67 correct mc_inventory keys.'
+'- Added full coverage: beauty, medical, contraceptives, drugs, food, sex toys, magazines, unique equipment.'
+*nl
+'<b>Version 0.8</b>'
+'- Dropped: Grades support removed. The grade system requires school initialization (createclass/grade_cap) that cannot be reliably set from a mod context.'
+*nl
+'<b>Version 0.7</b>'
+'- Fixed: Grade variables now set class cap to 100 before assigning grade directly.'
+'- Fixed: ARGS[1] was being clobbered by inner gs calls inside fill_grade loop.'
+*nl
+'<b>Version 0.6</b>'
+'- Fixed: Syntax error caused by inline !! comments after code (QSP only supports !! at start of a line).'
+'- Fixed: Em dash characters in comments caused parser crash.'
+'- Fixed: Attributes now use gs ''shortgs'', ''setStat'' directly (setAttrs needed $att_name[] pre-populated at startup).'
+'- Fixed: Grade storage uses class[''school_X_grade''] not gschoolVars. Grades are 0-100 not 1-5.'
+'- Fixed: Inhibition raw value is inverted - 100 = uninhibited, 0 = fully inhibited.'
+*nl
+'<b>Version 0.5</b>'
+'- Fixed: Inline !! comments partially addressed. Attribute variable names corrected from game source.'
+*nl
+'<b>Version 0.4</b>'
+'- Fixed: Skill and attribute variable names corrected using cheatmenu_din source code.'
+'- Added: Skills, attributes and grades option (grades still broken at this point).'
+*nl
+'<b>Version 0.3</b>'
+'- Added: Max Skills / Attributes / Grades option (all variable names wrong, fixed in later versions).'
+*nl
+'<b>Version 0.2</b>'
+'- Fixed: Clothing now unlocks from ALL stores, not just visited ones.'
+'- Root cause: arrsize() returns 0 for unvisited store arrays. Fixed by using each category totals subroutine.'
+*nl
+'<b>Version 0.1 - Initial Release</b>'
+'- All clothing and accessories from every store.'
+'- 10,000 of all consumables (variable names were wrong, fixed in 0.9).'
+*nl
+act 'Return': gt 'mod_setting'
+--- mod_GLQS_readme ---------------------------------
+
+# mod_GLQS
+if func('homes_properties', 'is_current_home', $curloc) and $locclass = 'bedr' and cheatVars['cheatsp'] = 1:
+	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+end
+
+if $loc = 'uni_dorm' and $curloc = 'uni_dorm' and $loc_arg = 'dorm_room' and cheatVars['cheatsp'] = 1:
+	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+end
+
+if $loc = 'HotelRoom' and $curloc = 'HotelRoom' and $loc_arg = 'therapist' and cheatVars['cheatsp'] = 1:
+	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+end
+
+if $ARGS[0] = 'permanent':
+	$cheatmenu['table_start']
+	'Quick Setup Mod: <a href="exec: cheatVars[''cheatsp''] = iif(cheatVars[''cheatsp''], 0, 1) & dynamic $cheatmenu[$cheatmenu[''this_menu'']]"><<iif(cheatVars[''cheatsp''], ''Enabled'', ''Disabled'')>></a>'
+	$cheatmenu['table_end']
+end
+--- mod_GLQS ---------------------------------
+
+# mod_GLQS_main
+
+!! MAIN MENU (start)
+if $ARGS[0] = 'start':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	killvar '$locclass'
+	gs 'core_library', 'setloc', 'mod_GLQS_main', 'start'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Quick Setup Mod</font></b></center>'
+	'<br>Instantly give your character everything she needs.'
+
+	act 'Clothing & Accessories': gt 'mod_GLQS_main', 'clothing_menu'
+
+	act 'Consumables': gt 'mod_GLQS_main', 'consumables_menu'
+
+	act 'Skills & Attributes': gt 'mod_GLQS_main', 'stats_menu'
+
+	act 'Recurrent Cheats': gt 'mod_GLQS_main', 'recurrent'
+
+	act 'School Grades': gt 'mod_GLQS_main', 'grades'
+
+	act 'Money': gt 'mod_GLQS_main', 'money_menu'
+
+	act 'Relationships': gt 'mod_GLQS_main', 'rel_menu'
+
+	act 'Health & Energy': gt 'mod_GLQS_main', 'health_menu'
+
+	act 'Body Mods': gt 'mod_GLQS_main', 'bodymod_menu'
+
+	act 'Return':
+		$menu_loc = $shopreturn
+		$menu_arg = $shoparg
+		killvar '$shopreturn'
+		killvar '$shoparg'
+		gt $menu_loc, $menu_arg
+	end
+end
+
+!! ===== CLOTHING MENU =====
+
+!! CLOTHING MENU + STORE SUBMENU + STORE_BUY DISPATCHER
+if $ARGS[0] = 'clothing_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Clothing & Accessories</font></b></center>'
+	*nl
+	'Buy out everything, or pick a single store from the submenu below. Items are granted at full durability so no tailor resize is needed.'
+	*nl
+
+	act 'Give Everything (all stores)':
+		gs 'mod_GLQS_main', 'clothing'
+		gt 'mod_GLQS_main', 'clothing_menu'
+	end
+
+	act 'Buy By Store': gt 'mod_GLQS_main', 'store_menu'
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'store_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Buy By Store</font></b></center>'
+	*nl
+	'Pick a store to buy out just that store''s stock.'
+	*nl
+
+	act 'Allure': gs 'mod_GLQS_main', 'store_buy', 'allure' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Bomba': gs 'mod_GLQS_main', 'store_buy', 'bomba' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Pussy-Cats': gs 'mod_GLQS_main', 'store_buy', 'cats' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Coco Carmen': gs 'mod_GLQS_main', 'store_buy', 'coco' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Danilovich': gs 'mod_GLQS_main', 'store_buy', 'danilovich' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Patchwork Dolls': gs 'mod_GLQS_main', 'store_buy', 'dolls' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Fancy Pancy': gs 'mod_GLQS_main', 'store_buy', 'fancy' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Fashionista': gs 'mod_GLQS_main', 'store_buy', 'fashionista' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Flamingos': gs 'mod_GLQS_main', 'store_buy', 'flamingos' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Salacious (Exhibitionist)': gs 'mod_GLQS_main', 'store_buy', 'salacious' & gt 'mod_GLQS_main', 'store_menu'
+	act 'G&M (all sub-lines)': gs 'mod_GLQS_main', 'store_buy', 'gm' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Market': gs 'mod_GLQS_main', 'store_buy', 'market' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Materinstvo': gs 'mod_GLQS_main', 'store_buy', 'materinstvo' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Mon Cheri': gs 'mod_GLQS_main', 'store_buy', 'moncheri' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Nerdvana': gs 'mod_GLQS_main', 'store_buy', 'nerdvana' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Scandalicious': gs 'mod_GLQS_main', 'store_buy', 'scandalicious' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Eroto (Sex Shop)': gs 'mod_GLQS_main', 'store_buy', 'eroto' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Lusso (underwear only)': gs 'mod_GLQS_main', 'store_buy', 'lusso' & gt 'mod_GLQS_main', 'store_menu'
+	act 'Misc': gs 'mod_GLQS_main', 'store_buy', 'misc' & gt 'mod_GLQS_main', 'store_menu'
+
+	act 'Return': gt 'mod_GLQS_main', 'clothing_menu'
+end
+
+
+if $ARGS[0] = 'store_buy':
+	!! Buys out every category a given store/brand carries, matching the games
+	!! actual catalog (not every store sells every category).
+	!! Uses separate if-blocks per store rather than one elseif chain.
+	if $ARGS[1] = 'allure':
+		gs 'mod_GLQS_main', 'fill_clo', 'allure_swimsuit'
+		gs 'mod_GLQS_main', 'fill_clo', 'allure_bikinis'
+	end
+	if $ARGS[1] = 'bomba':
+		gs 'mod_GLQS_main', 'fill_clo', 'bomba_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'bomba_dress'
+		gs 'mod_GLQS_main', 'fill_shoe', 'bomba'
+		gs 'mod_GLQS_main', 'fill_coat', 'bomba'
+		gs 'mod_GLQS_main', 'fill_purse', 'bomba'
+	end
+	if $ARGS[1] = 'cats':
+		gs 'mod_GLQS_main', 'fill_clo', 'cats_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'cats_dress'
+		gs 'mod_GLQS_main', 'fill_shoe', 'cats'
+		gs 'mod_GLQS_main', 'fill_bra', 'cats'
+		gs 'mod_GLQS_main', 'fill_panty', 'cats'
+		gs 'mod_GLQS_main', 'fill_coat', 'cats'
+		gs 'mod_GLQS_main', 'fill_purse', 'cats'
+	end
+	if $ARGS[1] = 'coco':
+		gs 'mod_GLQS_main', 'fill_clo', 'coco_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'coco_dress'
+		gs 'mod_GLQS_main', 'fill_purse', 'coco'
+	end
+	if $ARGS[1] = 'danilovich':
+		gs 'mod_GLQS_main', 'fill_clo', 'danilovich_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'danilovich_swimsuit'
+		gs 'mod_GLQS_main', 'fill_shoe', 'danilovich'
+		gs 'mod_GLQS_main', 'fill_bra', 'danilovich'
+		gs 'mod_GLQS_main', 'fill_panty', 'danilovich'
+		gs 'mod_GLQS_main', 'fill_coat', 'danilovich'
+		gs 'mod_GLQS_main', 'fill_purse', 'danilovich'
+	end
+	if $ARGS[1] = 'dolls':
+		gs 'mod_GLQS_main', 'fill_clo', 'dolls_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'dolls_dress'
+		gs 'mod_GLQS_main', 'fill_shoe', 'dolls'
+		gs 'mod_GLQS_main', 'fill_coat', 'dolls'
+		gs 'mod_GLQS_main', 'fill_purse', 'dolls'
+	end
+	if $ARGS[1] = 'fancy':
+		gs 'mod_GLQS_main', 'fill_clo', 'fancy_burlesque'
+	end
+	if $ARGS[1] = 'fashionista':
+		gs 'mod_GLQS_main', 'fill_clo', 'fashionista_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'fashionista_dress'
+		gs 'mod_GLQS_main', 'fill_bra', 'fashionista'
+		gs 'mod_GLQS_main', 'fill_panty', 'fashionista'
+		gs 'mod_GLQS_main', 'fill_purse', 'fashionista'
+	end
+	if $ARGS[1] = 'flamingos':
+		gs 'mod_GLQS_main', 'fill_clo', 'flamingos_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'flamingos_dress'
+		gs 'mod_GLQS_main', 'fill_purse', 'flamingos'
+	end
+	if $ARGS[1] = 'salacious':
+		gs 'mod_GLQS_main', 'fill_clo', 'salacious_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'salacious_dress'
+		gs 'mod_GLQS_main', 'fill_bra', 'salacious'
+		gs 'mod_GLQS_main', 'fill_panty', 'salacious'
+		gs 'mod_GLQS_main', 'fill_body', 'salacious'
+	end
+	if $ARGS[1] = 'gm':
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_dress'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_office'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_maid'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_server'
+		gs 'mod_GLQS_main', 'fill_clo', 'gm_school'
+		gs 'mod_GLQS_main', 'fill_shoe', 'gm'
+		gs 'mod_GLQS_main', 'fill_bra', 'gm'
+		gs 'mod_GLQS_main', 'fill_panty', 'gm'
+		gs 'mod_GLQS_main', 'fill_coat', 'gm'
+		gs 'mod_GLQS_main', 'fill_purse', 'gm'
+	end
+	if $ARGS[1] = 'market':
+		gs 'mod_GLQS_main', 'fill_clo', 'market_outfits'
+	end
+	if $ARGS[1] = 'materinstvo':
+		gs 'mod_GLQS_main', 'fill_clo', 'materinstvo_dress'
+	end
+	if $ARGS[1] = 'moncheri':
+		gs 'mod_GLQS_main', 'fill_clo', 'moncheri_dress'
+		gs 'mod_GLQS_main', 'fill_clo', 'moncheri_gown'
+		gs 'mod_GLQS_main', 'fill_shoe', 'moncheri'
+		gs 'mod_GLQS_main', 'fill_body', 'moncheri'
+		gs 'mod_GLQS_main', 'fill_coat', 'moncheri'
+		gs 'mod_GLQS_main', 'fill_purse', 'moncheri'
+	end
+	if $ARGS[1] = 'nerdvana':
+		gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_cosplay'
+		gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_swimsuit'
+		gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_bikinis'
+		gs 'mod_GLQS_main', 'fill_purse', 'nerdvana'
+	end
+	if $ARGS[1] = 'scandalicious':
+		gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_dress'
+		gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_swimsuit'
+		gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_bikinis'
+		gs 'mod_GLQS_main', 'fill_shoe', 'scandalicious'
+		gs 'mod_GLQS_main', 'fill_body', 'scandalicious'
+	end
+	if $ARGS[1] = 'eroto':
+		gs 'mod_GLQS_main', 'fill_clo', 'eroto_outfits'
+		gs 'mod_GLQS_main', 'fill_clo', 'eroto_dress'
+		gs 'mod_GLQS_main', 'fill_clo', 'eroto_strip'
+		gs 'mod_GLQS_main', 'fill_shoe', 'eroto'
+		gs 'mod_GLQS_main', 'fill_bra', 'eroto'
+		gs 'mod_GLQS_main', 'fill_panty', 'eroto'
+	end
+	if $ARGS[1] = 'lusso':
+		gs 'mod_GLQS_main', 'fill_bra', 'lusso'
+		gs 'mod_GLQS_main', 'fill_panty', 'lusso'
+		gs 'mod_GLQS_main', 'fill_body', 'lusso'
+	end
+	if $ARGS[1] = 'misc':
+		gs 'mod_GLQS_main', 'fill_clo', 'misc'
+	end
+end
+
+!! CONSUMABLES SUBMENU
+if $ARGS[0] = 'consumables_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Consumables</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td><b>Contraceptives</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Condoms (equipped)</td><td><<mc_inventory[''equipped_condoms'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Condoms (normal)</td><td><<mc_inventory[''normal_condoms'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Birth control pills</td><td><<mc_inventory[''contraceptive_pill'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Pregnancy tests</td><td><<mc_inventory[''pregnancy_test'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Morning after pill</td><td><<mc_inventory[''morning_after_pill'']>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Medical / Hygiene</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Painkillers</td><td><<mc_inventory[''painkillers'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Vitamins</td><td><<mc_inventory[''vitamins'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Antibiotics</td><td><<mc_inventory[''antibiotics'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Tampons</td><td><<mc_inventory[''tampons'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Sanitary pads</td><td><<mc_inventory[''sanitary_pads'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Shampoo</td><td><<mc_inventory[''shampoo'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Mouthwash</td><td><<mc_inventory[''mouthwash'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Deodorant</td><td><<mc_inventory[''deodorant'']>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Beauty</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Lipbalm</td><td><<mc_inventory[''lipbalm'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Cosmetics</td><td><<mc_inventory[''cosmetics'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Moisturiser</td><td><<mc_inventory[''moisturiser'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Scrunchies</td><td><<mc_inventory[''scrunchies'']>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Drugs</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Neuroboosters (Mentats)</td><td><<mc_inventory[''mentats'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Steroids</td><td><<mc_inventory[''steroids'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Aphrodisiac</td><td><<mc_inventory[''aphrodisiac'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Breast cream</td><td><<mc_inventory[''breastcream'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Lubricant</td><td><<mc_inventory[''lubricant'']>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Set All to 10,000':
+		gs 'mod_GLQS_main', 'consumables', 10000
+		gt 'mod_GLQS_main', 'consumables_menu'
+	end
+
+	act 'Set All to 1,000':
+		gs 'mod_GLQS_main', 'consumables', 1000
+		gt 'mod_GLQS_main', 'consumables_menu'
+	end
+
+	act 'Set All to 100':
+		gs 'mod_GLQS_main', 'consumables', 100
+		gt 'mod_GLQS_main', 'consumables_menu'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+!! SKILLS & ATTRIBUTES SUBMENU
+if $ARGS[0] = 'stats_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Skills & Attributes</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td><b>Attributes</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Strength</td><td><<stren_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Agility</td><td><<agil_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Endurance</td><td><<vital_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Intelligence</td><td><<intel_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Reaction</td><td><<react_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Spirit</td><td><<sprt_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Charisma</td><td><<chrsm_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Perception</td><td><<prcptn_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Magic</td><td><<magik_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Inhibition (0=uninhibited)</td><td><<inhib_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Willpower max</td><td><<willpowermax>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Skills (visible level)</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>People Skills</td><td><<humint_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Persuasion</td><td><<persuas_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Observation</td><td><<observ_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Jabs</td><td><<jab_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Power Strikes</td><td><<punch_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Kicks</td><td><<kick_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Defence</td><td><<def_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Running</td><td><<run_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Volleyball</td><td><<vball_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Football</td><td><<ftbll_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Modern Dancing</td><td><<danc_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Singing</td><td><<vokal_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Computer Skill</td><td><<compskl_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Tailoring</td><td><<sewng_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Medicine</td><td><<medcn_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Makeup</td><td><<makupskl_lvl>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Max All Skills & Attributes':
+		gs 'mod_GLQS_main', 'stats'
+		gt 'mod_GLQS_main', 'stats_menu'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+!! RECURRENT CHEATS SUBMENU + ON/OFF HANDLERS
+if $ARGS[0] = 'recurrent':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Recurrent Cheats</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Willpower cost always zero</td><td><<iif(cheatVars[''willpower''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Infinite willpower</td><td><<iif(cheatVars[''inf_willpower''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Always combed</td><td><<iif(cheatVars[''always_brushed''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Cosmetics never smeared</td><td><<iif(cheatVars[''makeup_smear''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never sweat</td><td><<iif(cheatVars[''no_sweat''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never eat</td><td><<iif(cheatVars[''hunger''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never drink</td><td><<iif(cheatVars[''thirst''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never sleep</td><td><<iif(cheatVars[''sleep''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never unhappy</td><td><<iif(cheatVars[''mood''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never shave legs</td><td><<iif(cheatVars[''no_leghair''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never lose or gain weight</td><td><<iif(cheatVars[''fat''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Bust and butt unaffected by weight</td><td><<iif(cheatVars[''body_staticAssets''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Allow any clothing for school</td><td><<iif(cheatVars[''school_clothing''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Never get addicted</td><td><<iif(cheatVars[''drugs_immune''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Enable sleeping with vibrator inserted</td><td><<iif(cheatVars[''sleep_vib''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Clothes never dirty</td><td><<iif(cheatVars[''clothes_dirt''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Set arousal to always be at 50 or more</td><td><<iif(cheatVars[''always_horny''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Succubus clothing invulnerability</td><td><<iif(cheatVars[''suc_bimbo''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Clothing archetypes (normal game behavior)</td><td><<iif(cheatVars[''bimbo''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Periods and pregnancies</td><td><<iif(cheatVars[''no_periods''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Impregnation</td><td><<iif(cheatVars[''no_pregnancy''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Lactation</td><td><<iif(cheatVars[''no_lactation''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Cum leaking</td><td><<iif(cheatVars[''no_cum_leak''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>STDs</td><td><<iif(cheatVars[''std''], ''Disabled'', ''Enabled'')>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Enable All':
+		gs 'mod_GLQS_main', 'recurrent_on'
+		gt 'mod_GLQS_main', 'recurrent'
+	end
+
+	act 'Disable All':
+		gs 'mod_GLQS_main', 'recurrent_off'
+		gt 'mod_GLQS_main', 'recurrent'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'recurrent_on':
+	cheatVars['willpower'] = 1
+	cheatVars['inf_willpower'] = 1
+	cheatVars['always_brushed'] = 1
+	cheatVars['makeup_smear'] = 1
+	cheatVars['no_sweat'] = 1
+	cheatVars['hunger'] = 1
+	cheatVars['thirst'] = 1
+	cheatVars['sleep'] = 1
+	cheatVars['mood'] = 1
+	cheatVars['no_leghair'] = 1
+	cheatVars['fat'] = 1
+	cheatVars['body_staticAssets'] = 1
+	cheatVars['school_clothing'] = 1
+	cheatVars['drugs_immune'] = 1
+	cheatVars['sleep_vib'] = 1
+	cheatVars['clothes_dirt'] = 1
+	cheatVars['always_horny'] = 1
+	cheatVars['suc_bimbo'] = 1
+	cheatVars['bimbo'] = 0
+	cheatVars['no_periods'] = 0
+	cheatVars['no_pregnancy'] = 0
+	cheatVars['no_lactation'] = 0
+	cheatVars['no_cum_leak'] = 0
+	cheatVars['std'] = 0
+end
+
+
+if $ARGS[0] = 'recurrent_off':
+	cheatVars['willpower'] = 0
+	cheatVars['inf_willpower'] = 0
+	cheatVars['always_brushed'] = 0
+	cheatVars['makeup_smear'] = 0
+	cheatVars['no_sweat'] = 0
+	cheatVars['hunger'] = 0
+	cheatVars['thirst'] = 0
+	cheatVars['sleep'] = 0
+	cheatVars['mood'] = 0
+	cheatVars['no_leghair'] = 0
+	cheatVars['fat'] = 0
+	cheatVars['body_staticAssets'] = 0
+	cheatVars['school_clothing'] = 0
+	cheatVars['drugs_immune'] = 0
+	cheatVars['sleep_vib'] = 0
+	cheatVars['clothes_dirt'] = 0
+	cheatVars['always_horny'] = 0
+	cheatVars['suc_bimbo'] = 0
+	cheatVars['bimbo'] = 0
+	cheatVars['no_periods'] = 0
+	cheatVars['no_pregnancy'] = 0
+	cheatVars['no_lactation'] = 0
+	cheatVars['no_cum_leak'] = 0
+	cheatVars['std'] = 0
+end
+
+!! SCHOOL GRADES SUBMENU
+if $ARGS[0] = 'grades':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">School Grades</font></b></center>'
+	'<br>Only applies on school start. Grades reset weekly based on class attendance.'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Math</td><td><<class[''school_math_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Russian</td><td><<class[''school_rus_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Literature</td><td><<class[''school_lit_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Art</td><td><<class[''school_art_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Biology</td><td><<class[''school_bio_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>English</td><td><<class[''school_eng_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Geography</td><td><<class[''school_geo_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Science</td><td><<class[''school_sci_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>History</td><td><<class[''school_his_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Shop</td><td><<class[''school_shop_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Computer</td><td><<class[''school_comp_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Music</td><td><<class[''school_mus_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>P.E.</td><td><<class[''school_pe_grade'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Absences</td><td><<gschoolVars[''absence_count'']>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Set All Grades to 100':
+		gs 'grades', 'grade_award', 'school', 'math', 100
+		gs 'grades', 'grade_award', 'school', 'rus', 100
+		gs 'grades', 'grade_award', 'school', 'lit', 100
+		gs 'grades', 'grade_award', 'school', 'art', 100
+		gs 'grades', 'grade_award', 'school', 'bio', 100
+		gs 'grades', 'grade_award', 'school', 'eng', 100
+		gs 'grades', 'grade_award', 'school', 'geo', 100
+		gs 'grades', 'grade_award', 'school', 'sci', 100
+		gs 'grades', 'grade_award', 'school', 'his', 100
+		gs 'grades', 'grade_award', 'school', 'shop', 100
+		gs 'grades', 'grade_award', 'school', 'comp', 100
+		gs 'grades', 'grade_award', 'school', 'mus', 100
+		gs 'grades', 'grade_award', 'school', 'pe', 100
+		gschoolVars['absence_count'] = 0
+		gt 'mod_GLQS_main', 'grades'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+!! MONEY SUBMENU
+if $ARGS[0] = 'money_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Money</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Cash on hand</td><td><<money>> RUB</td></tr>'
+	$glqs_tbl += '<tr><td>Bank account</td><td><<iif(bankAccount = 1, ''Open'', ''Not opened'')>></td></tr>'
+	if bankAccount = 1:
+		$glqs_tbl += '<tr><td>Bank balance</td><td><<karta - bankDebtLimit>> RUB</td></tr>'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	if bankAccount = 0:
+		act 'Open Bank Account (free)':
+			bankAccount = 1
+			bankShortCutMoney = 1000
+			bankDebtLimit = 0
+			gt 'mod_GLQS_main', 'money_menu'
+		end
+	end
+
+	act 'Give 1,000,000 Cash':
+		money += 1000000
+		gt 'mod_GLQS_main', 'money_menu'
+	end
+
+	if bankAccount = 1:
+		act 'Give 1,000,000 to Bank':
+			karta += 1000000
+			gt 'mod_GLQS_main', 'money_menu'
+		end
+
+		act 'Give 1,000,000 to Both':
+			money += 1000000
+			karta += 1000000
+			gt 'mod_GLQS_main', 'money_menu'
+		end
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+!! RELATIONSHIPS SUBMENU + MAX_CATEGORY DISPATCHER
+if $ARGS[0] = 'rel_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Relationships</font></b></center>'
+	'Values 0-100. Only affects characters you have met. Each category has its own [Max] link.'
+	*nl
+	'Filter: '
+	*p iif(glqs_rel_filter = 0, '<b>All</b>', '<a href="exec: glqs_rel_filter = 0 & gt ''mod_GLQS_main'', ''rel_menu''">All</a>')
+	*p ' | '
+	*p iif(glqs_rel_filter = 1, '<b>Male Only</b>', '<a href="exec: glqs_rel_filter = 1 & gt ''mod_GLQS_main'', ''rel_menu''">Male Only</a>')
+	*p ' | '
+	*pl iif(glqs_rel_filter = 2, '<b>Female Only</b>', '<a href="exec: glqs_rel_filter = 2 & gt ''mod_GLQS_main'', ''rel_menu''">Female Only</a>')
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=3>'
+	$glqs_tbl += '<tr><td colspan="2"><b>Family</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''family'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Dad (M)</td><td><<npc_rel[''A28'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Mother (F)</td><td><<npc_rel[''A29'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Sister (F)</td><td><<npc_rel[''A33'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Kolka (M)</td><td><<npc_rel[''A34'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Popular Kids</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''popular'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Dimka (M)</td><td><<npc_rel[''A1'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Igor (M)</td><td><<npc_rel[''A4'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Katja (F)</td><td><<npc_rel[''A14'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Vicky (F)</td><td><<npc_rel[''A15'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Inna (F)</td><td><<npc_rel[''A17'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Bella (F)</td><td><<npc_rel[''A22'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Sonia (F)</td><td><<npc_rel[''A25'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Stasya (F)</td><td><<npc_rel[''A139'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lizaveta (F)</td><td><<npc_rel[''A140'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Marcus (M)</td><td><<npc_rel[''A146'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Andrey (M)</td><td><<npc_rel[''A147'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Mefodiy (M)</td><td><<npc_rel[''A148'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Athletes</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''athletes'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Ivan (M)</td><td><<npc_rel[''A3'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Fedor (M)</td><td><<npc_rel[''A5'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Svyatoslav (M)</td><td><<npc_rel[''A8'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lariska (F)</td><td><<npc_rel[''A13'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Christina (F)</td><td><<npc_rel[''A18'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lina (F)</td><td><<npc_rel[''A19'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Albina (F)</td><td><<npc_rel[''A23'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Ronnie (F)</td><td><<npc_rel[''A141'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Lazar (M)</td><td><<npc_rel[''A149'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Erast (M)</td><td><<npc_rel[''A150'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Vanya (M)</td><td><<npc_rel[''A165'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Nerds</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''nerds'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Artem (M)</td><td><<npc_rel[''A2'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Petka (M)</td><td><<npc_rel[''A6'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Julia (F)</td><td><<npc_rel[''A12'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Natasha (F)</td><td><<npc_rel[''A16'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Evgeny (M)</td><td><<npc_rel[''A151'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Feofan (M)</td><td><<npc_rel[''A152'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Gerasim (M)</td><td><<npc_rel[''A153'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Nat (F)</td><td><<npc_rel[''A240'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Gopniks</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''gopniks'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Vitek (M)</td><td><<npc_rel[''A9'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Dan (M)</td><td><<npc_rel[''A10'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Shulga (M)</td><td><<npc_rel[''A11'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lena (F)</td><td><<npc_rel[''A20'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Lera (F)</td><td><<npc_rel[''A21'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Pauline (F)</td><td><<npc_rel[''A24'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Alyona (F)</td><td><<npc_rel[''A143'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Nush (F)</td><td><<npc_rel[''A144'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Katyusha (F)</td><td><<npc_rel[''A145'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Radomir (M)</td><td><<npc_rel[''A154'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Lavrenti (M)</td><td><<npc_rel[''A155'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Arkadi (M)</td><td><<npc_rel[''A156'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Roman (M)</td><td><<npc_rel[''A157'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Valentin (M)</td><td><<npc_rel[''A158'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Niko (M)</td><td><<npc_rel[''A189'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Outcasts</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''outcasts'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Lesco (M)</td><td><<npc_rel[''A7'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Petia (M)</td><td><<npc_rel[''A159'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Teachers</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''teachers'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Anatoly E. (M)</td><td><<npc_rel[''A26'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Coach (M)</td><td><<npc_rel[''A69'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Makar (M)</td><td><<npc_rel[''A128'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Serafim (M)</td><td><<npc_rel[''A129'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Ilya (M)</td><td><<npc_rel[''A130'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Viktor (M)</td><td><<npc_rel[''A131'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Ruslan (M)</td><td><<npc_rel[''A132'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Rolan (M)</td><td><<npc_rel[''A133'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Aleksandrina (F)</td><td><<npc_rel[''A134'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Yeva (F)</td><td><<npc_rel[''A135'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Olga (F)</td><td><<npc_rel[''A136'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Raven (F)</td><td><<npc_rel[''A137'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Arina (F)</td><td><<npc_rel[''A138'']>></td></tr>'
+	end
+	$glqs_tbl += '<tr><td colspan="2"><b>Others</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''others'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Mira (F)</td><td><<npc_rel[''A60'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Kat (F)</td><td><<npc_rel[''A219'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Vika (F)</td><td><<npc_rel[''A220'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Marisha (F)</td><td><<npc_rel[''A93'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Nika (F)</td><td><<npc_rel[''A43'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Fabiyan (M)</td><td><<npc_rel[''A41'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Ashot (M)</td><td><<npc_rel[''A42'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+		$glqs_tbl += '<tr><td>Eugene (F)</td><td><<npc_rel[''A89'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Pavlin (M)</td><td><<npc_rel[''A217'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Martin (M)</td><td><<npc_rel[''A216'']>></td></tr>'
+	end
+	if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+		$glqs_tbl += '<tr><td>Sergey (M)</td><td><<npc_rel[''A112'']>></td></tr>'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Max All (filtered)':
+		gs 'mod_GLQS_main', 'max_category', 'family'
+		gs 'mod_GLQS_main', 'max_category', 'popular'
+		gs 'mod_GLQS_main', 'max_category', 'athletes'
+		gs 'mod_GLQS_main', 'max_category', 'nerds'
+		gs 'mod_GLQS_main', 'max_category', 'gopniks'
+		gs 'mod_GLQS_main', 'max_category', 'outcasts'
+		gs 'mod_GLQS_main', 'max_category', 'teachers'
+		gs 'mod_GLQS_main', 'max_category', 'others'
+		gt 'mod_GLQS_main', 'rel_menu'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+if $ARGS[0] = 'max_category':
+	if $ARGS[1] = 'family':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A28'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A29'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A33'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A34'] = 100
+		end
+	end
+	if $ARGS[1] = 'popular':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A1'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A4'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A14'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A15'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A17'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A22'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A25'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A139'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A140'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A146'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A147'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A148'] = 100
+		end
+	end
+	if $ARGS[1] = 'athletes':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A3'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A5'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A8'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A13'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A18'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A19'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A23'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A141'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A149'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A150'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A165'] = 100
+		end
+	end
+	if $ARGS[1] = 'nerds':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A2'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A6'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A12'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A16'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A151'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A152'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A153'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A240'] = 100
+		end
+	end
+	if $ARGS[1] = 'gopniks':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A9'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A10'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A11'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A20'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A21'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A24'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A143'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A144'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A145'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A154'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A155'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A156'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A157'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A158'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A189'] = 100
+		end
+	end
+	if $ARGS[1] = 'outcasts':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A7'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A159'] = 100
+		end
+	end
+	if $ARGS[1] = 'teachers':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A26'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A69'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A128'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A129'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A130'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A131'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A132'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A133'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A134'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A135'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A136'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A137'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A138'] = 100
+		end
+	end
+	if $ARGS[1] = 'others':
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A60'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A219'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A220'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A93'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A43'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A41'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A42'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 2:
+			npc_rel['A89'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A217'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A216'] = 100
+		end
+		if glqs_rel_filter = 0 or glqs_rel_filter = 1:
+			npc_rel['A112'] = 100
+		end
+	end
+end
+
+!! BODY MODS + TATTOO/PIERCING PICKERS
+if $ARGS[0] = 'bodymod_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Body Mods</font></b></center>'
+	'<br>Electrolysis is free through this menu (normally 80,000 RUB at the clinic).'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Leg hair</td><td><<iif(pcs_leghair = 0, ''Removed'', ''Present'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Pubic hair</td><td><<iif(pcs_pubes = 0, ''Removed'', ''Present'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Tattoos</td><td><<pcs_tattoos[''total'']>> / 17 zones</td></tr>'
+	$glqs_tbl += '<tr><td>Piercings</td><td><<pcs_piercings[''total'']>> / 8 slots</td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Free Electrolysis (permanent hair removal)':
+		pcs_leghair = 0
+		pcs_pubes = 0
+		lashair = 1
+		gs 'stat'
+		gt 'mod_GLQS_main', 'bodymod_menu'
+	end
+
+	act 'Choose a Tattoo': gt 'mod_GLQS_main', 'tattoo_zone_menu'
+
+	act 'Choose a Piercing': gt 'mod_GLQS_main', 'piercing_slot_menu'
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+
+!! ===== TATTOO PICKER =====
+
+if $ARGS[0] = 'tattoo_zone_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Choose a Tattoo Zone</font></b></center>'
+	'<br>Pick a body zone, then pick a design. Current tattoo shown in brackets.'
+	*nl
+
+	act 'Ankle <<iif(pcs_tattoos[''ankle''] > 0, ''['' + pcs_tattoos[''ankle''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'ankle'
+	act 'Arm <<iif(pcs_tattoos[''arm''] > 0, ''['' + pcs_tattoos[''arm''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'arm'
+	act 'Ass <<iif(pcs_tattoos[''ass''] > 0, ''['' + pcs_tattoos[''ass''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'ass'
+	act 'Back <<iif(pcs_tattoos[''back''] > 0, ''['' + pcs_tattoos[''back''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'back'
+	act 'Belly <<iif(pcs_tattoos[''belly''] > 0, ''['' + pcs_tattoos[''belly''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'belly'
+	act 'Breast <<iif(pcs_tattoos[''breast''] > 0, ''['' + pcs_tattoos[''breast''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'breast'
+	act 'Chest <<iif(pcs_tattoos[''chest''] > 0, ''['' + pcs_tattoos[''chest''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'chest'
+	act 'Face <<iif(pcs_tattoos[''face''] > 0, ''['' + pcs_tattoos[''face''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'face'
+	act 'Hand <<iif(pcs_tattoos[''hand''] > 0, ''['' + pcs_tattoos[''hand''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'hand'
+	act 'Leg <<iif(pcs_tattoos[''leg''] > 0, ''['' + pcs_tattoos[''leg''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'leg'
+	act 'Lip <<iif(pcs_tattoos[''lip''] > 0, ''['' + pcs_tattoos[''lip''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'lip'
+	act 'Neck <<iif(pcs_tattoos[''neck''] > 0, ''['' + pcs_tattoos[''neck''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'neck'
+	act 'Pussy <<iif(pcs_tattoos[''pussy''] > 0, ''['' + pcs_tattoos[''pussy''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'pussy'
+	act 'Shoulder <<iif(pcs_tattoos[''shoulder''] > 0, ''['' + pcs_tattoos[''shoulder''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'shoulder'
+	act 'Side <<iif(pcs_tattoos[''side''] > 0, ''['' + pcs_tattoos[''side''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'side'
+	act 'Tramp Stamp <<iif(pcs_tattoos[''tramp''] > 0, ''['' + pcs_tattoos[''tramp''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'tramp'
+	act 'Underboob <<iif(pcs_tattoos[''under''] > 0, ''['' + pcs_tattoos[''under''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'under'
+	act 'Wrist <<iif(pcs_tattoos[''wrist''] > 0, ''['' + pcs_tattoos[''wrist''] + '']'', '''')>>': gt 'mod_GLQS_main', 'tattoo_design_menu', 'wrist'
+
+	act 'Return': gt 'mod_GLQS_main', 'bodymod_menu'
+end
+
+
+if $ARGS[0] = 'tattoo_design_menu':
+	!! $ARGS[1] = zone name
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	$glqs_zone = $ARGS[1]
+	total = func('tattoo_management', 'get_total', $glqs_zone)
+	'<center><b><font color="maroon">Tattoo Designs: <<$glqs_zone>></font></b></center>'
+	'<br><<total>> designs available. Click an image to apply it.'
+	*nl
+	$glqs_grid = '<div style="display:flex; flex-wrap:wrap; gap:8px;">'
+	glqs_i = 1
+	:glqs_tattoo_img_loop
+	if glqs_i <= total:
+		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''tattoo_management'', ''add'', ''<<$glqs_zone>>'', <<glqs_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''tattoo_design_menu'', ''<<$glqs_zone>>''"><img height="220" src="<<func(''tattoo_management'', $glqs_zone + ''_image'', glqs_i)>>"></a></div>'
+		glqs_i += 1
+		jump 'glqs_tattoo_img_loop'
+	end
+	killvar 'glqs_i'
+	$glqs_grid += '</div>'
+	$glqs_grid
+	*nl
+
+	if pcs_tattoos[$glqs_zone] > 0:
+		act 'Remove Tattoo From This Zone':
+			gs 'tattoo_management', 'remove', $glqs_zone
+			gs 'stat'
+			gt 'mod_GLQS_main', 'tattoo_design_menu', $glqs_zone
+		end
+	end
+
+	killvar '$glqs_zone'
+	act 'Back to Zones': gt 'mod_GLQS_main', 'tattoo_zone_menu'
+end
+
+
+!! ===== PIERCING PICKER =====
+
+if $ARGS[0] = 'piercing_slot_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Choose a Piercing Slot</font></b></center>'
+	'<br>Pick a slot, then pick jewelry. Currently worn design shown in brackets.'
+	*nl
+
+	act 'Ears <<iif(pcs_piercings[''ears''] > 0, ''['' + pcs_piercings[''ears''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'ears'
+	act 'Nose <<iif(pcs_piercings[''nose''] > 0, ''['' + pcs_piercings[''nose''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'nose'
+	act 'Eyebrow <<iif(pcs_piercings[''brow''] > 0, ''['' + pcs_piercings[''brow''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'brow'
+	act 'Lip <<iif(pcs_piercings[''lip''] > 0, ''['' + pcs_piercings[''lip''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'lip'
+	act 'Tongue <<iif(pcs_piercings[''tongue''] > 0, ''['' + pcs_piercings[''tongue''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'tongue'
+	act 'Navel <<iif(pcs_piercings[''navel''] > 0, ''['' + pcs_piercings[''navel''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'navel'
+	act 'Nipples <<iif(pcs_piercings[''nipples''] > 0, ''['' + pcs_piercings[''nipples''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'nipples'
+	act 'Pussy <<iif(pcs_piercings[''pussy''] > 0, ''['' + pcs_piercings[''pussy''] + '']'', '''')>>': gt 'mod_GLQS_main', 'piercing_design_menu', 'pussy'
+
+	act 'Return': gt 'mod_GLQS_main', 'bodymod_menu'
+end
+
+
+if $ARGS[0] = 'piercing_design_menu':
+	!! $ARGS[1] = slot name
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	$glqs_slot = $ARGS[1]
+	total = func('piercing_management', 'get_total', $glqs_slot)
+	'<center><b><font color="maroon">Piercing Jewelry: <<$glqs_slot>></font></b></center>'
+	'<br><<total>> designs available. Click an image to apply it.'
+	*nl
+	$glqs_grid = '<div style="display:flex; flex-wrap:wrap; gap:8px;">'
+	glqs_i = 1
+	:glqs_pierce_img_loop
+	if glqs_i <= total:
+		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''piercing_management'', ''add'', ''<<$glqs_slot>>'', <<glqs_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''piercing_design_menu'', ''<<$glqs_slot>>''"><img height="220" src="<<func(''piercing_management'', $glqs_slot + ''_image'', glqs_i)>>"></a></div>'
+		glqs_i += 1
+		jump 'glqs_pierce_img_loop'
+	end
+	killvar 'glqs_i'
+	$glqs_grid += '</div>'
+	$glqs_grid
+	*nl
+
+	if pcs_piercings[$glqs_slot] > 0:
+		act 'Remove Piercing From This Slot':
+			gs 'piercing_management', 'remove', $glqs_slot
+			gs 'stat'
+			gt 'mod_GLQS_main', 'piercing_design_menu', $glqs_slot
+		end
+	end
+
+	killvar '$glqs_slot'
+	act 'Back to Slots': gt 'mod_GLQS_main', 'piercing_slot_menu'
+end
+
+!! HEALTH & ENERGY SUBMENU
+if $ARGS[0] = 'health_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Health & Energy</font></b></center>'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Health</td><td><<pcs_health>> / <<healthmax>></td></tr>'
+	$glqs_tbl += '<tr><td>Stamina</td><td><<pcs_stam>> / <<stammax>></td></tr>'
+	$glqs_tbl += '<tr><td>Willpower</td><td><<pcs_willpwr>> / <<willpowermax>></td></tr>'
+	$glqs_tbl += '<tr><td>Mana</td><td><<pcs_mana>></td></tr>'
+	$glqs_tbl += '<tr><td>Sleep</td><td><<pcs_sleep>></td></tr>'
+	$glqs_tbl += '<tr><td>Mood</td><td><<pcs_mood>></td></tr>'
+	$glqs_tbl += '<tr><td>Hunger</td><td><<pcs_energy>></td></tr>'
+	$glqs_tbl += '<tr><td>Hydration</td><td><<pcs_hydra>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Full Restore Everything':
+		pcs_health = healthmax
+		pcs_stam = stammax
+		pcs_willpwr = willpowermax
+		pcs_mana = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+		pcs_sleep = 100
+		pcs_mood = 100
+		pcs_energy = 200
+		pcs_hydra = 200
+		vgape = 0
+		agape = 0
+		nippain = 0
+		gs 'stat'
+		gt 'mod_GLQS_main', 'health_menu'
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'start'
+end
+
+!! ACTION HANDLERS: consumables / stats / clothing
+if $ARGS[0] = 'consumables':
+	glqs_amt = iif(ARGS[1] > 0, ARGS[1], 10000)
+	!! --- Contraceptives ---
+	mc_inventory['equipped_condoms'] = glqs_amt
+	mc_inventory['normal_condoms'] = glqs_amt
+	mc_inventory['contraceptive_pill'] = glqs_amt
+	mc_inventory['pregnancy_test'] = glqs_amt
+	mc_inventory['morning_after_pill'] = glqs_amt
+	!! --- Medical / Hygiene ---
+	mc_inventory['painkillers'] = glqs_amt
+	mc_inventory['vitamins'] = glqs_amt
+	mc_inventory['antibiotics'] = glqs_amt
+	mc_inventory['tampons'] = glqs_amt
+	mc_inventory['sanitary_pads'] = glqs_amt
+	mc_inventory['shampoo'] = glqs_amt
+	mc_inventory['mouthwash'] = glqs_amt
+	mc_inventory['deodorant'] = glqs_amt
+	mc_inventory['razor'] = glqs_amt
+	mc_inventory['suncream'] = glqs_amt
+	mc_inventory['chafing_cream'] = glqs_amt
+	mc_inventory['weight_loss_pill'] = glqs_amt
+	mc_inventory['nipple_cream'] = glqs_amt
+	!! --- Beauty ---
+	mc_inventory['lipbalm'] = glqs_amt
+	mc_inventory['cosmetics'] = glqs_amt
+	mc_inventory['moisturiser'] = glqs_amt
+	mc_inventory['travel_makeup'] = glqs_amt
+	mc_inventory['makeup_wipes'] = glqs_amt
+	mc_inventory['scrunchies'] = glqs_amt
+	mc_inventory['kirbygrips'] = glqs_amt
+	mc_inventory['eyelash_fake'] = glqs_amt
+	mc_inventory['eyelash_mink'] = glqs_amt
+	!! --- Sexual ---
+	mc_inventory['lubricant'] = glqs_amt
+	mc_inventory['breastcream'] = glqs_amt
+	mc_inventory['aphrodisiac'] = glqs_amt
+	!! --- Drugs ---
+	mc_inventory['mentats'] = glqs_amt
+	mc_inventory['steroids'] = glqs_amt
+	!! --- Food ---
+	mc_inventory['food_basic'] = glqs_amt
+	mc_inventory['food_diet'] = glqs_amt
+	mc_inventory['food_biscuits'] = glqs_amt
+	!! --- Misc consumables ---
+	mc_inventory['cigarettes'] = glqs_amt
+	mc_inventory['sewing_fabric'] = glqs_amt
+	killvar 'glqs_amt'
+	!! --- Unique items (max 1) ---
+	mc_inventory['comb'] = 1
+	mc_inventory['travel_mirror'] = 1
+	mc_inventory['umbrella'] = 1
+	mc_inventory['sewing_kit'] = 1
+	mc_inventory['enema_kit'] = 1
+	mc_inventory['breast_pump'] = 1
+	mc_inventory['ice_skates'] = 1
+	mc_inventory['ski'] = 1
+	mc_inventory['skipping_rope'] = 1
+	mc_inventory['hula_hoop'] = 1
+	mc_inventory['book_yoga'] = 1
+	mc_inventory['refill_bottle'] = 1
+	!! --- Sex toys (unique) ---
+	mc_inventory['vibe'] = 1
+	mc_inventory['buttplug'] = 1
+	mc_inventory['strapon'] = 1
+	mc_inventory['dildo_suction'] = 1
+	mc_inventory['dildo_small'] = 1
+	mc_inventory['dildo_normal'] = 1
+	mc_inventory['dildo_big'] = 1
+	mc_inventory['dildo_large'] = 1
+	mc_inventory['dildo_huge'] = 1
+	mc_inventory['dildo_enormous'] = 1
+	mc_inventory['dildo_gigantic'] = 1
+	!! --- Magazines (unique) ---
+	mc_inventory['mag_fashion'] = 1
+	mc_inventory['mag_computer'] = 1
+	mc_inventory['mag_biography'] = 1
+	mc_inventory['mag_cooking'] = 1
+	mc_inventory['mag_knitting'] = 1
+	mc_inventory['mag_fitness'] = 1
+	mc_inventory['mag_porn'] = 1
+end
+
+!! ===== STATS =====
+if $ARGS[0] = 'stats':
+
+
+
+
+
+	gs 'shortgs', 'setStat', 'stren', 100
+	gs 'shortgs', 'setStat', 'agil', 100
+	gs 'shortgs', 'setStat', 'vital', 100
+	gs 'shortgs', 'setStat', 'intel', 100
+	gs 'shortgs', 'setStat', 'react', 100
+	gs 'shortgs', 'setStat', 'sprt', 100
+	gs 'shortgs', 'setStat', 'chrsm', 100
+	gs 'shortgs', 'setStat', 'prcptn', 100
+	gs 'shortgs', 'setStat', 'magik', 100
+	gs 'shortgs', 'setStat', 'inhib', 100
+	willpowermax = 150
+
+
+
+	!! --- Mental Skills (direct setStat - no cheat menu redirect) ---
+	gs 'shortgs', 'setStat', 'splcstng', 100
+	gs 'shortgs', 'setStat', 'humint', 100
+	gs 'shortgs', 'setStat', 'persuas', 100
+	gs 'shortgs', 'setStat', 'observ', 100
+	!! --- Combat Skills ---
+	gs 'shortgs', 'setStat', 'jab', 100
+	gs 'shortgs', 'setStat', 'punch', 100
+	gs 'shortgs', 'setStat', 'kick', 100
+	gs 'shortgs', 'setStat', 'def', 100
+	gs 'shortgs', 'setStat', 'shoot', 100
+	gs 'shortgs', 'setStat', 'bushcraft', 100
+	!! --- Sport Skills ---
+	gs 'shortgs', 'setStat', 'run', 100
+	gs 'shortgs', 'setStat', 'vball', 100
+	gs 'shortgs', 'setStat', 'ftbll', 100
+	gs 'shortgs', 'setStat', 'bkbll', 100
+	gs 'shortgs', 'setStat', 'wrstlng', 100
+	gs 'shortgs', 'setStat', 'icesktng', 100
+	gs 'shortgs', 'setStat', 'gaming', 100
+	gs 'shortgs', 'setStat', 'chess', 100
+	gs 'shortgs', 'setStat', 'pool', 100
+	!! --- Beauty Skills ---
+	gs 'shortgs', 'setStat', 'makupskl', 100
+	gs 'shortgs', 'setStat', 'danc', 100
+	gs 'shortgs', 'setStat', 'dancero', 100
+	gs 'shortgs', 'setStat', 'dancpol', 100
+	gs 'shortgs', 'setStat', 'cheer', 100
+	gs 'shortgs', 'setStat', 'heels', 100
+	!! --- Artistic Skills ---
+	gs 'shortgs', 'setStat', 'vokal', 100
+	gs 'shortgs', 'setStat', 'instrmusic', 100
+	gs 'shortgs', 'setStat', 'photoskl', 100
+	gs 'shortgs', 'setStat', 'artskls', 100
+	gs 'shortgs', 'setStat', 'perform', 100
+	gs 'shortgs', 'setStat', 'musicprod', 100
+	!! --- Work Skills ---
+	gs 'shortgs', 'setStat', 'compskl', 100
+	gs 'shortgs', 'setStat', 'comphckng', 100
+	gs 'shortgs', 'setStat', 'hndiwrk', 100
+	gs 'shortgs', 'setStat', 'sewng', 100
+	gs 'shortgs', 'setStat', 'servng', 100
+	gs 'shortgs', 'setStat', 'medcn', 100
+	gs 'shortgs', 'setStat', 'cleaning', 100
+	gs 'shortgs', 'setStat', 'mdlng', 100
+
+
+	pcs_vball_block = 100
+	pcs_vball_rec = 100
+	pcs_vball_serve = 100
+	pcs_vball_set = 100
+	pcs_vball_spike = 100
+
+
+
+end
+
+!! ===== CLOTHING =====
+if $ARGS[0] = 'clothing':
+	gs 'mod_GLQS_main', 'fill_clo', 'allure_swimsuit'
+	gs 'mod_GLQS_main', 'fill_clo', 'allure_bikinis'
+	gs 'mod_GLQS_main', 'fill_clo', 'bomba_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'bomba_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'cats_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'cats_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'coco_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'coco_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'danilovich_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'danilovich_swimsuit'
+	gs 'mod_GLQS_main', 'fill_clo', 'dolls_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'dolls_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'fancy_burlesque'
+	gs 'mod_GLQS_main', 'fill_clo', 'fashionista_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'fashionista_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'flamingos_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'flamingos_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'salacious_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'salacious_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_office'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_maid'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_server'
+	gs 'mod_GLQS_main', 'fill_clo', 'gm_school'
+	gs 'mod_GLQS_main', 'fill_clo', 'market_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'materinstvo_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'moncheri_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'moncheri_gown'
+	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_cosplay'
+	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_swimsuit'
+	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_bikinis'
+	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_swimsuit'
+	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_bikinis'
+	gs 'mod_GLQS_main', 'fill_clo', 'eroto_outfits'
+	gs 'mod_GLQS_main', 'fill_clo', 'eroto_dress'
+	gs 'mod_GLQS_main', 'fill_clo', 'eroto_strip'
+	gs 'mod_GLQS_main', 'fill_clo', 'misc'
+	gs 'mod_GLQS_main', 'fill_shoe', 'bomba'
+	gs 'mod_GLQS_main', 'fill_shoe', 'cats'
+	gs 'mod_GLQS_main', 'fill_shoe', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_shoe', 'dolls'
+	gs 'mod_GLQS_main', 'fill_shoe', 'eroto'
+	gs 'mod_GLQS_main', 'fill_shoe', 'gm'
+	gs 'mod_GLQS_main', 'fill_shoe', 'moncheri'
+	gs 'mod_GLQS_main', 'fill_shoe', 'scandalicious'
+	gs 'mod_GLQS_main', 'fill_bra', 'cats'
+	gs 'mod_GLQS_main', 'fill_bra', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_bra', 'eroto'
+	gs 'mod_GLQS_main', 'fill_bra', 'fashionista'
+	gs 'mod_GLQS_main', 'fill_bra', 'gm'
+	gs 'mod_GLQS_main', 'fill_bra', 'lusso'
+	gs 'mod_GLQS_main', 'fill_bra', 'salacious'
+	gs 'mod_GLQS_main', 'fill_panty', 'cats'
+	gs 'mod_GLQS_main', 'fill_panty', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_panty', 'eroto'
+	gs 'mod_GLQS_main', 'fill_panty', 'fashionista'
+	gs 'mod_GLQS_main', 'fill_panty', 'gm'
+	gs 'mod_GLQS_main', 'fill_panty', 'lusso'
+	gs 'mod_GLQS_main', 'fill_panty', 'salacious'
+	gs 'mod_GLQS_main', 'fill_body', 'lusso'
+	gs 'mod_GLQS_main', 'fill_body', 'moncheri'
+	gs 'mod_GLQS_main', 'fill_body', 'salacious'
+	gs 'mod_GLQS_main', 'fill_body', 'scandalicious'
+	gs 'mod_GLQS_main', 'fill_coat', 'bomba'
+	gs 'mod_GLQS_main', 'fill_coat', 'cats'
+	gs 'mod_GLQS_main', 'fill_coat', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_coat', 'dolls'
+	gs 'mod_GLQS_main', 'fill_coat', 'gm'
+	gs 'mod_GLQS_main', 'fill_coat', 'moncheri'
+	gs 'mod_GLQS_main', 'fill_purse', 'bomba'
+	gs 'mod_GLQS_main', 'fill_purse', 'cats'
+	gs 'mod_GLQS_main', 'fill_purse', 'coco'
+	gs 'mod_GLQS_main', 'fill_purse', 'danilovich'
+	gs 'mod_GLQS_main', 'fill_purse', 'dolls'
+	gs 'mod_GLQS_main', 'fill_purse', 'fashionista'
+	gs 'mod_GLQS_main', 'fill_purse', 'flamingos'
+	gs 'mod_GLQS_main', 'fill_purse', 'gm'
+	gs 'mod_GLQS_main', 'fill_purse', 'moncheri'
+	gs 'mod_GLQS_main', 'fill_purse', 'nerdvana'
+end
+
+!! ===== FILL HELPERS =====
+!! Each helper sets the item owned flag AND repairs it to full durability by
+!! setting the companion _h[] array to max strength (matches what the games
+!! own cheat_repair functions do, so items never need tailor repair/resize.
+
+!! FILL HELPERS: per-category item granting loops
+if $ARGS[0] = 'fill_clo':
+	gs 'clothing', 'totals', $ARGS[1]
+	glqs_i = 1
+	:glqs_clo_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>[glqs_i] = 1')
+		gs 'clothing_attributes', $ARGS[1], glqs_i
+		dyneval('<<$ARGS[1]>>_h[glqs_i] = CloMaxStrength')
+		glqs_i += 1
+		jump 'glqs_clo_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_shoe':
+	gs 'shoes', 'totals', $ARGS[1] + '_shoe'
+	glqs_i = 1
+	:glqs_shoe_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_shoe[glqs_i] = 1')
+		gs 'shoe_attributes', $ARGS[1], glqs_i
+		dyneval('<<$ARGS[1]>>_shoe_h[glqs_i] = ShoMaxStrength')
+		glqs_i += 1
+		jump 'glqs_shoe_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_bra':
+	gs 'bras', 'totals', $ARGS[1] + '_bras'
+	glqs_i = 1
+	:glqs_bra_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_bras[glqs_i] = 1')
+		gs 'underwear_attributes', $ARGS[1] + '_bras', glqs_i
+		dyneval('<<$ARGS[1]>>_bras_h[glqs_i] = BraMaxStrength')
+		glqs_i += 1
+		jump 'glqs_bra_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_panty':
+	gs 'panties', 'totals', $ARGS[1] + '_panties'
+	glqs_i = 1
+	:glqs_panty_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_panties[glqs_i] = 1')
+		gs 'underwear_attributes', $ARGS[1] + '_panties', glqs_i
+		dyneval('<<$ARGS[1]>>_panties_h[glqs_i] = PanMaxStrength')
+		glqs_i += 1
+		jump 'glqs_panty_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_body':
+	gs 'underwear_bodysuits', 'totals', $ARGS[1] + '_bodysuits'
+	glqs_i = 1
+	:glqs_body_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_bodysuits[glqs_i] = 1')
+		gs 'underwear_attributes', $ARGS[1] + '_bodysuits', glqs_i
+		dyneval('<<$ARGS[1]>>_bodysuits_h[glqs_i] = BraMaxStrength')
+		glqs_i += 1
+		jump 'glqs_body_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_coat':
+	gs 'coats', 'totals', $ARGS[1] + '_coats'
+	glqs_i = 1
+	:glqs_coat_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_coats[glqs_i] = 1')
+		gs 'coat_attributes', $ARGS[1], glqs_i
+		dyneval('<<$ARGS[1]>>_coats_h[glqs_i] = CoatMaxStrength')
+		glqs_i += 1
+		jump 'glqs_coat_loop'
+	end
+	killvar 'glqs_i'
+end
+
+if $ARGS[0] = 'fill_purse':
+	gs 'purses', 'totals', $ARGS[1] + '_purses'
+	glqs_i = 1
+	:glqs_purse_loop
+	if glqs_i <= total:
+		dyneval('<<$ARGS[1]>>_purses[glqs_i] = 1')
+		glqs_i += 1
+		jump 'glqs_purse_loop'
+	end
+	killvar 'glqs_i'
+end
+
+--- mod_GLQS_main ---------------------------------

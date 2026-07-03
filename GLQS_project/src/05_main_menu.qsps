@@ -1,0 +1,40 @@
+!! MAIN MENU (start)
+if $ARGS[0] = 'start':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	killvar '$locclass'
+	gs 'core_library', 'setloc', 'mod_GLQS_main', 'start'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Quick Setup Mod</font></b></center>'
+	'<br>Instantly give your character everything she needs.'
+
+	act 'Clothing & Accessories': gt 'mod_GLQS_main', 'clothing_menu'
+
+	act 'Consumables': gt 'mod_GLQS_main', 'consumables_menu'
+
+	act 'Skills & Attributes': gt 'mod_GLQS_main', 'stats_menu'
+
+	act 'Recurrent Cheats': gt 'mod_GLQS_main', 'recurrent'
+
+	act 'School Grades': gt 'mod_GLQS_main', 'grades'
+
+	act 'Money': gt 'mod_GLQS_main', 'money_menu'
+
+	act 'Relationships': gt 'mod_GLQS_main', 'rel_menu'
+
+	act 'Health & Energy': gt 'mod_GLQS_main', 'health_menu'
+
+	act 'Body Mods': gt 'mod_GLQS_main', 'bodymod_menu'
+
+	act 'Return':
+		$menu_loc = $shopreturn
+		$menu_arg = $shoparg
+		killvar '$shopreturn'
+		killvar '$shoparg'
+		gt $menu_loc, $menu_arg
+	end
+end
+
+!! ===== CLOTHING MENU =====

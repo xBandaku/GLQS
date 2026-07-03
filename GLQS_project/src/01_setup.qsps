@@ -1,0 +1,12 @@
+# mod_GLQS_setup
+$mod_info[0] = 'GLQS'
+$mod_info[1] = '02100'
+$mod_info[2] = 'xPandaku'
+$mod_info[3] = 'A mod for Girl Life that grants all clothing, maxes consumables, skills, attributes and school grades. By xPandaku.'
+
+if $curloc = 'mod_GLQS_setup':
+	usehtml = 1
+	'<center><h1><font color=red>ACCESS DENIED</font></h1></center>'
+	'GLQS is a mod for <b>Girl Life - English Community Version</b> and cannot be played individually.'
+end
+--- mod_GLQS_setup ---------------------------------
