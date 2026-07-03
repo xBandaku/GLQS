@@ -1,6 +1,15 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.29.1 - Current</b>'
+'<b>Version 0.29.4 - Current</b>'
+'- Note: Fame By Region - Max All (this region) only sets that regions own fame directly, but the games own fame-spread system then bleeds some of that into the other regions too (working as designed - e.g. maxing Pavlovsk also pushes Old Town and Gadukino close to maxed, since fame spreads fast between those, while City only gets a small bump since it is slow to notice fame from Pavlovsk). This is base game behavior, not a mod bug.'
+*nl
+'<b>Version 0.29.3</b>'
+'- Fixed: Relationships menu threw a Bracket not found error on open. The v0.29.2 refactor built the NPC value cell as a template marker split across a string concatenation, which QSP does not allow. Now reads npc_rel directly as a value instead of through a template marker.'
+*nl
+'<b>Version 0.29.2</b>'
+'- Changed: Internal refactor, no player-visible change. Relationships (roster + category maxing) and the clothing store catalog (store_buy and the Give Everything handler) each used to hardcode the same NPC list or store/category list in two or three places; they now share one data table each, looped over at render/apply time, so the copies can no longer drift out of sync.'
+*nl
+'<b>Version 0.29.1</b>'
 '- Added: Store icon shown at the top of the store category list and the item picker screen.'
 *nl
 '<b>Version 0.29</b>'

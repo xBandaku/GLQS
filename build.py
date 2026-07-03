@@ -108,6 +108,38 @@ def lint_non_ascii(text):
     return problems
 
 
+def lint_unbalanced_template_markers(text):
+    """<< >> template markers must open and close inside the same single-quoted
+    string literal -- they cannot span a '+' concatenation. Both compile fine
+    with qsp-cli (which never executes the code) and only fail in-game with
+    a 'Bracket not found' error. This scans each single-quoted literal on a
+    line (respecting QSP's '' escape) and flags any where << and >> counts
+    don't match."""
+    problems = []
+    literal_re = re.compile(r"'(?:[^']|'')*'")
+    for i, line in enumerate(text.splitlines(), start=1):
+        for m in literal_re.finditer(line):
+            literal = m.group(0)
+            if literal.count("<<") != literal.count(">>"):
+                problems.append((i, line))
+                break
+    return problems
+
+
+def lint_empty_template_markers(text):
+    """'<< >>' (nothing but whitespace between the markers) is always invalid
+    QSP -- typically typed as literal text describing the << >> syntax
+    itself (e.g. in a changelog string) rather than intended as real
+    interpolation. Compiles fine with qsp-cli, fails in-game with a plain
+    'Syntax error'."""
+    problems = []
+    empty_re = re.compile(r"<<\s*>>")
+    for i, line in enumerate(text.splitlines(), start=1):
+        if empty_re.search(line):
+            problems.append((i, line))
+    return problems
+
+
 def lint_block_balance(text):
     """Rough check that every multi-line 'if ...:' and 'act 'x':' block has
     a matching 'end'. Not a full parser -- doesn't understand elseif chains
@@ -148,6 +180,26 @@ def run_lints(text):
         ok = False
         print("\n[LINT] Non-ASCII characters found (smart quotes, em-dashes, etc.):")
         for lineno, line in non_ascii_hits:
+            print(f"    line {lineno}: {line.strip()}")
+
+    template_hits = lint_unbalanced_template_markers(text)
+    if template_hits:
+        ok = False
+        print("\n[LINT] Unbalanced << >> template markers inside a string literal:")
+        print("       (<< and >> must open/close in the same literal -- they can't")
+        print("        span a '+' concatenation)")
+        for lineno, line in template_hits:
+            print(f"    line {lineno}: {line.strip()}")
+
+    empty_template_hits = lint_empty_template_markers(text)
+    if empty_template_hits:
+        ok = False
+        print("\n[LINT] Empty << >> template markers found:")
+        print("       (nothing between << and >> is always invalid QSP -- if you")
+        print("        meant to describe the << >> syntax as plain text, add a")
+        print("        space or word between them so QSP doesn't parse it as a")
+        print("        marker, e.g. '<< >>' -> '<<  >>' won't help; rephrase instead)")
+        for lineno, line in empty_template_hits:
             print(f"    line {lineno}: {line.strip()}")
 
     depth, stack = lint_block_balance(text)

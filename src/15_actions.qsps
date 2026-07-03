@@ -161,89 +161,33 @@ end
 
 !! ===== CLOTHING =====
 if $ARGS[0] = 'clothing':
-	gs 'mod_GLQS_main', 'fill_clo', 'allure_swimsuit'
-	gs 'mod_GLQS_main', 'fill_clo', 'allure_bikinis'
-	gs 'mod_GLQS_main', 'fill_clo', 'bomba_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'bomba_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'cats_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'cats_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'coco_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'coco_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'danilovich_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'danilovich_swimsuit'
-	gs 'mod_GLQS_main', 'fill_clo', 'dolls_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'dolls_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'fancy_burlesque'
-	gs 'mod_GLQS_main', 'fill_clo', 'fashionista_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'fashionista_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'flamingos_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'flamingos_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'salacious_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'salacious_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'gm_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'gm_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'gm_office'
-	gs 'mod_GLQS_main', 'fill_clo', 'gm_maid'
-	gs 'mod_GLQS_main', 'fill_clo', 'gm_server'
-	gs 'mod_GLQS_main', 'fill_clo', 'gm_school'
-	gs 'mod_GLQS_main', 'fill_clo', 'market_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'materinstvo_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'moncheri_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'moncheri_gown'
-	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_cosplay'
-	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_swimsuit'
-	gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_bikinis'
-	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_swimsuit'
-	gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_bikinis'
-	gs 'mod_GLQS_main', 'fill_clo', 'eroto_outfits'
-	gs 'mod_GLQS_main', 'fill_clo', 'eroto_dress'
-	gs 'mod_GLQS_main', 'fill_clo', 'eroto_strip'
-	gs 'mod_GLQS_main', 'fill_clo', 'misc'
-	gs 'mod_GLQS_main', 'fill_shoe', 'bomba'
-	gs 'mod_GLQS_main', 'fill_shoe', 'cats'
-	gs 'mod_GLQS_main', 'fill_shoe', 'danilovich'
-	gs 'mod_GLQS_main', 'fill_shoe', 'dolls'
-	gs 'mod_GLQS_main', 'fill_shoe', 'eroto'
-	gs 'mod_GLQS_main', 'fill_shoe', 'gm'
-	gs 'mod_GLQS_main', 'fill_shoe', 'moncheri'
-	gs 'mod_GLQS_main', 'fill_shoe', 'scandalicious'
-	gs 'mod_GLQS_main', 'fill_bra', 'cats'
-	gs 'mod_GLQS_main', 'fill_bra', 'danilovich'
-	gs 'mod_GLQS_main', 'fill_bra', 'eroto'
-	gs 'mod_GLQS_main', 'fill_bra', 'fashionista'
-	gs 'mod_GLQS_main', 'fill_bra', 'gm'
-	gs 'mod_GLQS_main', 'fill_bra', 'lusso'
-	gs 'mod_GLQS_main', 'fill_bra', 'salacious'
-	gs 'mod_GLQS_main', 'fill_panty', 'cats'
-	gs 'mod_GLQS_main', 'fill_panty', 'danilovich'
-	gs 'mod_GLQS_main', 'fill_panty', 'eroto'
-	gs 'mod_GLQS_main', 'fill_panty', 'fashionista'
-	gs 'mod_GLQS_main', 'fill_panty', 'gm'
-	gs 'mod_GLQS_main', 'fill_panty', 'lusso'
-	gs 'mod_GLQS_main', 'fill_panty', 'salacious'
-	gs 'mod_GLQS_main', 'fill_body', 'lusso'
-	gs 'mod_GLQS_main', 'fill_body', 'moncheri'
-	gs 'mod_GLQS_main', 'fill_body', 'salacious'
-	gs 'mod_GLQS_main', 'fill_body', 'scandalicious'
-	gs 'mod_GLQS_main', 'fill_coat', 'bomba'
-	gs 'mod_GLQS_main', 'fill_coat', 'cats'
-	gs 'mod_GLQS_main', 'fill_coat', 'danilovich'
-	gs 'mod_GLQS_main', 'fill_coat', 'dolls'
-	gs 'mod_GLQS_main', 'fill_coat', 'gm'
-	gs 'mod_GLQS_main', 'fill_coat', 'moncheri'
-	gs 'mod_GLQS_main', 'fill_purse', 'bomba'
-	gs 'mod_GLQS_main', 'fill_purse', 'cats'
-	gs 'mod_GLQS_main', 'fill_purse', 'coco'
-	gs 'mod_GLQS_main', 'fill_purse', 'danilovich'
-	gs 'mod_GLQS_main', 'fill_purse', 'dolls'
-	gs 'mod_GLQS_main', 'fill_purse', 'fashionista'
-	gs 'mod_GLQS_main', 'fill_purse', 'flamingos'
-	gs 'mod_GLQS_main', 'fill_purse', 'gm'
-	gs 'mod_GLQS_main', 'fill_purse', 'moncheri'
-	gs 'mod_GLQS_main', 'fill_purse', 'nerdvana'
+	!! Buys out every stores full catalog. Driven by the shared
+	!! clothing_cat_build table in 06_clothing.qsps so this can never
+	!! drift from store_buy or store_detail.
+	gs 'mod_GLQS_main', 'clothing_cat_build'
+	glqs_ca_i = 0
+	:glqs_clothing_all_loop
+	if glqs_ca_i < glqs_cc_total:
+		$glqs_ca_row = $glqs_cc[glqs_ca_i]
+		glqs_ca_p1 = instr($glqs_ca_row, '|')
+		$glqs_ca_rest = $mid($glqs_ca_row, glqs_ca_p1 + 1)
+		glqs_ca_p2 = instr($glqs_ca_rest, '|')
+		$glqs_ca_type = $mid($glqs_ca_rest, 1, glqs_ca_p2 - 1)
+		$glqs_ca_key = $mid($glqs_ca_rest, glqs_ca_p2 + 1)
+		if $glqs_ca_type = 'clo': gs 'mod_GLQS_main', 'fill_clo', $glqs_ca_key
+		if $glqs_ca_type = 'shoe': gs 'mod_GLQS_main', 'fill_shoe', $glqs_ca_key
+		if $glqs_ca_type = 'bra': gs 'mod_GLQS_main', 'fill_bra', $glqs_ca_key
+		if $glqs_ca_type = 'panty': gs 'mod_GLQS_main', 'fill_panty', $glqs_ca_key
+		if $glqs_ca_type = 'body': gs 'mod_GLQS_main', 'fill_body', $glqs_ca_key
+		if $glqs_ca_type = 'coat': gs 'mod_GLQS_main', 'fill_coat', $glqs_ca_key
+		if $glqs_ca_type = 'purse': gs 'mod_GLQS_main', 'fill_purse', $glqs_ca_key
+		glqs_ca_i += 1
+		jump 'glqs_clothing_all_loop'
+	end
+
+	killvar 'glqs_ca_i' & killvar 'glqs_ca_p1' & killvar 'glqs_ca_p2'
+	killvar '$glqs_ca_row' & killvar '$glqs_ca_rest' & killvar '$glqs_ca_type' & killvar '$glqs_ca_key'
+	killvar '$glqs_cc' & killvar 'glqs_cc_total'
 end
 
 !! ===== FILL HELPERS =====

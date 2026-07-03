@@ -74,6 +74,28 @@ These exist because they caused real, hard-to-diagnose failures during developme
 When lint fails, fix the referenced `src/` fragment, not `build/GLQS.qsps` (that's
 generated output and gets overwritten every build).
 
+## Runtime gotchas (now caught by build.py's lint)
+
+`qsp-cli` compiling with `SUCCESS` only means the syntax is well-formed - it does not
+execute the code, so these used to surface as in-game errors only when you actually
+opened the affected menu. Both are now checked by `build.py` (see
+`lint_unbalanced_template_markers` / `lint_empty_template_markers`), but the
+reasoning is worth knowing when lint flags them:
+
+- **`<< >>` template markers must open and close inside the same string literal.**
+  They cannot span a `+` concatenation - `'foo' + '<<bar[' + $key + ']>>'` fails at
+  runtime with "Bracket not found" even though it compiles fine, because each quoted
+  chunk is tokenized separately and `<<` with no matching `>>` in that same chunk is
+  an error. If a value needs to be built from concatenated pieces (e.g. a dynamic
+  array key), evaluate it directly instead of deferring to a template marker:
+  `'foo' + npc_rel[$key]` (arrays accept a variable/expression as the key - no
+  `dyneval` needed for reads) rather than `'foo<<npc_rel[''' + $key + ''']>>'`.
+- **`<< >>` with nothing between them is always invalid**, even outside code - e.g.
+  writing `<< >>` as literal text in a changelog string to describe the syntax
+  itself. QSP does not know it's "just text"; it always tries to parse `<<...>>` as
+  a real template marker and fails with a plain "Syntax error". Describe the syntax
+  in words instead of typing literal angle brackets in any live QSP string.
+
 ## Reference: the base game's own source
 
 `reference/glife_dev_build.qsps` (gitignored, not tracked) is the *decompiled*
