@@ -1,6 +1,18 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.28 - Current</b>'
+'<b>Version 0.29.1 - Current</b>'
+'- Added: Store icon shown at the top of the store category list and the item picker screen.'
+*nl
+'<b>Version 0.29</b>'
+'- Changed: Clothing categories (e.g. Allure - Swimsuits) now open an image grid like the tattoo/piercing pickers instead of instantly buying every item in the category. Click an item to add just that one, or use Give All (this category) to still buy the whole category in one click.'
+*nl
+'<b>Version 0.28.2</b>'
+'- Changed: Updated the mod description (shown in the games mod list) to cover everything GLQS actually does now - money, relationships, health, body mods and fame were missing from it.'
+*nl
+'<b>Version 0.28.1</b>'
+'- Changed: Removed Return to Top Menu from the tattoo design screen (Body Mods, Choose a Tattoo, pick a zone) - Back to Zones already covers it at that depth.'
+*nl
+'<b>Version 0.28</b>'
 '- Fixed: Fame By Region (individual activity buttons, Max All This Region, and the live table) still did not apply. Root cause: the region code was captured from ARGS after calling stat/themes, which clobber the shared ARGS array just like any nested gs call, and a stray killvar was clearing the captured region before the player could click a button. Same fix applied to the clothing per-store screen and the tattoo/piercing pickers, which had the same latent bug.'
 *nl
 '<b>Version 0.27</b>'

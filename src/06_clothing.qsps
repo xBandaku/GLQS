@@ -218,138 +218,271 @@ if $ARGS[0] = 'store_detail':
 	if $glqs_store = 'eroto': $glqs_label = 'Eroto (Sex Shop)'
 	if $glqs_store = 'lusso': $glqs_label = 'Lusso (underwear only)'
 	if $glqs_store = 'misc': $glqs_label = 'Misc'
+	$glqs_sicon = $func('$shop_icon_image', $glqs_store)
 
-	'<center><b><font color="maroon"><<$glqs_label>></font></b></center>'
+	'<center><img src="<<$glqs_sicon>>" height="80"><br><b><font color="maroon"><<$glqs_label>></font></b></center>'
 	*nl
-	'Buy a single category, or grab everything this store carries.'
+	'Pick a category to browse it item-by-item, or grab everything this store carries.'
 	*nl
 
 	if $glqs_store = 'allure':
-		act 'Swimsuits': gs 'mod_GLQS_main', 'fill_clo', 'allure_swimsuit' & gt 'mod_GLQS_main', 'store_detail', 'allure'
-		act 'Bikinis': gs 'mod_GLQS_main', 'fill_clo', 'allure_bikinis' & gt 'mod_GLQS_main', 'store_detail', 'allure'
+		act 'Swimsuits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'allure_swimsuit', 'allure', 'Swimsuits'
+		act 'Bikinis': gt 'mod_GLQS_main', 'item_picker', 'clo', 'allure_bikinis', 'allure', 'Bikinis'
 	end
 	if $glqs_store = 'bomba':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'bomba_outfits' & gt 'mod_GLQS_main', 'store_detail', 'bomba'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'bomba_dress' & gt 'mod_GLQS_main', 'store_detail', 'bomba'
-		act 'Shoes': gs 'mod_GLQS_main', 'fill_shoe', 'bomba' & gt 'mod_GLQS_main', 'store_detail', 'bomba'
-		act 'Coats': gs 'mod_GLQS_main', 'fill_coat', 'bomba' & gt 'mod_GLQS_main', 'store_detail', 'bomba'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'bomba' & gt 'mod_GLQS_main', 'store_detail', 'bomba'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'bomba_outfits', 'bomba', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'bomba_dress', 'bomba', 'Dresses'
+		act 'Shoes': gt 'mod_GLQS_main', 'item_picker', 'shoe', 'bomba', 'bomba', 'Shoes'
+		act 'Coats': gt 'mod_GLQS_main', 'item_picker', 'coat', 'bomba', 'bomba', 'Coats'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'bomba', 'bomba', 'Purses'
 	end
 	if $glqs_store = 'cats':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'cats_outfits' & gt 'mod_GLQS_main', 'store_detail', 'cats'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'cats_dress' & gt 'mod_GLQS_main', 'store_detail', 'cats'
-		act 'Shoes': gs 'mod_GLQS_main', 'fill_shoe', 'cats' & gt 'mod_GLQS_main', 'store_detail', 'cats'
-		act 'Bras': gs 'mod_GLQS_main', 'fill_bra', 'cats' & gt 'mod_GLQS_main', 'store_detail', 'cats'
-		act 'Panties': gs 'mod_GLQS_main', 'fill_panty', 'cats' & gt 'mod_GLQS_main', 'store_detail', 'cats'
-		act 'Coats': gs 'mod_GLQS_main', 'fill_coat', 'cats' & gt 'mod_GLQS_main', 'store_detail', 'cats'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'cats' & gt 'mod_GLQS_main', 'store_detail', 'cats'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'cats_outfits', 'cats', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'cats_dress', 'cats', 'Dresses'
+		act 'Shoes': gt 'mod_GLQS_main', 'item_picker', 'shoe', 'cats', 'cats', 'Shoes'
+		act 'Bras': gt 'mod_GLQS_main', 'item_picker', 'bra', 'cats', 'cats', 'Bras'
+		act 'Panties': gt 'mod_GLQS_main', 'item_picker', 'panty', 'cats', 'cats', 'Panties'
+		act 'Coats': gt 'mod_GLQS_main', 'item_picker', 'coat', 'cats', 'cats', 'Coats'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'cats', 'cats', 'Purses'
 	end
 	if $glqs_store = 'coco':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'coco_outfits' & gt 'mod_GLQS_main', 'store_detail', 'coco'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'coco_dress' & gt 'mod_GLQS_main', 'store_detail', 'coco'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'coco' & gt 'mod_GLQS_main', 'store_detail', 'coco'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'coco_outfits', 'coco', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'coco_dress', 'coco', 'Dresses'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'coco', 'coco', 'Purses'
 	end
 	if $glqs_store = 'danilovich':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'danilovich_outfits' & gt 'mod_GLQS_main', 'store_detail', 'danilovich'
-		act 'Swimsuits': gs 'mod_GLQS_main', 'fill_clo', 'danilovich_swimsuit' & gt 'mod_GLQS_main', 'store_detail', 'danilovich'
-		act 'Shoes': gs 'mod_GLQS_main', 'fill_shoe', 'danilovich' & gt 'mod_GLQS_main', 'store_detail', 'danilovich'
-		act 'Bras': gs 'mod_GLQS_main', 'fill_bra', 'danilovich' & gt 'mod_GLQS_main', 'store_detail', 'danilovich'
-		act 'Panties': gs 'mod_GLQS_main', 'fill_panty', 'danilovich' & gt 'mod_GLQS_main', 'store_detail', 'danilovich'
-		act 'Coats': gs 'mod_GLQS_main', 'fill_coat', 'danilovich' & gt 'mod_GLQS_main', 'store_detail', 'danilovich'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'danilovich' & gt 'mod_GLQS_main', 'store_detail', 'danilovich'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'danilovich_outfits', 'danilovich', 'Outfits'
+		act 'Swimsuits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'danilovich_swimsuit', 'danilovich', 'Swimsuits'
+		act 'Shoes': gt 'mod_GLQS_main', 'item_picker', 'shoe', 'danilovich', 'danilovich', 'Shoes'
+		act 'Bras': gt 'mod_GLQS_main', 'item_picker', 'bra', 'danilovich', 'danilovich', 'Bras'
+		act 'Panties': gt 'mod_GLQS_main', 'item_picker', 'panty', 'danilovich', 'danilovich', 'Panties'
+		act 'Coats': gt 'mod_GLQS_main', 'item_picker', 'coat', 'danilovich', 'danilovich', 'Coats'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'danilovich', 'danilovich', 'Purses'
 	end
 	if $glqs_store = 'dolls':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'dolls_outfits' & gt 'mod_GLQS_main', 'store_detail', 'dolls'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'dolls_dress' & gt 'mod_GLQS_main', 'store_detail', 'dolls'
-		act 'Shoes': gs 'mod_GLQS_main', 'fill_shoe', 'dolls' & gt 'mod_GLQS_main', 'store_detail', 'dolls'
-		act 'Coats': gs 'mod_GLQS_main', 'fill_coat', 'dolls' & gt 'mod_GLQS_main', 'store_detail', 'dolls'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'dolls' & gt 'mod_GLQS_main', 'store_detail', 'dolls'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'dolls_outfits', 'dolls', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'dolls_dress', 'dolls', 'Dresses'
+		act 'Shoes': gt 'mod_GLQS_main', 'item_picker', 'shoe', 'dolls', 'dolls', 'Shoes'
+		act 'Coats': gt 'mod_GLQS_main', 'item_picker', 'coat', 'dolls', 'dolls', 'Coats'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'dolls', 'dolls', 'Purses'
 	end
 	if $glqs_store = 'fancy':
-		act 'Burlesque Outfits': gs 'mod_GLQS_main', 'fill_clo', 'fancy_burlesque' & gt 'mod_GLQS_main', 'store_detail', 'fancy'
+		act 'Burlesque Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'fancy_burlesque', 'fancy', 'Burlesque Outfits'
 	end
 	if $glqs_store = 'fashionista':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'fashionista_outfits' & gt 'mod_GLQS_main', 'store_detail', 'fashionista'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'fashionista_dress' & gt 'mod_GLQS_main', 'store_detail', 'fashionista'
-		act 'Bras': gs 'mod_GLQS_main', 'fill_bra', 'fashionista' & gt 'mod_GLQS_main', 'store_detail', 'fashionista'
-		act 'Panties': gs 'mod_GLQS_main', 'fill_panty', 'fashionista' & gt 'mod_GLQS_main', 'store_detail', 'fashionista'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'fashionista' & gt 'mod_GLQS_main', 'store_detail', 'fashionista'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'fashionista_outfits', 'fashionista', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'fashionista_dress', 'fashionista', 'Dresses'
+		act 'Bras': gt 'mod_GLQS_main', 'item_picker', 'bra', 'fashionista', 'fashionista', 'Bras'
+		act 'Panties': gt 'mod_GLQS_main', 'item_picker', 'panty', 'fashionista', 'fashionista', 'Panties'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'fashionista', 'fashionista', 'Purses'
 	end
 	if $glqs_store = 'flamingos':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'flamingos_outfits' & gt 'mod_GLQS_main', 'store_detail', 'flamingos'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'flamingos_dress' & gt 'mod_GLQS_main', 'store_detail', 'flamingos'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'flamingos' & gt 'mod_GLQS_main', 'store_detail', 'flamingos'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'flamingos_outfits', 'flamingos', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'flamingos_dress', 'flamingos', 'Dresses'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'flamingos', 'flamingos', 'Purses'
 	end
 	if $glqs_store = 'salacious':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'salacious_outfits' & gt 'mod_GLQS_main', 'store_detail', 'salacious'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'salacious_dress' & gt 'mod_GLQS_main', 'store_detail', 'salacious'
-		act 'Bras': gs 'mod_GLQS_main', 'fill_bra', 'salacious' & gt 'mod_GLQS_main', 'store_detail', 'salacious'
-		act 'Panties': gs 'mod_GLQS_main', 'fill_panty', 'salacious' & gt 'mod_GLQS_main', 'store_detail', 'salacious'
-		act 'Bodysuits': gs 'mod_GLQS_main', 'fill_body', 'salacious' & gt 'mod_GLQS_main', 'store_detail', 'salacious'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'salacious_outfits', 'salacious', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'salacious_dress', 'salacious', 'Dresses'
+		act 'Bras': gt 'mod_GLQS_main', 'item_picker', 'bra', 'salacious', 'salacious', 'Bras'
+		act 'Panties': gt 'mod_GLQS_main', 'item_picker', 'panty', 'salacious', 'salacious', 'Panties'
+		act 'Bodysuits': gt 'mod_GLQS_main', 'item_picker', 'body', 'salacious', 'salacious', 'Bodysuits'
 	end
 	if $glqs_store = 'gm':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'gm_outfits' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'gm_dress' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Office Outfits': gs 'mod_GLQS_main', 'fill_clo', 'gm_office' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Maid Outfits': gs 'mod_GLQS_main', 'fill_clo', 'gm_maid' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Server Outfits': gs 'mod_GLQS_main', 'fill_clo', 'gm_server' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'School Outfits': gs 'mod_GLQS_main', 'fill_clo', 'gm_school' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Shoes': gs 'mod_GLQS_main', 'fill_shoe', 'gm' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Bras': gs 'mod_GLQS_main', 'fill_bra', 'gm' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Panties': gs 'mod_GLQS_main', 'fill_panty', 'gm' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Coats': gs 'mod_GLQS_main', 'fill_coat', 'gm' & gt 'mod_GLQS_main', 'store_detail', 'gm'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'gm' & gt 'mod_GLQS_main', 'store_detail', 'gm'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'gm_outfits', 'gm', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'gm_dress', 'gm', 'Dresses'
+		act 'Office Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'gm_office', 'gm', 'Office Outfits'
+		act 'Maid Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'gm_maid', 'gm', 'Maid Outfits'
+		act 'Server Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'gm_server', 'gm', 'Server Outfits'
+		act 'School Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'gm_school', 'gm', 'School Outfits'
+		act 'Shoes': gt 'mod_GLQS_main', 'item_picker', 'shoe', 'gm', 'gm', 'Shoes'
+		act 'Bras': gt 'mod_GLQS_main', 'item_picker', 'bra', 'gm', 'gm', 'Bras'
+		act 'Panties': gt 'mod_GLQS_main', 'item_picker', 'panty', 'gm', 'gm', 'Panties'
+		act 'Coats': gt 'mod_GLQS_main', 'item_picker', 'coat', 'gm', 'gm', 'Coats'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'gm', 'gm', 'Purses'
 	end
 	if $glqs_store = 'market':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'market_outfits' & gt 'mod_GLQS_main', 'store_detail', 'market'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'market_outfits', 'market', 'Outfits'
 	end
 	if $glqs_store = 'materinstvo':
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'materinstvo_dress' & gt 'mod_GLQS_main', 'store_detail', 'materinstvo'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'materinstvo_dress', 'materinstvo', 'Dresses'
 	end
 	if $glqs_store = 'moncheri':
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'moncheri_dress' & gt 'mod_GLQS_main', 'store_detail', 'moncheri'
-		act 'Gowns': gs 'mod_GLQS_main', 'fill_clo', 'moncheri_gown' & gt 'mod_GLQS_main', 'store_detail', 'moncheri'
-		act 'Shoes': gs 'mod_GLQS_main', 'fill_shoe', 'moncheri' & gt 'mod_GLQS_main', 'store_detail', 'moncheri'
-		act 'Bodysuits': gs 'mod_GLQS_main', 'fill_body', 'moncheri' & gt 'mod_GLQS_main', 'store_detail', 'moncheri'
-		act 'Coats': gs 'mod_GLQS_main', 'fill_coat', 'moncheri' & gt 'mod_GLQS_main', 'store_detail', 'moncheri'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'moncheri' & gt 'mod_GLQS_main', 'store_detail', 'moncheri'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'moncheri_dress', 'moncheri', 'Dresses'
+		act 'Gowns': gt 'mod_GLQS_main', 'item_picker', 'clo', 'moncheri_gown', 'moncheri', 'Gowns'
+		act 'Shoes': gt 'mod_GLQS_main', 'item_picker', 'shoe', 'moncheri', 'moncheri', 'Shoes'
+		act 'Bodysuits': gt 'mod_GLQS_main', 'item_picker', 'body', 'moncheri', 'moncheri', 'Bodysuits'
+		act 'Coats': gt 'mod_GLQS_main', 'item_picker', 'coat', 'moncheri', 'moncheri', 'Coats'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'moncheri', 'moncheri', 'Purses'
 	end
 	if $glqs_store = 'nerdvana':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_outfits' & gt 'mod_GLQS_main', 'store_detail', 'nerdvana'
-		act 'Cosplay Outfits': gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_cosplay' & gt 'mod_GLQS_main', 'store_detail', 'nerdvana'
-		act 'Swimsuits': gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_swimsuit' & gt 'mod_GLQS_main', 'store_detail', 'nerdvana'
-		act 'Bikinis': gs 'mod_GLQS_main', 'fill_clo', 'nerdvana_bikinis' & gt 'mod_GLQS_main', 'store_detail', 'nerdvana'
-		act 'Purses': gs 'mod_GLQS_main', 'fill_purse', 'nerdvana' & gt 'mod_GLQS_main', 'store_detail', 'nerdvana'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'nerdvana_outfits', 'nerdvana', 'Outfits'
+		act 'Cosplay Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'nerdvana_cosplay', 'nerdvana', 'Cosplay Outfits'
+		act 'Swimsuits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'nerdvana_swimsuit', 'nerdvana', 'Swimsuits'
+		act 'Bikinis': gt 'mod_GLQS_main', 'item_picker', 'clo', 'nerdvana_bikinis', 'nerdvana', 'Bikinis'
+		act 'Purses': gt 'mod_GLQS_main', 'item_picker', 'purse', 'nerdvana', 'nerdvana', 'Purses'
 	end
 	if $glqs_store = 'scandalicious':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_outfits' & gt 'mod_GLQS_main', 'store_detail', 'scandalicious'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_dress' & gt 'mod_GLQS_main', 'store_detail', 'scandalicious'
-		act 'Swimsuits': gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_swimsuit' & gt 'mod_GLQS_main', 'store_detail', 'scandalicious'
-		act 'Bikinis': gs 'mod_GLQS_main', 'fill_clo', 'scandalicious_bikinis' & gt 'mod_GLQS_main', 'store_detail', 'scandalicious'
-		act 'Shoes': gs 'mod_GLQS_main', 'fill_shoe', 'scandalicious' & gt 'mod_GLQS_main', 'store_detail', 'scandalicious'
-		act 'Bodysuits': gs 'mod_GLQS_main', 'fill_body', 'scandalicious' & gt 'mod_GLQS_main', 'store_detail', 'scandalicious'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'scandalicious_outfits', 'scandalicious', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'scandalicious_dress', 'scandalicious', 'Dresses'
+		act 'Swimsuits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'scandalicious_swimsuit', 'scandalicious', 'Swimsuits'
+		act 'Bikinis': gt 'mod_GLQS_main', 'item_picker', 'clo', 'scandalicious_bikinis', 'scandalicious', 'Bikinis'
+		act 'Shoes': gt 'mod_GLQS_main', 'item_picker', 'shoe', 'scandalicious', 'scandalicious', 'Shoes'
+		act 'Bodysuits': gt 'mod_GLQS_main', 'item_picker', 'body', 'scandalicious', 'scandalicious', 'Bodysuits'
 	end
 	if $glqs_store = 'eroto':
-		act 'Outfits': gs 'mod_GLQS_main', 'fill_clo', 'eroto_outfits' & gt 'mod_GLQS_main', 'store_detail', 'eroto'
-		act 'Dresses': gs 'mod_GLQS_main', 'fill_clo', 'eroto_dress' & gt 'mod_GLQS_main', 'store_detail', 'eroto'
-		act 'Strip Outfits': gs 'mod_GLQS_main', 'fill_clo', 'eroto_strip' & gt 'mod_GLQS_main', 'store_detail', 'eroto'
-		act 'Shoes': gs 'mod_GLQS_main', 'fill_shoe', 'eroto' & gt 'mod_GLQS_main', 'store_detail', 'eroto'
-		act 'Bras': gs 'mod_GLQS_main', 'fill_bra', 'eroto' & gt 'mod_GLQS_main', 'store_detail', 'eroto'
-		act 'Panties': gs 'mod_GLQS_main', 'fill_panty', 'eroto' & gt 'mod_GLQS_main', 'store_detail', 'eroto'
+		act 'Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'eroto_outfits', 'eroto', 'Outfits'
+		act 'Dresses': gt 'mod_GLQS_main', 'item_picker', 'clo', 'eroto_dress', 'eroto', 'Dresses'
+		act 'Strip Outfits': gt 'mod_GLQS_main', 'item_picker', 'clo', 'eroto_strip', 'eroto', 'Strip Outfits'
+		act 'Shoes': gt 'mod_GLQS_main', 'item_picker', 'shoe', 'eroto', 'eroto', 'Shoes'
+		act 'Bras': gt 'mod_GLQS_main', 'item_picker', 'bra', 'eroto', 'eroto', 'Bras'
+		act 'Panties': gt 'mod_GLQS_main', 'item_picker', 'panty', 'eroto', 'eroto', 'Panties'
 	end
 	if $glqs_store = 'lusso':
-		act 'Bras': gs 'mod_GLQS_main', 'fill_bra', 'lusso' & gt 'mod_GLQS_main', 'store_detail', 'lusso'
-		act 'Panties': gs 'mod_GLQS_main', 'fill_panty', 'lusso' & gt 'mod_GLQS_main', 'store_detail', 'lusso'
-		act 'Bodysuits': gs 'mod_GLQS_main', 'fill_body', 'lusso' & gt 'mod_GLQS_main', 'store_detail', 'lusso'
+		act 'Bras': gt 'mod_GLQS_main', 'item_picker', 'bra', 'lusso', 'lusso', 'Bras'
+		act 'Panties': gt 'mod_GLQS_main', 'item_picker', 'panty', 'lusso', 'lusso', 'Panties'
+		act 'Bodysuits': gt 'mod_GLQS_main', 'item_picker', 'body', 'lusso', 'lusso', 'Bodysuits'
 	end
 	if $glqs_store = 'misc':
-		act 'Misc Items': gs 'mod_GLQS_main', 'fill_clo', 'misc' & gt 'mod_GLQS_main', 'store_detail', 'misc'
+		act 'Misc Items': gt 'mod_GLQS_main', 'item_picker', 'clo', 'misc', 'misc', 'Misc Items'
 	end
 
 	*nl
 	act 'Buy All (this store)': gs 'mod_GLQS_main', 'store_buy', $glqs_store & gt 'mod_GLQS_main', 'store_detail', $glqs_store
 	act 'Return': gt 'mod_GLQS_main', 'store_menu'
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'item_picker':
+	!! Image-grid item picker, same pattern as the tattoo/piercing design
+	!! pickers - shows every item in a category so a specific one can be
+	!! clicked instead of buying the whole category in one shot.
+	!! ARGS[1] = item type: clo / shoe / bra / panty / body / coat / purse
+	!! ARGS[2] = key - full category name for clo (e.g. allure_swimsuit),
+	!!           bare store name for every other type (e.g. bomba)
+	!! ARGS[3] = store - bare store name, used only for the Return button
+	!! ARGS[4] = label - display name for the category (e.g. Swimsuits)
+	!! All captured before any nested gs call - $ARGS and total are both
+	!! plain globals in QSP, clobbered by any nested gs call.
+	$glqs_ptype = $ARGS[1]
+	$glqs_pkey = $ARGS[2]
+	$glqs_pstore = $ARGS[3]
+	$glqs_plabel = $ARGS[4]
+
+	if $glqs_ptype = 'clo': gs 'clothing', 'totals', $glqs_pkey
+	if $glqs_ptype = 'shoe': gs 'shoes', 'totals', $glqs_pkey + '_shoe'
+	if $glqs_ptype = 'bra': gs 'bras', 'totals', $glqs_pkey + '_bras'
+	if $glqs_ptype = 'panty': gs 'panties', 'totals', $glqs_pkey + '_panties'
+	if $glqs_ptype = 'body': gs 'underwear_bodysuits', 'totals', $glqs_pkey + '_bodysuits'
+	if $glqs_ptype = 'coat': gs 'coats', 'totals', $glqs_pkey + '_coats'
+	if $glqs_ptype = 'purse': gs 'purses', 'totals', $glqs_pkey + '_purses'
+	glqs_ptotal = total
+	$glqs_picon = $func('$shop_icon_image', $glqs_pkey)
+
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+
+	'<center><img src="<<$glqs_picon>>" height="80"><br><b><font color="maroon"><<$glqs_plabel>></font></b></center>'
+	'<br><<glqs_ptotal>> items available. Click an image to add it to your wardrobe at full durability.'
+	*nl
+
+	$glqs_grid = '<div style="display:flex; flex-wrap:wrap; gap:8px;">'
+	glqs_i = 1
+	:glqs_item_picker_loop
+	if glqs_i <= glqs_ptotal:
+		if $glqs_ptype = 'clo': $glqs_pimg = $func('$clothing_image', $glqs_pkey, glqs_i)
+		if $glqs_ptype = 'shoe': $glqs_pimg = $func('$shoe_image', $glqs_pkey, glqs_i)
+		if $glqs_ptype = 'bra': $glqs_pimg = $func('$bra_image', $glqs_pkey, glqs_i)
+		if $glqs_ptype = 'panty': $glqs_pimg = $func('$panty_image', $glqs_pkey, glqs_i)
+		if $glqs_ptype = 'body': $glqs_pimg = $func('$bodysuit_image', $glqs_pkey, glqs_i)
+		if $glqs_ptype = 'coat': $glqs_pimg = $func('$coat_image', $glqs_pkey, glqs_i)
+		if $glqs_ptype = 'purse': $glqs_pimg = $func('$purse_image', $glqs_pkey, glqs_i)
+
+		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''mod_GLQS_main'', ''item_pick'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', <<glqs_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''item_picker'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', ''<<$glqs_pstore>>'', ''<<$glqs_plabel>>''"><img height="220" src="<<$glqs_pimg>>"></a></div>'
+
+		glqs_i += 1
+		jump 'glqs_item_picker_loop'
+	end
+	killvar 'glqs_i'
+	$glqs_grid += '</div>'
+	$glqs_grid
+	*nl
+
+	act 'Give All (this category)':
+		gs 'mod_GLQS_main', 'item_pick_all', $glqs_ptype, $glqs_pkey
+		gt 'mod_GLQS_main', 'item_picker', $glqs_ptype, $glqs_pkey, $glqs_pstore, $glqs_plabel
+	end
+	act 'Return': gt 'mod_GLQS_main', 'store_detail', $glqs_pstore
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'item_pick':
+	!! Grants a single item at ARGS[3] within category ARGS[2] of type ARGS[1].
+	!! Mirrors the per-type grant logic in fill_clo/fill_shoe/etc in
+	!! 16_fill_helpers.qsps, but for one index instead of looping over all.
+	$glqs_ip_type = $ARGS[1]
+	$glqs_ip_key = $ARGS[2]
+	glqs_ip_idx = ARGS[3]
+
+	if $glqs_ip_type = 'clo':
+		dyneval('<<$glqs_ip_key>>[glqs_ip_idx] = 1')
+		gs 'clothing_attributes', $glqs_ip_key, glqs_ip_idx
+		dyneval('<<$glqs_ip_key>>_h[glqs_ip_idx] = CloMaxStrength')
+	end
+	if $glqs_ip_type = 'shoe':
+		dyneval('<<$glqs_ip_key>>_shoe[glqs_ip_idx] = 1')
+		gs 'shoe_attributes', $glqs_ip_key, glqs_ip_idx
+		dyneval('<<$glqs_ip_key>>_shoe_h[glqs_ip_idx] = ShoMaxStrength')
+	end
+	if $glqs_ip_type = 'bra':
+		dyneval('<<$glqs_ip_key>>_bras[glqs_ip_idx] = 1')
+		gs 'underwear_attributes', $glqs_ip_key + '_bras', glqs_ip_idx
+		dyneval('<<$glqs_ip_key>>_bras_h[glqs_ip_idx] = BraMaxStrength')
+	end
+	if $glqs_ip_type = 'panty':
+		dyneval('<<$glqs_ip_key>>_panties[glqs_ip_idx] = 1')
+		gs 'underwear_attributes', $glqs_ip_key + '_panties', glqs_ip_idx
+		dyneval('<<$glqs_ip_key>>_panties_h[glqs_ip_idx] = PanMaxStrength')
+	end
+	if $glqs_ip_type = 'body':
+		dyneval('<<$glqs_ip_key>>_bodysuits[glqs_ip_idx] = 1')
+		gs 'underwear_attributes', $glqs_ip_key + '_bodysuits', glqs_ip_idx
+		dyneval('<<$glqs_ip_key>>_bodysuits_h[glqs_ip_idx] = BraMaxStrength')
+	end
+	if $glqs_ip_type = 'coat':
+		dyneval('<<$glqs_ip_key>>_coats[glqs_ip_idx] = 1')
+		gs 'coat_attributes', $glqs_ip_key, glqs_ip_idx
+		dyneval('<<$glqs_ip_key>>_coats_h[glqs_ip_idx] = CoatMaxStrength')
+	end
+	if $glqs_ip_type = 'purse':
+		dyneval('<<$glqs_ip_key>>_purses[glqs_ip_idx] = 1')
+	end
+
+	killvar '$glqs_ip_type'
+	killvar '$glqs_ip_key'
+	killvar 'glqs_ip_idx'
+end
+
+
+if $ARGS[0] = 'item_pick_all':
+	!! Convenience bulk option inside the picker - grants every item in the
+	!! category by dispatching to the existing fill_* helper for the type.
+	$glqs_ipa_type = $ARGS[1]
+	$glqs_ipa_key = $ARGS[2]
+	if $glqs_ipa_type = 'clo': gs 'mod_GLQS_main', 'fill_clo', $glqs_ipa_key
+	if $glqs_ipa_type = 'shoe': gs 'mod_GLQS_main', 'fill_shoe', $glqs_ipa_key
+	if $glqs_ipa_type = 'bra': gs 'mod_GLQS_main', 'fill_bra', $glqs_ipa_key
+	if $glqs_ipa_type = 'panty': gs 'mod_GLQS_main', 'fill_panty', $glqs_ipa_key
+	if $glqs_ipa_type = 'body': gs 'mod_GLQS_main', 'fill_body', $glqs_ipa_key
+	if $glqs_ipa_type = 'coat': gs 'mod_GLQS_main', 'fill_coat', $glqs_ipa_key
+	if $glqs_ipa_type = 'purse': gs 'mod_GLQS_main', 'fill_purse', $glqs_ipa_key
+	killvar '$glqs_ipa_type'
+	killvar '$glqs_ipa_key'
 end
 
 

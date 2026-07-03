@@ -107,7 +107,6 @@ if $ARGS[0] = 'tattoo_design_menu':
 
 	killvar '$glqs_zone'
 	act 'Back to Zones': gt 'mod_GLQS_main', 'tattoo_zone_menu'
-	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
