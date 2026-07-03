@@ -96,6 +96,21 @@ reasoning is worth knowing when lint flags them:
   a real template marker and fails with a plain "Syntax error". Describe the syntax
   in words instead of typing literal angle brackets in any live QSP string.
 
+## `03_hook.qsps`'s location-based hook only works for real `gt` transitions
+
+`03_hook.qsps` renders the "Quick Setup" link by checking ambient globals like
+`$curloc`/`$locclass`/`$loc`/`$loc_arg` (e.g. `$locclass = 'bedr'` for the bedroom).
+This only works because those screens are reached via a real `gt` location change.
+Confirmed by testing live in-game: screens rendered via a plain `gs` subroutine call
+from wherever the player already is (e.g. the purse - `gs 'din_bad', 'd_bag'` - or the
+phone - `gs 'telefon', 'Phone_menu'`) do **not** change `$curloc` to that subroutine's
+own location name, so a hook checking `$curloc = 'din_bad'` never fires even while
+that screen is what's actually displayed. There is no confirmed reliable global to
+detect "this gs-rendered overlay is currently on screen" from outside its own code.
+Before adding a new hook point, check whether the target screen is reached via `gt`
+(hookable, same pattern as bedroom/dorm/hotel) or `gs` (not reliably hookable this
+way) - grep the reference source for how the screen is invoked.
+
 ## Reference: the base game's own source
 
 `reference/` (gitignored, not tracked) holds two shallow clones of the game's real

@@ -1,6 +1,12 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.29.8 - Current</b>'
+'<b>Version 0.29.11 - Current</b>'
+'- Fixed: The Quick Setup link (bedroom/dorm/hotel) was hidden by default on every new save until you found and enabled the Quick Setup Mod toggle buried in the games own cheat menu. Now enabled automatically the first time - the toggle is still there in the cheat menu if you ever want to hide the link.'
+*nl
+'<b>Version 0.29.10</b>'
+'- Removed: The experimental Purse screen Quick Setup link from v0.29.9. Confirmed by live testing it never appeared - the purse is a plain subroutine overlay rather than a real location change, so it does not update the game state the bedroom/dorm/hotel links rely on to detect where the player currently is.'
+*nl
+'<b>Version 0.29.8</b>'
 '- Added: Max Attractiveness button in Body Mods. Forces the underlying appearance base high enough that attractiveness always reads as maxed regardless of clothing, accessories, or grooming state. Only applies until the next in-game day, same as School Grades - click again to reapply.'
 *nl
 '<b>Version 0.29.7</b>'
