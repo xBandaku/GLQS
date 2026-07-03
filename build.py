@@ -140,6 +140,31 @@ def lint_empty_template_markers(text):
     return problems
 
 
+def lint_version_mismatch(text):
+    """$mod_info[1] (01_setup.qsps, shown on the game's mod-selection screen) and
+    the top changelog entry (02_readme.qsps, shown on the in-game readme screen)
+    encode the same version independently and must be bumped together. Nothing
+    else catches drift between them -- it compiles fine and only shows up as the
+    wrong version displayed in one of the two places in-game. Returns None if
+    they agree, else (mod_info_version, changelog_version) as 'X.Y.Z' strings."""
+    mod_info_match = re.search(r"\$mod_info\[1\]\s*=\s*'(\d)(\d{2})(\d{2})'", text)
+    changelog_match = re.search(
+        r"'<b>Version (\d+)\.(\d+)(?:\.(\d+))?\s*(?:-\s*Current)?</b>'", text
+    )
+    if not mod_info_match or not changelog_match:
+        return None
+
+    mi_major, mi_minor, mi_patch = mod_info_match.groups()
+    mod_info_version = f"{int(mi_major)}.{int(mi_minor)}.{int(mi_patch)}"
+
+    cl_major, cl_minor, cl_patch = changelog_match.groups()
+    changelog_version = f"{int(cl_major)}.{int(cl_minor)}.{int(cl_patch or 0)}"
+
+    if mod_info_version != changelog_version:
+        return (mod_info_version, changelog_version)
+    return None
+
+
 def lint_block_balance(text):
     """Rough check that every multi-line 'if ...:' and 'act 'x':' block has
     a matching 'end'. Not a full parser -- doesn't understand elseif chains
@@ -209,6 +234,17 @@ def run_lints(text):
         print("       Unclosed blocks (most likely culprits):")
         for lineno, snippet in stack:
             print(f"    line {lineno}: {snippet}")
+
+    version_mismatch = lint_version_mismatch(text)
+    if version_mismatch:
+        ok = False
+        mod_info_version, changelog_version = version_mismatch
+        print("\n[LINT] Version mismatch between mod_info and changelog:")
+        print(f"       01_setup.qsps $mod_info[1] says {mod_info_version}")
+        print(f"       02_readme.qsps top changelog entry says {changelog_version}")
+        print("       Bump both together -- $mod_info[1] drives the version shown")
+        print("       on the game's mod-selection screen, the changelog entry drives")
+        print("       the in-game readme screen, and nothing else keeps them in sync.")
 
     return ok
 

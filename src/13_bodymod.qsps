@@ -14,6 +14,7 @@ if $ARGS[0] = 'bodymod_menu':
 	$glqs_tbl += '<tr><td>Pubic hair</td><td><<iif(pcs_pubes = 0, ''Removed'', ''Present'')>></td></tr>'
 	$glqs_tbl += '<tr><td>Tattoos</td><td><<pcs_tattoos[''total'']>> / 17 zones</td></tr>'
 	$glqs_tbl += '<tr><td>Piercings</td><td><<pcs_piercings[''total'']>> / 8 slots</td></tr>'
+	$glqs_tbl += '<tr><td>Attractiveness</td><td><<pcs_apprnc>> (<<pcs_hotcat>>/10)</td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -26,11 +27,43 @@ if $ARGS[0] = 'bodymod_menu':
 		gt 'mod_GLQS_main', 'bodymod_menu'
 	end
 
+	act 'Max Attractiveness (resets nightly, click again to reapply)':
+		gs 'mod_GLQS_main', 'max_attractiveness'
+		gt 'mod_GLQS_main', 'bodymod_menu'
+	end
+
 	act 'Choose a Tattoo': gt 'mod_GLQS_main', 'tattoo_zone_menu'
 
 	act 'Choose a Piercing': gt 'mod_GLQS_main', 'piercing_slot_menu'
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'max_attractiveness':
+	!! pcs_apprnc is not a settable stat - AppearanceSystem.qsrc recomputes it
+	!! from pcs_apprncbase plus live clothing/accessories/grooming bonuses and
+	!! penalties every time gs stat runs (gs stat -> gs body, Update_Appearance
+	!! -> gs AppearanceSystem), and CalcAppearance clamps that whole sum to
+	!! 0-200 before adding a separate supernatural bonus on top. Rather than
+	!! reverse engineering and maxing every underlying clothing-quality and
+	!! body-composition input individually (CalcClothingBonus and
+	!! CalcAccessoriesBonus in outfit.qsrc, and the BMI-dependent logic inside
+	!! CalcBodyShapeBonus), setting pcs_apprncbase itself to a large value
+	!! guarantees the 0-200 clamp always saturates at the max regardless of
+	!! what is worn or
+	!! current body composition - confirmed against both reference/0.9.8.3 and
+	!! reference/nightly, which use an identical clamp formula (only the
+	!! separate supernatural-bonus term differs between the two, which this
+	!! does not touch, so any archetype/succubus bonus a save already has
+	!! still applies normally on top of the guaranteed 200).
+	!! pcs_apprncbase is only recalculated by an explicit
+	!! gs AppearanceSystem, UpdateBaseAppearance call (daily at midnight, or a
+	!! few specific cheats/spells) - never by gs stat - so this override
+	!! persists across menus until the next in-game day, same as School
+	!! Grades resetting weekly.
+	pcs_apprncbase = 1000
+	gs 'stat'
 end
 
 

@@ -98,28 +98,41 @@ reasoning is worth knowing when lint flags them:
 
 ## Reference: the base game's own source
 
-`reference/glife_dev_build.qsps` (gitignored, not tracked) is the *decompiled*
-source of the actual Girl Life game (Dev Life build), produced with:
+`reference/` (gitignored, not tracked) holds two shallow clones of the game's real
+developer source, https://gitlab.com/kevinsmartstfg/girl-life, one per installed
+build:
 
-```
-qsp-cli "path/to/glife Dev Build.qsp"
-```
+- **`reference/0.9.8.3/`** — checked out at tag `0.9.8.3`, exactly matching the
+  `.qsp` installed in the `Girl Life` (stable) game folder (`Girl Life 0.9.8.3.qsp`).
+- **`reference/nightly/`** — `master` branch HEAD, matching the `Dev Life` folder's
+  newer nightly build (its filename embeds the exact commit hash it was built from,
+  e.g. `dev_glife-...-<hash>.qsp` — confirm `git -C reference/nightly log -1
+  --format=%H` still equals that hash before trusting a lookup for Dev-Life-only
+  behavior; `master` moves fast so this drifts and needs a re-clone periodically).
 
-(`qsp-cli` converts in both directions based on file extension — `.qsps -> .qsp`
-compiles, `.qsp -> .qsps` decompiles. Note its `--directory` flag does not reliably
-redirect output when given an absolute source path outside the cwd; it may write
-next to the source file instead, so double check where the output landed.)
+When a lookup could go either way, prefer `0.9.8.3/` for anything about the stable
+`Girl Life` build and `nightly/` for anything specific to `Dev Life` behavior; for
+most subsystem/variable-name lookups the two agree closely enough that either works.
 
-**Before assuming a variable name, array name, or subsystem exists, grep this file
+This replaced an earlier approach of decompiling the installed `.qsp` with
+`qsp-cli` into one flat `glife_dev_build.qsps` file — the real source here is much
+better organized (one `.qsrc` file per location/system under `locations/`, original
+comments intact) and doesn't need re-decompiling by hand.
+
+**Before assuming a variable name, array name, or subsystem exists, grep this
 first** — most of the bug-fix version bumps in `02_readme.qsps`'s changelog (grades,
 attributes, consumables) were guessed variable names that turned out wrong.
 Confirming against the real source before writing a `src/` fragment avoids that
-cycle. E.g. `grep -n "^# homes_properties" reference/glife_dev_build.qsps` to find
-the property system, or search for an item's in-game display string to find its
-`mc_inventory[...]` key.
+cycle. E.g. `grep -rn "pav_.*_contribution" reference/0.9.8.3/locations/fame.qsrc` to
+check the fame-spread system, `cat reference/0.9.8.3/locations/homes_properties.qsrc`
+for the property system, or search for an item's in-game display string across
+`reference/0.9.8.3/locations/*.qsrc` to find its `mc_inventory[...]` key.
 
-Regenerate this file if the Dev Life build updates and a lookup seems stale (compare
-`glife Dev Build.qsp`'s modified date against `reference/glife_dev_build.qsps`'s).
+To refresh either clone if a lookup seems stale or the installed builds update:
+`cd reference/<0.9.8.3-or-nightly> && git fetch --depth 1 origin <tag-or-branch> &&
+git checkout <tag-or-branch>` (or just re-clone the same way these were set up,
+matching whatever version string/commit hash the corresponding installed `.qsp`
+filename shows).
 
 ## Adding functionality
 

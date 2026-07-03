@@ -1,4 +1,36 @@
 !! FAME & REPUTATION SUBMENU
+if $ARGS[0] = 'fame_detail' or $ARGS[0] = 'fame_maxregion':
+	!! One shared 17-entry activity list (code|label), built here since this
+	!! is a separate top-level $ARGS[0] check in the same shared location -
+	!! it runs automatically before the fame_detail and fame_maxregion blocks
+	!! below (QSP evaluates every top-level if in file order on every call
+	!! into this location), no explicit gs call needed. Used by fame_detail
+	!! for its live table and per-activity act buttons, and by fame_maxregion
+	!! for its bulk maxing loop, so the three can never drift out of sync
+	!! with each other or with the games own activity set in fame.qsrc.
+	glqs_fa_n = 0
+	$glqs_fame_act[glqs_fa_n] = 'acting' & $glqs_fame_label[glqs_fa_n] = 'Acting' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'dance' & $glqs_fame_label[glqs_fa_n] = 'Dance' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'painting' & $glqs_fame_label[glqs_fa_n] = 'Painting' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'music' & $glqs_fame_label[glqs_fa_n] = 'Music' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'ballet' & $glqs_fame_label[glqs_fa_n] = 'Ballet' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'modelling' & $glqs_fame_label[glqs_fa_n] = 'Modelling' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'porn' & $glqs_fame_label[glqs_fa_n] = 'Porn' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'stripping' & $glqs_fame_label[glqs_fa_n] = 'Stripping' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'kickboxing' & $glqs_fame_label[glqs_fa_n] = 'Kickboxing' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'running' & $glqs_fame_label[glqs_fa_n] = 'Running' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'volleyball' & $glqs_fame_label[glqs_fa_n] = 'Volleyball' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'chess' & $glqs_fame_label[glqs_fa_n] = 'Chess' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'teaching' & $glqs_fame_label[glqs_fa_n] = 'Teaching' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'media' & $glqs_fame_label[glqs_fa_n] = 'Media' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'sex' & $glqs_fame_label[glqs_fa_n] = 'Sex' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'prostitute' & $glqs_fame_label[glqs_fa_n] = 'Prostitution' & glqs_fa_n += 1
+	$glqs_fame_act[glqs_fa_n] = 'flash' & $glqs_fame_label[glqs_fa_n] = 'Flashing' & glqs_fa_n += 1
+	glqs_fame_act_total = glqs_fa_n
+	killvar 'glqs_fa_n'
+end
+
+
 if $ARGS[0] = 'fame_menu':
 	menu_off = 0
 	usehtml = 1
@@ -72,50 +104,14 @@ if $ARGS[0] = 'fame_detail':
 	'Max a single activity, or max every activity in this region at once.'
 	*nl
 
-	$glqs_fame_tbl_acts[0] = 'acting'
-	$glqs_fame_tbl_acts[1] = 'dance'
-	$glqs_fame_tbl_acts[2] = 'painting'
-	$glqs_fame_tbl_acts[3] = 'music'
-	$glqs_fame_tbl_acts[4] = 'ballet'
-	$glqs_fame_tbl_acts[5] = 'modelling'
-	$glqs_fame_tbl_acts[6] = 'porn'
-	$glqs_fame_tbl_acts[7] = 'stripping'
-	$glqs_fame_tbl_acts[8] = 'kickboxing'
-	$glqs_fame_tbl_acts[9] = 'running'
-	$glqs_fame_tbl_acts[10] = 'volleyball'
-	$glqs_fame_tbl_acts[11] = 'chess'
-	$glqs_fame_tbl_acts[12] = 'teaching'
-	$glqs_fame_tbl_acts[13] = 'media'
-	$glqs_fame_tbl_acts[14] = 'sex'
-	$glqs_fame_tbl_acts[15] = 'prostitute'
-	$glqs_fame_tbl_acts[16] = 'flash'
-
-	$glqs_fame_tbl_labels[0] = 'Acting'
-	$glqs_fame_tbl_labels[1] = 'Dance'
-	$glqs_fame_tbl_labels[2] = 'Painting'
-	$glqs_fame_tbl_labels[3] = 'Music'
-	$glqs_fame_tbl_labels[4] = 'Ballet'
-	$glqs_fame_tbl_labels[5] = 'Modelling'
-	$glqs_fame_tbl_labels[6] = 'Porn'
-	$glqs_fame_tbl_labels[7] = 'Stripping'
-	$glqs_fame_tbl_labels[8] = 'Kickboxing'
-	$glqs_fame_tbl_labels[9] = 'Running'
-	$glqs_fame_tbl_labels[10] = 'Volleyball'
-	$glqs_fame_tbl_labels[11] = 'Chess'
-	$glqs_fame_tbl_labels[12] = 'Teaching'
-	$glqs_fame_tbl_labels[13] = 'Media'
-	$glqs_fame_tbl_labels[14] = 'Sex'
-	$glqs_fame_tbl_labels[15] = 'Prostitution'
-	$glqs_fame_tbl_labels[16] = 'Flashing'
-
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="60%" cellpadding=4>'
 	$glqs_tbl += '<tr><td><b>Activity</b></td><td><b>Fame</b></td></tr>'
 	glqs_i = 0
 	:glqs_fame_tbl_loop
-	if glqs_i <= 16:
-		glqs_val = fame[$glqs_region + '_' + $glqs_fame_tbl_acts[glqs_i]]
-		$glqs_tbl += '<tr><td>' + $glqs_fame_tbl_labels[glqs_i] + '</td><td><<glqs_val>></td></tr>'
+	if glqs_i < glqs_fame_act_total:
+		glqs_val = fame[$glqs_region + '_' + $glqs_fame_act[glqs_i]]
+		$glqs_tbl += '<tr><td>' + $glqs_fame_label[glqs_i] + '</td><td><<glqs_val>></td></tr>'
 		glqs_i += 1
 		jump 'glqs_fame_tbl_loop'
 	end
@@ -124,8 +120,6 @@ if $ARGS[0] = 'fame_detail':
 	*nl
 	killvar 'glqs_i'
 	killvar 'glqs_val'
-	killvar '$glqs_fame_tbl_acts'
-	killvar '$glqs_fame_tbl_labels'
 
 	act 'Acting': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'acting' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
 	act 'Dance': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'dance' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
@@ -153,6 +147,8 @@ if $ARGS[0] = 'fame_detail':
 
 	act 'Return': gt 'mod_GLQS_main', 'fame_region_menu'
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+	killvar '$glqs_region' & killvar '$glqs_label'
+	killvar '$glqs_fame_act' & killvar '$glqs_fame_label' & killvar 'glqs_fame_act_total'
 end
 
 
@@ -196,51 +192,24 @@ end
 
 
 if $ARGS[0] = 'fame_maxregion':
-	!! ARGS[1] = region code
+	!! ARGS[1] = region code. Driven by the shared activity table built above
+	!! so this can never drift from the fame_detail list.
 	$glqs_fmr_region = $ARGS[1]
-	$glqs_fame_acts[0] = 'acting'
-	$glqs_fame_acts[1] = 'dance'
-	$glqs_fame_acts[2] = 'painting'
-	$glqs_fame_acts[3] = 'music'
-	$glqs_fame_acts[4] = 'ballet'
-	$glqs_fame_acts[5] = 'modelling'
-	$glqs_fame_acts[6] = 'porn'
-	$glqs_fame_acts[7] = 'stripping'
-	$glqs_fame_acts[8] = 'kickboxing'
-	$glqs_fame_acts[9] = 'running'
-	$glqs_fame_acts[10] = 'volleyball'
-	$glqs_fame_acts[11] = 'chess'
-	$glqs_fame_acts[12] = 'teaching'
-	$glqs_fame_acts[13] = 'media'
-	$glqs_fame_acts[14] = 'sex'
-	$glqs_fame_acts[15] = 'prostitute'
-	$glqs_fame_acts[16] = 'flash'
 
 	glqs_a = 0
 	:glqs_fame_maxregion_loop
-	if glqs_a <= 16:
-		gs 'mod_GLQS_main', 'fame_apply', $glqs_fmr_region, $glqs_fame_acts[glqs_a]
+	if glqs_a < glqs_fame_act_total:
+		gs 'mod_GLQS_main', 'fame_apply', $glqs_fmr_region, $glqs_fame_act[glqs_a]
+		if $glqs_fame_act[glqs_a] <> 'sex' and $glqs_fame_act[glqs_a] <> 'prostitute' and $glqs_fame_act[glqs_a] <> 'flash':
+			gs 'fame', 'calculate', $glqs_fame_act[glqs_a]
+		end
 		glqs_a += 1
 		jump 'glqs_fame_maxregion_loop'
 	end
 	killvar 'glqs_a'
-	killvar '$glqs_fame_acts'
 	killvar '$glqs_fmr_region'
+	killvar '$glqs_fame_act' & killvar '$glqs_fame_label' & killvar 'glqs_fame_act_total'
 
-	gs 'fame', 'calculate', 'acting'
-	gs 'fame', 'calculate', 'dance'
-	gs 'fame', 'calculate', 'painting'
-	gs 'fame', 'calculate', 'music'
-	gs 'fame', 'calculate', 'ballet'
-	gs 'fame', 'calculate', 'modelling'
-	gs 'fame', 'calculate', 'porn'
-	gs 'fame', 'calculate', 'stripping'
-	gs 'fame', 'calculate', 'kickboxing'
-	gs 'fame', 'calculate', 'running'
-	gs 'fame', 'calculate', 'volleyball'
-	gs 'fame', 'calculate', 'chess'
-	gs 'fame', 'calculate', 'teaching'
-	gs 'fame', 'calculate', 'media'
 	gs 'fame', 'calculateGroups'
 end
 
@@ -261,3 +230,4 @@ if $ARGS[0] = 'fame_maxall':
 	killvar 'glqs_r'
 	killvar '$glqs_fame_regions'
 end
+

@@ -27,12 +27,6 @@ if $ARGS[0] = 'recurrent':
 	$glqs_tbl += '<tr><td>Clothes never dirty</td><td><<iif(cheatVars[''clothes_dirt''], ''Enabled'', ''Disabled'')>></td></tr>'
 	$glqs_tbl += '<tr><td>Set arousal to always be at 50 or more</td><td><<iif(cheatVars[''always_horny''], ''Enabled'', ''Disabled'')>></td></tr>'
 	$glqs_tbl += '<tr><td>Succubus clothing invulnerability</td><td><<iif(cheatVars[''suc_bimbo''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Clothing archetypes (normal game behavior)</td><td><<iif(cheatVars[''bimbo''], ''Disabled'', ''Enabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Periods and pregnancies</td><td><<iif(cheatVars[''no_periods''], ''Disabled'', ''Enabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Impregnation</td><td><<iif(cheatVars[''no_pregnancy''], ''Disabled'', ''Enabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Lactation</td><td><<iif(cheatVars[''no_lactation''], ''Disabled'', ''Enabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Cum leaking</td><td><<iif(cheatVars[''no_cum_leak''], ''Disabled'', ''Enabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>STDs</td><td><<iif(cheatVars[''std''], ''Disabled'', ''Enabled'')>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -46,6 +40,30 @@ if $ARGS[0] = 'recurrent':
 		gs 'mod_GLQS_main', 'recurrent_off'
 		gt 'mod_GLQS_main', 'recurrent'
 	end
+
+	'<b>Individual toggles</b> (each affects related in-game state, e.g. resetting clothing-archetype trait levels or a periods cycle, so they are not bundled into Enable/Disable All above):'
+	*nl
+	$glqs_tbl2 = ''
+	$glqs_tbl2 += '<table width="80%" cellpadding=4>'
+	$glqs_tbl2 += '<tr><td>Clothing archetypes (normal game behavior)</td><td><a href="exec: gs ''cheatmenu_din'', ''BimboCloth'' & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''bimbo''], ''Disabled'', ''Enabled'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Periods and pregnancies</td><td><a href="exec: gs ''cheatmenu_din'', ''slutshot'' & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''no_periods''], ''Disabled'', ''Enabled'')>></a></td></tr>'
+	!! Impregnation only matters while periods are enabled - conception in
+	!! femcyc.qsrc runs off the ovulate flag, which is only ever set during
+	!! the normal cycle (cyc1 -> cyc2 transition); slutshot pins cycle at 6
+	!! when periods are disabled, so that transition never happens and
+	!! ovulate never gets set, making this toggle a silent no-op in that
+	!! state. The base games own cheat menu hides this row for the same
+	!! reason (cheatmenu_din.qsrc, permanent handler) - mirrored here rather
+	!! than showing a control that looks live but does nothing.
+	if cheatVars['no_periods'] = 0:
+		$glqs_tbl2 += '<tr><td>&nbsp;&nbsp;Impregnation</td><td><a href="exec: cheatVars[''no_pregnancy''] = iif(cheatVars[''no_pregnancy''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''no_pregnancy''], ''Disabled'', ''Enabled'')>></a></td></tr>'
+	end
+	$glqs_tbl2 += '<tr><td>Lactation</td><td><a href="exec: cheatVars[''no_lactation''] = iif(cheatVars[''no_lactation''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''no_lactation''], ''Disabled'', ''Enabled'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Cum leaking</td><td><a href="exec: cheatVars[''no_cum_leak''] = iif(cheatVars[''no_cum_leak''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''no_cum_leak''], ''Disabled'', ''Enabled'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>STDs</td><td><a href="exec: cheatVars[''std''] = iif(cheatVars[''std''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''std''], ''Disabled'', ''Enabled'')>></a></td></tr>'
+	$glqs_tbl2 += '</table>'
+	$glqs_tbl2
+	*nl
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
@@ -70,12 +88,6 @@ if $ARGS[0] = 'recurrent_on':
 	cheatVars['clothes_dirt'] = 1
 	cheatVars['always_horny'] = 1
 	cheatVars['suc_bimbo'] = 1
-	cheatVars['bimbo'] = 0
-	cheatVars['no_periods'] = 0
-	cheatVars['no_pregnancy'] = 0
-	cheatVars['no_lactation'] = 0
-	cheatVars['no_cum_leak'] = 0
-	cheatVars['std'] = 0
 end
 
 
@@ -98,12 +110,6 @@ if $ARGS[0] = 'recurrent_off':
 	cheatVars['clothes_dirt'] = 0
 	cheatVars['always_horny'] = 0
 	cheatVars['suc_bimbo'] = 0
-	cheatVars['bimbo'] = 0
-	cheatVars['no_periods'] = 0
-	cheatVars['no_pregnancy'] = 0
-	cheatVars['no_lactation'] = 0
-	cheatVars['no_cum_leak'] = 0
-	cheatVars['std'] = 0
 end
 
 

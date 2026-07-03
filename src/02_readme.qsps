@@ -1,6 +1,18 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.29.4 - Current</b>'
+'<b>Version 0.29.8 - Current</b>'
+'- Added: Max Attractiveness button in Body Mods. Forces the underlying appearance base high enough that attractiveness always reads as maxed regardless of clothing, accessories, or grooming state. Only applies until the next in-game day, same as School Grades - click again to reapply.'
+*nl
+'<b>Version 0.29.7</b>'
+'- Fixed: Recurrent Cheats - Impregnation toggle was always shown even while Periods and pregnancies was disabled, where it silently did nothing (conception in the base game only runs as part of the normal menstrual cycle, which Periods and pregnancies fully halts). Now hidden in that state, matching the base games own cheat menu.'
+*nl
+'<b>Version 0.29.6</b>'
+'- Changed: Recurrent Cheats - Impregnation, Lactation, Cum leaking, STDs, Periods and pregnancies, and Clothing archetypes each got their own individual toggle instead of being bundled into Enable All/Disable All, since those six affect more significant game state (fertility, disease risk, clothing-archetype trait progress) than the other quality-of-life toggles. Enable All/Disable All no longer touch these six at all - previously both buttons silently forced all six to the same off state no matter which was clicked, so there was no way to turn any of them on from this menu.'
+*nl
+'<b>Version 0.29.5</b>'
+'- Changed: Internal refactor, no player-visible change. Fame By Region (activity list + labels) was hardcoded in two places (fame_detail and fame_maxregion); they now share one data table, so the copies can no longer drift out of sync. build.py also now checks that mod_info and the changelog version agree, so this specific number cannot silently drift again.'
+*nl
+'<b>Version 0.29.4</b>'
 '- Note: Fame By Region - Max All (this region) only sets that regions own fame directly, but the games own fame-spread system then bleeds some of that into the other regions too (working as designed - e.g. maxing Pavlovsk also pushes Old Town and Gadukino close to maxed, since fame spreads fast between those, while City only gets a small bump since it is slow to notice fame from Pavlovsk). This is base game behavior, not a mod bug.'
 *nl
 '<b>Version 0.29.3</b>'
