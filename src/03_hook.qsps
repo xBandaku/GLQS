@@ -1,4 +1,17 @@
 # mod_GLQS
+!! The cheatsp entry in cheatVars gates whether the Quick Setup link shows up
+!! at all, and previously had no default - QSP vars start at 0 (falsy) until
+!! explicitly set, so every new save silently hid the link until a player
+!! happened to find the Enabled/Disabled toggle in the permanent block below,
+!! buried inside the games own cheat menu. Default it on the first time it is
+!! ever seen (tracked by a companion flag, since 0 alone cannot distinguish
+!! never-set from explicitly-disabled), so the link just works out of the box
+!! while still leaving the toggle available to hide it later.
+if cheatVars['cheatsp_defaulted'] <> 1:
+	cheatVars['cheatsp'] = 1
+	cheatVars['cheatsp_defaulted'] = 1
+end
+
 if func('homes_properties', 'is_current_home', $curloc) and $locclass = 'bedr' and cheatVars['cheatsp'] = 1:
 	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
 end
