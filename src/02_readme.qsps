@@ -1,6 +1,10 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.29.11 - Current</b>'
+'<b>Version 0.29.12 - Current</b>'
+'- Changed: The Quick Setup link now shows up on every real location in the game (previously only the bedroom, dorm room and therapist hotel room), since it turns out the mod was already being invoked everywhere by the games own mod loader - it was just being filtered down to those 3 screens. Hidden during character creation and the games own scripted scenes (sex scenes, big story beats) so it does not show before your character fully exists or interrupt a scene. Still does not appear during ordinary NPC chat screens, which do not carry a signal this mod can detect.'
+'- Fixed: The Return link now returns to the exact screen you opened Quick Setup from, using the same location tracking the game itself uses, instead of a value that was only reliably set if you had recently visited a shop.'
+*nl
+'<b>Version 0.29.11</b>'
 '- Fixed: The Quick Setup link (bedroom/dorm/hotel) was hidden by default on every new save until you found and enabled the Quick Setup Mod toggle buried in the games own cheat menu. Now enabled automatically the first time - the toggle is still there in the cheat menu if you ever want to hide the link.'
 *nl
 '<b>Version 0.29.10</b>'

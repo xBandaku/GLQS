@@ -12,16 +12,27 @@ if cheatVars['cheatsp_defaulted'] <> 1:
 	cheatVars['cheatsp_defaulted'] = 1
 end
 
-if func('homes_properties', 'is_current_home', $curloc) and $locclass = 'bedr' and cheatVars['cheatsp'] = 1:
-	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
-end
-
-if $loc = 'uni_dorm' and $curloc = 'uni_dorm' and $loc_arg = 'dorm_room' and cheatVars['cheatsp'] = 1:
-	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
-end
-
-if $loc = 'HotelRoom' and $curloc = 'HotelRoom' and $loc_arg = 'therapist' and cheatVars['cheatsp'] = 1:
-	'<b> MOD <a href="exec: $shopreturn = $menu_loc & $shoparg = $menu_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+!! mod_GLQS is auto-invoked by the games own mod loader (core_loop in
+!! mod_system.qsrc, wired up via $onnewloc = LOCA in start.qsrc) after
+!! EVERY real gt transition anywhere in the game, not just the bedroom -
+!! this used to be filtered down to 3 hardcoded screens (bedroom/dorm/
+!! therapist hotel room) with location-specific if checks. Showing it on
+!! every real location instead needs two guards: opPRE > 0 marks character
+!! creation still in progress (set in start.qsrc at the very first screen,
+!! cleared at the end of intro_initialization.qsrc) - mc stats do not
+!! fully exist yet, so cheats would error or behave strangely if triggered
+!! there. location_type = event marks the games own scripted scenes (sex
+!! scenes, big story beats) which should not be interrupted with an
+!! unrelated UI link. This does not catch ordinary NPC chat screens, which
+!! do not set location_type at all and just inherit whatever the previous
+!! real location left it as - a known, accepted gap, not a bug.
+!! gt $loc, $loc_arg (not curloc/menu_loc) is the games own idiom for
+!! returning to the exact screen the player is currently on (see the
+!! act Continue: gt $loc, $loc_arg pattern in core_library.qsrc), used
+!! here for the Return link so it works from any location, not just ones
+!! that happen to have $menu_loc/$menu_arg already set from a shop visit.
+if opPRE = 0 and $location_type <> 'event' and cheatVars['cheatsp'] = 1:
+	'<b> MOD <a href="exec: $shopreturn = $loc & $shoparg = $loc_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
 end
 
 if $ARGS[0] = 'permanent':
