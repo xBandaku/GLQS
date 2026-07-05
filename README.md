@@ -129,3 +129,10 @@ installation and enabling steps above instead.
 Check the [Releases page](https://github.com/xBandaku/GLQS/releases) on
 GitHub for the full changelog, or, in-game, click the small info icon next to
 GLQS's entry in your installed mods list.
+
+## License
+
+GLQS's own source code is licensed under the [GNU GPL v3](LICENSE). This
+covers the mod's `.qsps`/`.qsp` files and build tooling only - it has no
+bearing on **Girl Life** itself, which remains its own separate, independently
+licensed game.
