@@ -49,8 +49,15 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   `'consumables'`/`'stats'`, `16_fill_helpers.qsps` handles bulk-grant loops like
   `'fill_clo'`. Menus link to each other via
   `gt 'mod_GLQS_main', 'other_menu_name'`.
-- `03_hook.qsps` is the entry point injected into the game's bedroom location
-  (`$locclass = 'bedr'`) that renders the "Quick Setup" link into `mod_GLQS_main`.
+- `03_hook.qsps` defines its own location, `mod_GLQS` (matching the
+  `mod_<$mod_info[0]>` naming the base game's mod loader expects), which the
+  base game auto-invokes after every real `gt` transition anywhere in the
+  game via `$onnewloc = 'LOCA'` (`start.qsrc`) chaining into `core_loop` in
+  `mod_system.qsrc` - not just the bedroom. Whether the "Quick Setup" link
+  actually renders into `mod_GLQS_main` is gated inside the file itself
+  (skipped during character creation, during the game's own scripted events,
+  and on the wardrobe/clothing-store screens); there is no `$locclass` check
+  anywhere in the current file.
 - File numbering (`01`, `02`, `03`, `05`...`16`) controls both display order in the
   standalone list and concatenation order in the shared location — it's advisory
   (gaps are fine), just keep related menus grouped.
@@ -99,8 +106,8 @@ reasoning is worth knowing when lint flags them:
 ## `03_hook.qsps`'s location-based hook only works for real `gt` transitions
 
 `03_hook.qsps` renders the "Quick Setup" link by checking ambient globals like
-`$curloc`/`$locclass`/`$loc`/`$loc_arg` (e.g. `$locclass = 'bedr'` for the bedroom).
-This only works because those screens are reached via a real `gt` location change.
+`$curloc`/`$location_type`/`$loc`/`$loc_arg` (e.g. `$curloc <> 'wardrobe'` to
+skip that screen). This only works because those screens are reached via a real `gt` location change.
 Confirmed by testing live in-game: screens rendered via a plain `gs` subroutine call
 from wherever the player already is (e.g. the purse - `gs 'din_bad', 'd_bag'` - or the
 phone - `gs 'telefon', 'Phone_menu'`) do **not** change `$curloc` to that subroutine's
@@ -108,8 +115,9 @@ own location name, so a hook checking `$curloc = 'din_bad'` never fires even whi
 that screen is what's actually displayed. There is no confirmed reliable global to
 detect "this gs-rendered overlay is currently on screen" from outside its own code.
 Before adding a new hook point, check whether the target screen is reached via `gt`
-(hookable, same pattern as bedroom/dorm/hotel) or `gs` (not reliably hookable this
-way) - grep the reference source for how the screen is invoked.
+(hookable - the hook fires globally on every real `gt` location, no per-screen
+allowlist needed) or `gs` (not reliably hookable this way) - grep the reference
+source for how the screen is invoked.
 
 ## Reference: the base game's own source
 
