@@ -46,7 +46,10 @@ if $ARGS[0] = 'grades':
 		gt 'mod_GLQS_main', 'grades'
 	end
 
+	act 'Zero Absences':
+		gschoolVars['absence_count'] = 0
+		gt 'mod_GLQS_main', 'grades'
+	end
+
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
-
-

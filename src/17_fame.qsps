@@ -147,7 +147,17 @@ if $ARGS[0] = 'fame_detail':
 
 	act 'Return': gt 'mod_GLQS_main', 'fame_region_menu'
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
-	killvar '$glqs_region' & killvar '$glqs_label'
+	!! $glqs_region is NOT killed here - every act above (Acting..Flashing,
+	!! Max All (this region)) references it directly, and QSP resolves act
+	!! bodies at click time, not at definition time. Killing it here cleared
+	!! it before the player could ever click, so every max button silently
+	!! wrote to a bogus empty-region fame key instead of the real
+	!! region - this is the same stray-killvar bug the v0.28 changelog
+	!! already fixed once (clothing/tattoo/piercing pickers, same root
+	!! cause); the v0.29.4 shared-data-table refactor reintroduced it here.
+	!! $glqs_label is safe to kill - only used for this renders own display,
+	!! not referenced by any act.
+	killvar '$glqs_label'
 	killvar '$glqs_fame_act' & killvar '$glqs_fame_label' & killvar 'glqs_fame_act_total'
 end
 
@@ -230,4 +240,3 @@ if $ARGS[0] = 'fame_maxall':
 	killvar 'glqs_r'
 	killvar '$glqs_fame_regions'
 end
-

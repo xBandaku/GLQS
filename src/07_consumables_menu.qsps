@@ -24,17 +24,33 @@ if $ARGS[0] = 'consumables_menu':
 	$glqs_tbl += '<tr><td>Shampoo</td><td><<mc_inventory[''shampoo'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Mouthwash</td><td><<mc_inventory[''mouthwash'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Deodorant</td><td><<mc_inventory[''deodorant'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Breastmilk bottle S</td><td><<mc_inventory[''bottle_s'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Breastmilk bottle M</td><td><<mc_inventory[''bottle_m'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Thrush medication</td><td><<mc_inventory[''thrush_meds'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Morning sickness pills</td><td><<mc_inventory[''meds_morning_sick'']>></td></tr>'
 	$glqs_tbl += '<tr><td><b>Beauty</b></td><td></td></tr>'
 	$glqs_tbl += '<tr><td>Lipbalm</td><td><<mc_inventory[''lipbalm'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Cosmetics</td><td><<mc_inventory[''cosmetics'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Moisturiser</td><td><<mc_inventory[''moisturiser'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Scrunchies</td><td><<mc_inventory[''scrunchies'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Hair extension shampoo</td><td><<mc_inventory[''hair_extensioncream'']>></td></tr>'
 	$glqs_tbl += '<tr><td><b>Drugs</b></td><td></td></tr>'
 	$glqs_tbl += '<tr><td>Neuroboosters (Mentats)</td><td><<mc_inventory[''mentats'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Steroids</td><td><<mc_inventory[''steroids'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Aphrodisiac</td><td><<mc_inventory[''aphrodisiac'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Breast cream</td><td><<mc_inventory[''breastcream'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Lubricant</td><td><<mc_inventory[''lubricant'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Butt growth injection</td><td><<mc_inventory[''butt_injection'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Joints</td><td><<mc_inventory[''joints'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Cocaine</td><td><<mc_inventory[''cocaine'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Amphetamine</td><td><<mc_inventory[''amphetamine'']>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Food</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Berries</td><td><<mc_inventory[''berries'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Mushrooms</td><td><<mc_inventory[''mushrooms'']>></td></tr>'
+	$glqs_tbl += '<tr><td><b>Household</b></td><td></td></tr>'
+	$glqs_tbl += '<tr><td>Dishwashing detergent</td><td><<mc_inventory[''dish_soap'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Clothing detergent</td><td><<mc_inventory[''laundry_soap'']>></td></tr>'
+	$glqs_tbl += '<tr><td>Plates</td><td><<mc_inventory[''dish_plates'']>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -54,7 +70,28 @@ if $ARGS[0] = 'consumables_menu':
 		gt 'mod_GLQS_main', 'consumables_menu'
 	end
 
+	'<b>Individual toggles</b> (the base game caps these at 1 regardless of quantity, so Set All above does not apply to them - each toggles independently):'
+	*nl
+	$glqs_tbl2 = ''
+	$glqs_tbl2 += '<table width="80%" cellpadding=4>'
+	$glqs_tbl2 += '<tr><td><b>Food</b></td><td></td></tr>'
+	$glqs_tbl2 += '<tr><td>Bottle of water</td><td><a href="exec: mc_inventory[''food_water''] = iif(mc_inventory[''food_water''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''food_water''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Sandwich</td><td><a href="exec: mc_inventory[''food_sandwich''] = iif(mc_inventory[''food_sandwich''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''food_sandwich''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Cheap bottle of wine</td><td><a href="exec: mc_inventory[''food_wine''] = iif(mc_inventory[''food_wine''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''food_wine''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td><b>Pregnancy</b></td><td></td></tr>'
+	$glqs_tbl2 += '<tr><td>Pregnancy ball</td><td><a href="exec: mc_inventory[''preg_ball''] = iif(mc_inventory[''preg_ball''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''preg_ball''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Pregnancy brace</td><td><a href="exec: mc_inventory[''preg_brace''] = iif(mc_inventory[''preg_brace''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''preg_brace''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Pregnancy pillow</td><td><a href="exec: mc_inventory[''preg_pillow''] = iif(mc_inventory[''preg_pillow''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''preg_pillow''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td><b>Exercise Equipment</b></td><td></td></tr>'
+	$glqs_tbl2 += '<tr><td>Skipping rope</td><td><a href="exec: mc_inventory[''skipping_rope''] = iif(mc_inventory[''skipping_rope''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''skipping_rope''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Hula hoop</td><td><a href="exec: mc_inventory[''hula_hoop''] = iif(mc_inventory[''hula_hoop''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''hula_hoop''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Book on yoga</td><td><a href="exec: mc_inventory[''book_yoga''] = iif(mc_inventory[''book_yoga''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''book_yoga''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Ice skates</td><td><a href="exec: mc_inventory[''ice_skates''] = iif(mc_inventory[''ice_skates''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''ice_skates''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Skis</td><td><a href="exec: mc_inventory[''ski''] = iif(mc_inventory[''ski''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''ski''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '<tr><td>Refillable water bottle</td><td><a href="exec: mc_inventory[''refill_bottle''] = iif(mc_inventory[''refill_bottle''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''"><<iif(mc_inventory[''refill_bottle''] > 0, ''Owned'', ''Not owned'')>></a></td></tr>'
+	$glqs_tbl2 += '</table>'
+	$glqs_tbl2
+	*nl
+
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
-
-

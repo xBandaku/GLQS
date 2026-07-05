@@ -39,5 +39,3 @@ if $ARGS[0] = 'health_menu':
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
-
-

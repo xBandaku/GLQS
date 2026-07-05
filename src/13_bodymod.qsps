@@ -138,7 +138,10 @@ if $ARGS[0] = 'tattoo_design_menu':
 		end
 	end
 
-	killvar '$glqs_zone'
+	!! $glqs_zone is NOT killed here - the act above references it directly,
+	!! and QSP resolves act bodies at click time, not at definition time.
+	!! Killing it here would clear it before the player could ever click,
+	!! same stray-killvar bug as fame_detail (see comment there).
 	act 'Back to Zones': gt 'mod_GLQS_main', 'tattoo_zone_menu'
 end
 
@@ -204,9 +207,10 @@ if $ARGS[0] = 'piercing_design_menu':
 		end
 	end
 
-	killvar '$glqs_slot'
+	!! $glqs_slot is NOT killed here - the act above references it directly,
+	!! and QSP resolves act bodies at click time, not at definition time.
+	!! Killing it here would clear it before the player could ever click,
+	!! same stray-killvar bug as fame_detail (see comment there).
 	act 'Back to Slots': gt 'mod_GLQS_main', 'piercing_slot_menu'
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
-
-

@@ -492,5 +492,3 @@ if $ARGS[0] = 'item_pick_all':
 	killvar '$glqs_ipa_type'
 	killvar '$glqs_ipa_key'
 end
-
-

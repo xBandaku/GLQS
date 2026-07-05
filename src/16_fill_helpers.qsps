@@ -94,4 +94,3 @@ if $ARGS[0] = 'fill_purse':
 	end
 	killvar 'glqs_i'
 end
-

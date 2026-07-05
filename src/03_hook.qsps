@@ -31,7 +31,15 @@ end
 !! act Continue: gt $loc, $loc_arg pattern in core_library.qsrc), used
 !! here for the Return link so it works from any location, not just ones
 !! that happen to have $menu_loc/$menu_arg already set from a shop visit.
-if opPRE = 0 and $location_type <> 'event' and cheatVars['cheatsp'] = 1:
+!! Two extra location exclusions on top of the two guards above: wardrobe
+!! (reached via gt ''wardrobe'', ''start'' from the bedroom/dorm/etc) and
+!! clothing_view (the shared item-browsing/buying screen every individual
+!! store - Allure, Bomba, Pussy-Cats, etc - and the detailed wardrobe view
+!! both gt into). Both are real gt locations so the hook would otherwise
+!! fire there same as anywhere else; excluded purely so the link does not
+!! clutter these image-heavy screens. Purely cosmetic - nothing else in
+!! the mod depends on the link being present on these two screens.
+if opPRE = 0 and $location_type <> 'event' and cheatVars['cheatsp'] = 1 and $curloc <> 'wardrobe' and $curloc <> 'clothing_view':
 	'<b> MOD <a href="exec: $shopreturn = $loc & $shoparg = $loc_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
 end
 

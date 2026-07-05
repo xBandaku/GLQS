@@ -7,26 +7,32 @@ if $ARGS[0] = 'recurrent':
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Recurrent Cheats</font></b></center>'
 	*nl
+	'Each row below toggles individually on click; Enable All / Disable All further down still set all of them at once:'
+	*nl
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
-	$glqs_tbl += '<tr><td>Willpower cost always zero</td><td><<iif(cheatVars[''willpower''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Infinite willpower</td><td><<iif(cheatVars[''inf_willpower''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Always combed</td><td><<iif(cheatVars[''always_brushed''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Cosmetics never smeared</td><td><<iif(cheatVars[''makeup_smear''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Never sweat</td><td><<iif(cheatVars[''no_sweat''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Never eat</td><td><<iif(cheatVars[''hunger''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Never drink</td><td><<iif(cheatVars[''thirst''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Never sleep</td><td><<iif(cheatVars[''sleep''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Never unhappy</td><td><<iif(cheatVars[''mood''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Never shave legs</td><td><<iif(cheatVars[''no_leghair''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Never lose or gain weight</td><td><<iif(cheatVars[''fat''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Bust and butt unaffected by weight</td><td><<iif(cheatVars[''body_staticAssets''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Allow any clothing for school</td><td><<iif(cheatVars[''school_clothing''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Never get addicted</td><td><<iif(cheatVars[''drugs_immune''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Enable sleeping with vibrator inserted</td><td><<iif(cheatVars[''sleep_vib''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Clothes never dirty</td><td><<iif(cheatVars[''clothes_dirt''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Set arousal to always be at 50 or more</td><td><<iif(cheatVars[''always_horny''], ''Enabled'', ''Disabled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Succubus clothing invulnerability</td><td><<iif(cheatVars[''suc_bimbo''], ''Enabled'', ''Disabled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Willpower cost always zero</td><td><a href="exec: cheatVars[''willpower''] = iif(cheatVars[''willpower''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''willpower''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Infinite willpower</td><td><a href="exec: cheatVars[''inf_willpower''] = iif(cheatVars[''inf_willpower''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''inf_willpower''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Always combed</td><td><a href="exec: cheatVars[''always_brushed''] = iif(cheatVars[''always_brushed''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''always_brushed''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Cosmetics never smeared</td><td><a href="exec: cheatVars[''makeup_smear''] = iif(cheatVars[''makeup_smear''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''makeup_smear''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Never sweat</td><td><a href="exec: cheatVars[''no_sweat''] = iif(cheatVars[''no_sweat''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''no_sweat''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Never eat</td><td><a href="exec: cheatVars[''hunger''] = iif(cheatVars[''hunger''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''hunger''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Never drink</td><td><a href="exec: cheatVars[''thirst''] = iif(cheatVars[''thirst''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''thirst''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Never sleep</td><td><a href="exec: cheatVars[''sleep''] = iif(cheatVars[''sleep''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''sleep''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>No dream chance (skip bad dreams)</td><td><a href="exec: cheatVars[''no_dream_chance''] = iif(cheatVars[''no_dream_chance''] > 0, 0, 100) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''no_dream_chance''] > 0, ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Never unhappy</td><td><a href="exec: cheatVars[''mood''] = iif(cheatVars[''mood''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''mood''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Never shave legs</td><td><a href="exec: cheatVars[''no_leghair''] = iif(cheatVars[''no_leghair''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''no_leghair''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Never lose or gain weight</td><td><a href="exec: cheatVars[''fat''] = iif(cheatVars[''fat''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''fat''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Bust and butt unaffected by weight</td><td><a href="exec: cheatVars[''body_staticAssets''] = iif(cheatVars[''body_staticAssets''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''body_staticAssets''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Allow any clothing for school</td><td><a href="exec: cheatVars[''school_clothing''] = iif(cheatVars[''school_clothing''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''school_clothing''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Porn schedule editor</td><td><a href="exec: cheatVars[''edit_porn''] = iif(cheatVars[''edit_porn''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''edit_porn''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Never get addicted</td><td><a href="exec: gs ''cheatmenu_din'', ''addict'' & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''drugs_immune''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Enable sleeping with vibrator inserted</td><td><a href="exec: gs ''cheatmenu_din'', ''Vibrator'' & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''sleep_vib''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Clothes never dirty</td><td><a href="exec: gs ''cheatmenu_din'', ''clothes_dirt'' & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''clothes_dirt''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	$glqs_tbl += '<tr><td>Set arousal to always be at 50 or more</td><td><a href="exec: cheatVars[''always_horny''] = iif(cheatVars[''always_horny''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''always_horny''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	if cheatVars['bimbo'] = 0:
+		$glqs_tbl += '<tr><td>Succubus clothing invulnerability</td><td><a href="exec: cheatVars[''suc_bimbo''] = iif(cheatVars[''suc_bimbo''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''suc_bimbo''], ''Enabled'', ''Disabled'')>></a></td></tr>'
+	end
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -78,14 +84,32 @@ if $ARGS[0] = 'recurrent_on':
 	cheatVars['hunger'] = 1
 	cheatVars['thirst'] = 1
 	cheatVars['sleep'] = 1
+	cheatVars['no_dream_chance'] = 100
 	cheatVars['mood'] = 1
 	cheatVars['no_leghair'] = 1
 	cheatVars['fat'] = 1
 	cheatVars['body_staticAssets'] = 1
 	cheatVars['school_clothing'] = 1
+	cheatVars['edit_porn'] = 1
+	!! Matches the base games own addict handler (cheatmenu_din.qsrc) so
+	!! enabling here also clears existing addiction progress, not just the flag.
 	cheatVars['drugs_immune'] = 1
+	drugVars['cigarettes_used'] = 0
+	drugVars['cigarettes_need'] = 0
+	drugVars['weed_used'] = 0
+	drugVars['alcohol_used'] = 0
+	drugVars['cocaine_used'] = 0
+	drugVars['amphetamine_used'] = 0
+	drugVars['heroin_used'] = 0
+	!! Matches the base games own Vibrator handler - sleepVars[bedVibrator]
+	!! is the flag pre_sleep/bed2 actually check, cheatVars alone only
+	!! unlocks the option, so both need to be set for this to take effect.
 	cheatVars['sleep_vib'] = 1
+	sleepVars['bedVibrator'] = 1
+	!! Matches the base games own clothes_dirt handler - also washes
+	!! everything currently dirty instead of only preventing new dirt.
 	cheatVars['clothes_dirt'] = 1
+	gs 'washer', 'wash_all'
 	cheatVars['always_horny'] = 1
 	cheatVars['suc_bimbo'] = 1
 end
@@ -100,16 +124,17 @@ if $ARGS[0] = 'recurrent_off':
 	cheatVars['hunger'] = 0
 	cheatVars['thirst'] = 0
 	cheatVars['sleep'] = 0
+	cheatVars['no_dream_chance'] = 0
 	cheatVars['mood'] = 0
 	cheatVars['no_leghair'] = 0
 	cheatVars['fat'] = 0
 	cheatVars['body_staticAssets'] = 0
 	cheatVars['school_clothing'] = 0
+	cheatVars['edit_porn'] = 0
 	cheatVars['drugs_immune'] = 0
 	cheatVars['sleep_vib'] = 0
+	sleepVars['bedVibrator'] = 0
 	cheatVars['clothes_dirt'] = 0
 	cheatVars['always_horny'] = 0
 	cheatVars['suc_bimbo'] = 0
 end
-
-

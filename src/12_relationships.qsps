@@ -197,5 +197,3 @@ if $ARGS[0] = 'max_category':
 	killvar '$glqs_row' & killvar '$glqs_rest' & killvar '$glqs_cat' & killvar '$glqs_key' & killvar '$glqs_mc_target'
 	killvar '$glqs_npc' & killvar '$glqs_cat_label' & killvar 'glqs_rel_total'
 end
-
-

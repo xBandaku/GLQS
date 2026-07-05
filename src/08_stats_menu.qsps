@@ -28,7 +28,7 @@ if $ARGS[0] = 'stats_menu':
 	$glqs_tbl += '<tr><td>Jabs</td><td><<jab_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Power Strikes</td><td><<punch_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Kicks</td><td><<kick_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Defence</td><td><<def_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Defense</td><td><<def_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Running</td><td><<run_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Volleyball</td><td><<vball_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Football</td><td><<ftbll_lvl>></td></tr>'
@@ -49,5 +49,3 @@ if $ARGS[0] = 'stats_menu':
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
-
-

@@ -1,6 +1,35 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.29.12 - Current</b>'
+'<b>Version 0.34.1 - Current</b>'
+'- Changed: Quick Setup link no longer shows on the wardrobe screen or the shared clothing_view browsing/buying screen every store routes through - purely cosmetic, so it does not clutter these image-heavy screens. Nothing else depends on the link being present there.'
+*nl
+'<b>Version 0.34</b>'
+'- Added: School Grades has a Zero Absences button, separate from Set All Grades to 100, matching the base games own Zero Absenteeism cheat menu option.'
+*nl
+'<b>Version 0.33</b>'
+'- Fixed: Fame By Region (individual activity Max buttons and Max All (this region)) silently did nothing for every activity except Sex, Prostitution and Flashing - those three looked unaffected only because they already carry decent fame from normal gameplay, not because the buttons worked. Root cause: fame_detail killed the captured region variable at the end of its own render, before the player could click any button that used it, so every max click ran with an empty region and wrote to a bogus fame key instead of the real one. This is the same stray-killvar bug the v0.28 changelog already fixed once; the v0.29.4 shared-data-table refactor reintroduced it here.'
+'- Fixed: Same stray-killvar bug also broke Remove Tattoo From This Zone and Remove Piercing From This Slot in Body Mods - both killed the captured zone/slot before the button using it could be clicked.'
+*nl
+'<b>Version 0.32.1</b>'
+'- Changed: Consumables - Individual toggles now read Owned/Not owned instead of Enabled/Disabled, since these are physical items rather than behavior flags.'
+*nl
+'<b>Version 0.32</b>'
+'- Fixed: 14 of the items added to Consumables in v0.30 (breastmilk bottles, thrush medication, hair extension shampoo, a butt growth injection, joints/cocaine/amphetamine, foraged berries/mushrooms, and household supplies) are stackable in the base game, not capped at 1 like the items that remain in Individual toggles - moved them into Set All to 10,000/1,000/100 instead of a fixed on/off value.'
+'- Added: Consumables - Exercise Equipment toggle category (skipping rope, hula hoop, book on yoga, ice skates, skis, refillable water bottle). These were already granted silently by Set All as part of a generic unique-items grant; pulling them into their own toggles gives each one visibility and individual control, matching the base games own Sport Equipment shop catalog.'
+*nl
+'<b>Version 0.31</b>'
+'- Added: Recurrent Cheats - every item in the main list now toggles individually by clicking it, not just via Enable All/Disable All. Also added two cheats the base games own cheat menu has that GLQS was missing entirely: Porn schedule editor and No dream chance (skip bad dreams).'
+'- Fixed: Never get addicted, Enable sleeping with vibrator inserted, and Clothes never dirty now call the same handlers the base games own cheat menu uses instead of only flipping the flag, so enabling them also clears existing addiction progress, syncs the bed vibrator setting the sleep menu actually checks, and washes everything currently dirty, matching base game behavior.'
+'- Changed: Succubus clothing invulnerability only shows while Clothing archetypes is enabled, matching the base games own cheat menu - it has no effect otherwise.'
+*nl
+'<b>Version 0.30</b>'
+'- Added: Consumables now has an Individual toggles section below Set All, covering 20 items the base games own cheat menu and item catalog expose that Set All did not: breastmilk bottles (S/M), thrush medication, hair extension shampoo, a butt growth injection, narcotics (joints, cocaine, amphetamine), bottled water/sandwich/wine, foraged berries and mushrooms, household supplies (dishwashing detergent, clothing detergent, plates), and pregnancy support (morning sickness pills, pregnancy ball/brace/pillow). Kept separate from Set All and toggled individually so items like narcotics are not forced on a playthrough that is not using them - the same reasoning Recurrent Cheats already uses for its own individual toggles.'
+*nl
+'<b>Version 0.29.13</b>'
+'- Fixed: Skills & Attributes listed the def skill as Defence; corrected to Defense to match the base games own skill label.'
+'- Changed: Internal cleanup - removed stray excess blank lines that had accumulated in a few src fragments. No player-visible change.'
+*nl
+'<b>Version 0.29.12</b>'
 '- Changed: The Quick Setup link now shows up on every real location in the game (previously only the bedroom, dorm room and therapist hotel room), since it turns out the mod was already being invoked everywhere by the games own mod loader - it was just being filtered down to those 3 screens. Hidden during character creation and the games own scripted scenes (sex scenes, big story beats) so it does not show before your character fully exists or interrupt a scene. Still does not appear during ordinary NPC chat screens, which do not carry a signal this mod can detect.'
 '- Fixed: The Return link now returns to the exact screen you opened Quick Setup from, using the same location tracking the game itself uses, instead of a value that was only reliably set if you had recently visited a shop.'
 *nl

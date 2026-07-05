@@ -21,6 +21,10 @@ if $ARGS[0] = 'consumables':
 	mc_inventory['chafing_cream'] = glqs_amt
 	mc_inventory['weight_loss_pill'] = glqs_amt
 	mc_inventory['nipple_cream'] = glqs_amt
+	mc_inventory['bottle_s'] = glqs_amt
+	mc_inventory['bottle_m'] = glqs_amt
+	mc_inventory['thrush_meds'] = glqs_amt
+	mc_inventory['meds_morning_sick'] = glqs_amt
 	!! --- Beauty ---
 	mc_inventory['lipbalm'] = glqs_amt
 	mc_inventory['cosmetics'] = glqs_amt
@@ -31,20 +35,31 @@ if $ARGS[0] = 'consumables':
 	mc_inventory['kirbygrips'] = glqs_amt
 	mc_inventory['eyelash_fake'] = glqs_amt
 	mc_inventory['eyelash_mink'] = glqs_amt
+	mc_inventory['hair_extensioncream'] = glqs_amt
 	!! --- Sexual ---
 	mc_inventory['lubricant'] = glqs_amt
 	mc_inventory['breastcream'] = glqs_amt
 	mc_inventory['aphrodisiac'] = glqs_amt
+	mc_inventory['butt_injection'] = glqs_amt
 	!! --- Drugs ---
 	mc_inventory['mentats'] = glqs_amt
 	mc_inventory['steroids'] = glqs_amt
+	mc_inventory['joints'] = glqs_amt
+	mc_inventory['cocaine'] = glqs_amt
+	mc_inventory['amphetamine'] = glqs_amt
 	!! --- Food ---
 	mc_inventory['food_basic'] = glqs_amt
 	mc_inventory['food_diet'] = glqs_amt
 	mc_inventory['food_biscuits'] = glqs_amt
+	mc_inventory['berries'] = glqs_amt
+	mc_inventory['mushrooms'] = glqs_amt
 	!! --- Misc consumables ---
 	mc_inventory['cigarettes'] = glqs_amt
 	mc_inventory['sewing_fabric'] = glqs_amt
+	!! --- Household ---
+	mc_inventory['dish_soap'] = glqs_amt
+	mc_inventory['laundry_soap'] = glqs_amt
+	mc_inventory['dish_plates'] = glqs_amt
 	killvar 'glqs_amt'
 	!! --- Unique items (max 1) ---
 	mc_inventory['comb'] = 1
@@ -53,12 +68,6 @@ if $ARGS[0] = 'consumables':
 	mc_inventory['sewing_kit'] = 1
 	mc_inventory['enema_kit'] = 1
 	mc_inventory['breast_pump'] = 1
-	mc_inventory['ice_skates'] = 1
-	mc_inventory['ski'] = 1
-	mc_inventory['skipping_rope'] = 1
-	mc_inventory['hula_hoop'] = 1
-	mc_inventory['book_yoga'] = 1
-	mc_inventory['refill_bottle'] = 1
 	!! --- Sex toys (unique) ---
 	mc_inventory['vibe'] = 1
 	mc_inventory['buttplug'] = 1
@@ -84,10 +93,6 @@ end
 !! ===== STATS =====
 if $ARGS[0] = 'stats':
 
-
-
-
-
 	gs 'shortgs', 'setStat', 'stren', 100
 	gs 'shortgs', 'setStat', 'agil', 100
 	gs 'shortgs', 'setStat', 'vital', 100
@@ -99,9 +104,6 @@ if $ARGS[0] = 'stats':
 	gs 'shortgs', 'setStat', 'magik', 100
 	gs 'shortgs', 'setStat', 'inhib', 100
 	willpowermax = 150
-
-
-
 	!! --- Mental Skills (direct setStat - no cheat menu redirect) ---
 	gs 'shortgs', 'setStat', 'splcstng', 100
 	gs 'shortgs', 'setStat', 'humint', 100
@@ -147,16 +149,11 @@ if $ARGS[0] = 'stats':
 	gs 'shortgs', 'setStat', 'medcn', 100
 	gs 'shortgs', 'setStat', 'cleaning', 100
 	gs 'shortgs', 'setStat', 'mdlng', 100
-
-
 	pcs_vball_block = 100
 	pcs_vball_rec = 100
 	pcs_vball_serve = 100
 	pcs_vball_set = 100
 	pcs_vball_spike = 100
-
-
-
 end
 
 !! ===== CLOTHING =====
@@ -194,4 +191,3 @@ end
 !! Each helper sets the item owned flag AND repairs it to full durability by
 !! setting the companion _h[] array to max strength (matches what the games
 !! own cheat_repair functions do, so items never need tailor repair/resize.
-
