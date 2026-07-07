@@ -7,6 +7,7 @@ if $ARGS[0] = 'fill_clo':
 		dyneval('<<$ARGS[1]>>[glqs_i] = 1')
 		gs 'clothing_attributes', $ARGS[1], glqs_i
 		dyneval('<<$ARGS[1]>>_h[glqs_i] = CloMaxStrength')
+		dyneval('<<$ARGS[1]>>_b[glqs_i] = pcs_hips')
 		glqs_i += 1
 		jump 'glqs_clo_loop'
 	end

@@ -441,6 +441,7 @@ if $ARGS[0] = 'item_pick':
 		dyneval('<<$glqs_ip_key>>[glqs_ip_idx] = 1')
 		gs 'clothing_attributes', $glqs_ip_key, glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_h[glqs_ip_idx] = CloMaxStrength')
+		dyneval('<<$glqs_ip_key>>_b[glqs_ip_idx] = pcs_hips')
 	end
 	if $glqs_ip_type = 'shoe':
 		dyneval('<<$glqs_ip_key>>_shoe[glqs_ip_idx] = 1')

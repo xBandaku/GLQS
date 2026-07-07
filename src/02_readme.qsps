@@ -1,6 +1,9 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.1 - Current</b>'
+'<b>Version 0.34.2 - Current</b>'
+'- Fixed: Every clothing item granted through Quick Setup (Fill categories, Give All, Give This Item) reported This item is too small for you to wear as soon as you tried it on. The grant code set every clothing attribute except the body-size fit value the base game bakes in when you actually buy an outfit, so it was left at 0 and always failed the fit check against your real hip size. Now set the same way the base games own add_item/resize_clothes routines do.'
+*nl
+'<b>Version 0.34.1</b>'
 '- Changed: Quick Setup link no longer shows on the wardrobe screen or the shared clothing_view browsing/buying screen every store routes through - purely cosmetic, so it does not clutter these image-heavy screens. Nothing else depends on the link being present there.'
 *nl
 '<b>Version 0.34</b>'
