@@ -58,7 +58,7 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   (skipped during character creation, during the game's own scripted events,
   and on the wardrobe/clothing-store screens); there is no `$locclass` check
   anywhere in the current file.
-- File numbering (`01`, `02`, `03`, `05`...`16`) controls both display order in the
+- File numbering (`01`, `02`, `03`, `05`...`17`) controls both display order in the
   standalone list and concatenation order in the shared location — it's advisory
   (gaps are fine), just keep related menus grouped.
 
@@ -77,6 +77,11 @@ These exist because they caused real, hard-to-diagnose failures during developme
    line-based depth counter, not a real parser — it doesn't fully understand
    single-line `if`/`act` or elseif chains, but catches missing/extra `end`s before
    an in-game repro is needed.
+4. **`$mod_info[1]` (`01_setup.qsps`) and the top changelog entry
+   (`02_readme.qsps`) must agree on version.** They encode the same version
+   independently — one drives the version shown on the game's mod-selection
+   screen, the other the in-game readme screen — and nothing else keeps them in
+   sync, so bump both together.
 
 When lint fails, fix the referenced `src/` fragment, not `build/GLQS.qsps` (that's
 generated output and gets overwritten every build).
