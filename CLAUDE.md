@@ -84,8 +84,7 @@ These exist because they caused real, hard-to-diagnose failures during developme
    `'<b>Version 0.34.2 - Current</b>'` — and nothing but this lint keeps them
    in sync. Bump both on every version change: patch `$mod_info[1]` in
    `01_setup.qsps`, and prepend a new `'<b>Version X.Y.Z - Current</b>'` entry
-   (moving `- Current` off the previous top entry) in `02_readme.qsps`. The
-   `/release` skill automates this.
+   (moving `- Current` off the previous top entry) in `02_readme.qsps`.
 
 When lint fails, fix the referenced `src/` fragment, not `build/GLQS.qsps` (that's
 generated output and gets overwritten every build).
