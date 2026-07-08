@@ -1,3 +1,4 @@
 build/
 reference/
 __pycache__/
+.claude/settings.local.json
