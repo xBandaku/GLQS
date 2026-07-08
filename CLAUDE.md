@@ -78,10 +78,14 @@ These exist because they caused real, hard-to-diagnose failures during developme
    single-line `if`/`act` or elseif chains, but catches missing/extra `end`s before
    an in-game repro is needed.
 4. **`$mod_info[1]` (`01_setup.qsps`) and the top changelog entry
-   (`02_readme.qsps`) must agree on version.** They encode the same version
-   independently — one drives the version shown on the game's mod-selection
-   screen, the other the in-game readme screen — and nothing else keeps them in
-   sync, so bump both together.
+   (`02_readme.qsps`) must encode the same version.** They're independent
+   strings with different formats — `$mod_info[1] = '03402'` is
+   `0`/`34`/`02` zero-padded-to-2-digits-each with no dots, vs. the changelog's
+   `'<b>Version 0.34.2 - Current</b>'` — and nothing but this lint keeps them
+   in sync. Bump both on every version change: patch `$mod_info[1]` in
+   `01_setup.qsps`, and prepend a new `'<b>Version X.Y.Z - Current</b>'` entry
+   (moving `- Current` off the previous top entry) in `02_readme.qsps`. The
+   `/release` skill automates this.
 
 When lint fails, fix the referenced `src/` fragment, not `build/GLQS.qsps` (that's
 generated output and gets overwritten every build).
@@ -178,3 +182,12 @@ to an existing fragment (if related) or a new `src/NN_description.qsps` file (no
 **New standalone QSP location (rare — only for something outside `mod_GLQS_main`):**
 create `src/NN_name.qsps` with its own full `# location_name` / `--- location_name ---`
 wrapper, and add `"NN_name.qsps"` to `STANDALONE_FILES` in `build.py`.
+
+## Keeping this file accurate
+
+When a bug or wasted cycle traces back to guidance here being wrong, stale, or
+silently contradicted by a later decision elsewhere in the repo, fix the
+guidance in the same session and say why — tie it to the concrete incident,
+not a vague warning. Don't add speculative rules for problems that haven't
+actually happened, and don't restate what's already obvious from reading
+`build.py` or `src/`.
