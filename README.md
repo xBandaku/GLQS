@@ -75,10 +75,10 @@ actually use it until you register it once from inside the game:
 4. GLQS now appears in your installed mods list and is active immediately -
    no restart needed.
 
-> **About the version number shown:** the Mods list displays GLQS's version
-> as **"0.34 fix 1"** rather than "0.34.1" - that's just the base game's own
-> display format for mod version numbers (major.minor "fix" patch). It's the
-> same version, not a mismatch.
+> **About the version number shown:** the Mods list displays version numbers
+> in the base game's own major.minor "fix" patch format - so, for example,
+> GLQS version 0.34.4 shows up as **"0.34 fix 4"**. It's the same version,
+> not a mismatch.
 
 > **Using an existing save?** Girl Life tracks installed mods per save file.
 > If you have older saves from before you installed GLQS, load each one and
