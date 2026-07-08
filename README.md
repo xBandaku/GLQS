@@ -1,17 +1,17 @@
-# GLQS - Girl Life Quick Setup
+# GLQS Rolling - Girl Life Quick Setup
 
 *Girl Life is an 18+ game; this mod and repository are intended for adult audiences.*
 
-GLQS is a quick-setup cheat mod for **Girl Life**. Once installed, it adds a
+GLQS Rolling is a quick-setup cheat mod for **Girl Life**. Once installed, it adds a
 single in-game link that opens a menu for instantly maxing out money,
 consumables, stats, skills, school grades, relationships, health/energy, fame
 and reputation, unlocking all clothing and body mods, and toggling a long list
 of quality-of-life cheats - no save editing or outside tools required.
 
 This guide covers everything a player needs: getting the mod, installing it,
-and turning it on in-game. (Developers who want to build GLQS from source
-instead of downloading it should see [`CLAUDE.md`](CLAUDE.md) - not needed for
-normal play.)
+and turning it on in-game. (Developers who want to build GLQS Rolling from
+source instead of downloading it should see [`CLAUDE.md`](CLAUDE.md) - not
+needed for normal play.)
 
 ## Contents
 
@@ -22,14 +22,14 @@ normal play.)
 
 ## 1. How to Get the Mod
 
-> **Before you download:** GLQS is a mod for **Girl Life - English Community
-> Version (ECV)**. Make sure Girl Life (ECV) is already installed and working
-> on its own first - GLQS has nothing to load into by itself and cannot be
-> played individually.
+> **Before you download:** GLQS Rolling is a mod for **Girl Life - English
+> Community Version (ECV)**. Make sure Girl Life (ECV) is already installed
+> and working on its own first - GLQS Rolling has nothing to load into by
+> itself and cannot be played individually.
 
-GLQS is distributed as a single, ready-to-use file, `GLQS.qsp`:
+GLQS Rolling is distributed as a single, ready-to-use file, `GLQS.qsp`:
 
-1. Go to the **[GLQS Releases page](https://github.com/xBandaku/GLQS/releases/latest)**.
+1. Go to the **[GLQS Rolling Releases page](https://github.com/xBandaku/GLQS-Rolling/releases/latest)**.
 2. The release at the top is always the newest version.
 3. Under **Assets**, download **`GLQS.qsp`**.
    - The page will also list "Source code (zip)" and "Source code (tar.gz)" -
@@ -126,13 +126,13 @@ game, instead of being installed as a mod through the Mods tab. Follow the
 installation and enabling steps above instead.
 
 **Where can I see what's new in the latest version?**
-Check the [Releases page](https://github.com/xBandaku/GLQS/releases) on
+Check the [Releases page](https://github.com/xBandaku/GLQS-Rolling/releases) on
 GitHub for the full changelog, or, in-game, click the small info icon next to
 GLQS's entry in your installed mods list.
 
 ## License
 
-GLQS's own source code is licensed under the [GNU GPL v3](LICENSE). This
+GLQS Rolling's own source code is licensed under the [GNU GPL v3](LICENSE). This
 covers the mod's `.qsps`/`.qsp` files and build tooling only - it has no
 bearing on **Girl Life** itself, which remains its own separate, independently
 licensed game.

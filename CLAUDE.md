@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-GLQS is a QSP (Quest Soft Player) mod for the game "Girl Life". It's a cheat/debug
+GLQS Rolling is a QSP (Quest Soft Player) mod for the game "Girl Life". It's a cheat/debug
 menu (clothing, consumables, stats/attributes, school grades, money, relationships,
 body mods, health) accessible from the bedroom in-game. Source is plain-text `.qsps`
 fragments that get stitched into one `.qsps` file and compiled to a binary `.qsp`.
