@@ -79,12 +79,13 @@ These exist because they caused real, hard-to-diagnose failures during developme
    an in-game repro is needed.
 4. **`$mod_info[1]` (`01_setup.qsps`) and the top changelog entry
    (`02_readme.qsps`) must encode the same version.** They're independent
-   strings with different formats — `$mod_info[1] = '03402'` is
-   `0`/`34`/`02` zero-padded-to-2-digits-each with no dots, vs. the changelog's
-   `'<b>Version 0.34.2 - Current</b>'` — and nothing but this lint keeps them
-   in sync. Bump both on every version change: patch `$mod_info[1]` in
-   `01_setup.qsps`, and prepend a new `'<b>Version X.Y.Z - Current</b>'` entry
-   (moving `- Current` off the previous top entry) in `02_readme.qsps`.
+   strings with different formats — `$mod_info[1]` is major/minor/patch
+   zero-padded-to-2-digits-each with no dots (e.g. `'03402'` = version
+   0.34.2), vs. the changelog's dotted `'<b>Version X.Y.Z - Current</b>'` —
+   and nothing but this lint keeps them in sync. Bump both on every version
+   change: patch `$mod_info[1]` in `01_setup.qsps`, and prepend a new
+   `'<b>Version X.Y.Z - Current</b>'` entry (moving `- Current` off the
+   previous top entry) in `02_readme.qsps`.
 
 When lint fails, fix the referenced `src/` fragment, not `build/GLQS.qsps` (that's
 generated output and gets overwritten every build).
@@ -111,6 +112,21 @@ reasoning is worth knowing when lint flags them:
   a real template marker and fails with a plain "Syntax error". Describe the syntax
   in words instead of typing literal angle brackets in any live QSP string.
 
+## Setting base-game stats: many `pcs_*` values are derived, not stored
+
+`stat_sklattrib_lvlset.qsrc` (run by every single `gs 'stat'` pass) recomputes a
+long list of `pcs_*` variables from their `*_lvl` counterparts plus attributes —
+e.g. `pcs_vball_block/rec/serve/set/spike` are all derived from `vball_lvl` and
+attribute values. Writing such a variable directly compiles and even displays
+fine, but the next `gs 'stat'` (which every GLQS menu itself runs) silently
+overwrites it, so the write does nothing. This shipped as dead code once: five
+direct `pcs_vball_*` writes sat in `15_actions.qsps` across many releases until
+the v0.34.4 reference audit caught them. Before assigning any `pcs_*` variable
+directly, grep `reference/nightly/locations/stat_sklattrib_lvlset.qsrc` for it —
+if it's assigned there, set the underlying skill/attribute via
+`gs 'shortgs', 'setStat', '<name>', <value>` instead (or skip it entirely:
+derived values follow automatically once their inputs are maxed).
+
 ## `03_hook.qsps`'s location-based hook only works for real `gt` transitions
 
 `03_hook.qsps` renders the "Quick Setup" link by checking ambient globals like
@@ -129,8 +145,9 @@ source for how the screen is invoked.
 
 ## Reference: the base game's own source
 
-`reference/` (gitignored, not tracked) holds two shallow clones of the game's real
-developer source, https://gitlab.com/kevinsmartstfg/girl-life:
+`reference/` (gitignored, not tracked) holds shallow clones of the game's real
+developer source, https://gitlab.com/kevinsmartstfg/girl-life. Only
+`reference/nightly/` is currently on disk:
 
 - **`reference/nightly/`** — `master` branch HEAD, matching the `Dev Life` folder's
   newer nightly build (its filename embeds the exact commit hash it was built from,
@@ -140,15 +157,18 @@ developer source, https://gitlab.com/kevinsmartstfg/girl-life:
   **This is the primary and default reference for all lookups going forward** —
   grep here first and only, unless a task is specifically and only about the
   stable `Girl Life` build.
-- **`reference/0.9.8.3/`** — checked out at tag `0.9.8.3`, matching the `.qsp`
-  installed in the `Girl Life` (stable) game folder (`Girl Life 0.9.8.3.qsp`). Kept
-  on disk but no longer checked by default — the two builds have diverged in real,
-  substantive ways in places (e.g. an archetype-system rewrite affecting
-  `BimboCloth`/`CalcAppearance`, and character creation being restructured
-  entirely from `intro_sg_select`/`intro_city_select` into
-  `intro_character_creation` on nightly), so do not assume a lookup here still
-  matches nightly. Only consult this if a task is explicitly about stable-only
-  behavior.
+- **`reference/0.9.8.3/`** — **not currently on disk** (removed after nightly
+  became the sole default reference; confirmed absent during the 2026-07 full
+  audit). It was a clone checked out at tag `0.9.8.3`, matching the `.qsp`
+  installed in the `Girl Life` (stable) game folder (`Girl Life 0.9.8.3.qsp`).
+  Only re-clone it (shallow, at that tag, using the refresh command below) if a
+  task is explicitly about stable-only behavior — and even then remember the two
+  builds have diverged in real, substantive ways in places (e.g. an
+  archetype-system rewrite affecting `BimboCloth`/`CalcAppearance`, and
+  character creation being restructured entirely from
+  `intro_sg_select`/`intro_city_select` into `intro_character_creation` on
+  nightly), so do not assume a stable lookup still matches nightly or vice
+  versa.
 
 This replaced an earlier approach of decompiling the installed `.qsp` with
 `qsp-cli` into one flat `glife_dev_build.qsps` file — the real source here is much
@@ -165,7 +185,8 @@ reference/nightly/locations/homes_properties.qsrc` for the property system, or
 search for an item's in-game display string across `reference/nightly/locations/*.qsrc`
 to find its `mc_inventory[...]` key.
 
-To refresh either clone if a lookup seems stale or the installed builds update:
+To refresh `nightly` if a lookup seems stale (or to re-create the `0.9.8.3`
+clone if a stable-only task ever needs it):
 `cd reference/<0.9.8.3-or-nightly> && git fetch --depth 1 origin <tag-or-branch> &&
 git checkout <tag-or-branch>` (or just re-clone the same way these were set up,
 matching whatever version string/commit hash the corresponding installed `.qsp`
