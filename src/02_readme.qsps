@@ -1,6 +1,9 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.2 - Current</b>'
+'<b>Version 0.34.3 - Current</b>'
+'- Fixed: The Misc clothing category (Give Everything, Buy By Store, and the per-item picker) granted a wall of blank, unlabeled clothing slots - as many as whatever category happened to run right before it internally. Root cause: this category was keyed to an array named misc, but the base game only ever defines images and descriptions for a differently-named misc_outfits array (which holds exactly one scripted item, not a real shop line) and has no official item count for misc at all, so the count silently carried over from the previous category in the buy-out list instead of stopping at zero. The broken Misc category has been removed entirely - there was never a real shop behind it to buy out.'
+*nl
+'<b>Version 0.34.2</b>'
 '- Fixed: Every clothing item granted through Quick Setup (Fill categories, Give All, Give This Item) reported This item is too small for you to wear as soon as you tried it on. The grant code set every clothing attribute except the body-size fit value the base game bakes in when you actually buy an outfit, so it was left at 0 and always failed the fit check against your real hip size. Now set the same way the base games own add_item/resize_clothes routines do.'
 *nl
 '<b>Version 0.34.1</b>'
