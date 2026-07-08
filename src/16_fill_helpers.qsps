@@ -1,4 +1,10 @@
 !! FILL HELPERS: per-category item granting loops
+!! Each helper mirrors the full array set the games own add_item handlers do
+!! (clothing.qsrc / shoes.qsrc / bras.qsrc / panties.qsrc /
+!! underwear_bodysuits.qsrc / coats.qsrc / purses.qsrc), including zeroing the
+!! alteration and dirt state arrays - without those, re-granting an item the
+!! player already owned kept its old dirt/alteration instead of arriving
+!! factory-fresh like a real purchase.
 if $ARGS[0] = 'fill_clo':
 	gs 'clothing', 'totals', $ARGS[1]
 	glqs_i = 1
@@ -8,6 +14,8 @@ if $ARGS[0] = 'fill_clo':
 		gs 'clothing_attributes', $ARGS[1], glqs_i
 		dyneval('<<$ARGS[1]>>_h[glqs_i] = CloMaxStrength')
 		dyneval('<<$ARGS[1]>>_b[glqs_i] = pcs_hips')
+		dyneval('<<$ARGS[1]>>_s[glqs_i] = 0')
+		dyneval('<<$ARGS[1]>>_dirt[glqs_i] = 0')
 		glqs_i += 1
 		jump 'glqs_clo_loop'
 	end
@@ -22,6 +30,7 @@ if $ARGS[0] = 'fill_shoe':
 		dyneval('<<$ARGS[1]>>_shoe[glqs_i] = 1')
 		gs 'shoe_attributes', $ARGS[1], glqs_i
 		dyneval('<<$ARGS[1]>>_shoe_h[glqs_i] = ShoMaxStrength')
+		dyneval('<<$ARGS[1]>>_shoe_s[glqs_i] = 0')
 		glqs_i += 1
 		jump 'glqs_shoe_loop'
 	end
@@ -36,6 +45,8 @@ if $ARGS[0] = 'fill_bra':
 		dyneval('<<$ARGS[1]>>_bras[glqs_i] = 1')
 		gs 'underwear_attributes', $ARGS[1] + '_bras', glqs_i
 		dyneval('<<$ARGS[1]>>_bras_h[glqs_i] = BraMaxStrength')
+		dyneval('<<$ARGS[1]>>_brasS[glqs_i] = 0')
+		dyneval('<<$ARGS[1]>>_bras_dirt[glqs_i] = 0')
 		glqs_i += 1
 		jump 'glqs_bra_loop'
 	end
@@ -50,6 +61,8 @@ if $ARGS[0] = 'fill_panty':
 		dyneval('<<$ARGS[1]>>_panties[glqs_i] = 1')
 		gs 'underwear_attributes', $ARGS[1] + '_panties', glqs_i
 		dyneval('<<$ARGS[1]>>_panties_h[glqs_i] = PanMaxStrength')
+		dyneval('<<$ARGS[1]>>_pantiesS[glqs_i] = 0')
+		dyneval('<<$ARGS[1]>>_panties_dirt[glqs_i] = 0')
 		glqs_i += 1
 		jump 'glqs_panty_loop'
 	end
@@ -64,6 +77,8 @@ if $ARGS[0] = 'fill_body':
 		dyneval('<<$ARGS[1]>>_bodysuits[glqs_i] = 1')
 		gs 'underwear_attributes', $ARGS[1] + '_bodysuits', glqs_i
 		dyneval('<<$ARGS[1]>>_bodysuits_h[glqs_i] = BraMaxStrength')
+		dyneval('<<$ARGS[1]>>_bodysuits_s[glqs_i] = 0')
+		dyneval('<<$ARGS[1]>>_bodysuits_dirt[glqs_i] = 0')
 		glqs_i += 1
 		jump 'glqs_body_loop'
 	end
@@ -78,6 +93,8 @@ if $ARGS[0] = 'fill_coat':
 		dyneval('<<$ARGS[1]>>_coats[glqs_i] = 1')
 		gs 'coat_attributes', $ARGS[1], glqs_i
 		dyneval('<<$ARGS[1]>>_coats_h[glqs_i] = CoatMaxStrength')
+		dyneval('<<$ARGS[1]>>_coats_s[glqs_i] = 0')
+		dyneval('<<$ARGS[1]>>_coats_w[glqs_i] = 0')
 		glqs_i += 1
 		jump 'glqs_coat_loop'
 	end

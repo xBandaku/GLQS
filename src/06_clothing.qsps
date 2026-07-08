@@ -443,31 +443,42 @@ if $ARGS[0] = 'item_pick':
 		gs 'clothing_attributes', $glqs_ip_key, glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_h[glqs_ip_idx] = CloMaxStrength')
 		dyneval('<<$glqs_ip_key>>_b[glqs_ip_idx] = pcs_hips')
+		dyneval('<<$glqs_ip_key>>_s[glqs_ip_idx] = 0')
+		dyneval('<<$glqs_ip_key>>_dirt[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'shoe':
 		dyneval('<<$glqs_ip_key>>_shoe[glqs_ip_idx] = 1')
 		gs 'shoe_attributes', $glqs_ip_key, glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_shoe_h[glqs_ip_idx] = ShoMaxStrength')
+		dyneval('<<$glqs_ip_key>>_shoe_s[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'bra':
 		dyneval('<<$glqs_ip_key>>_bras[glqs_ip_idx] = 1')
 		gs 'underwear_attributes', $glqs_ip_key + '_bras', glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_bras_h[glqs_ip_idx] = BraMaxStrength')
+		dyneval('<<$glqs_ip_key>>_brasS[glqs_ip_idx] = 0')
+		dyneval('<<$glqs_ip_key>>_bras_dirt[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'panty':
 		dyneval('<<$glqs_ip_key>>_panties[glqs_ip_idx] = 1')
 		gs 'underwear_attributes', $glqs_ip_key + '_panties', glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_panties_h[glqs_ip_idx] = PanMaxStrength')
+		dyneval('<<$glqs_ip_key>>_pantiesS[glqs_ip_idx] = 0')
+		dyneval('<<$glqs_ip_key>>_panties_dirt[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'body':
 		dyneval('<<$glqs_ip_key>>_bodysuits[glqs_ip_idx] = 1')
 		gs 'underwear_attributes', $glqs_ip_key + '_bodysuits', glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_bodysuits_h[glqs_ip_idx] = BraMaxStrength')
+		dyneval('<<$glqs_ip_key>>_bodysuits_s[glqs_ip_idx] = 0')
+		dyneval('<<$glqs_ip_key>>_bodysuits_dirt[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'coat':
 		dyneval('<<$glqs_ip_key>>_coats[glqs_ip_idx] = 1')
 		gs 'coat_attributes', $glqs_ip_key, glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_coats_h[glqs_ip_idx] = CoatMaxStrength')
+		dyneval('<<$glqs_ip_key>>_coats_s[glqs_ip_idx] = 0')
+		dyneval('<<$glqs_ip_key>>_coats_w[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'purse':
 		dyneval('<<$glqs_ip_key>>_purses[glqs_ip_idx] = 1')

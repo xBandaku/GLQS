@@ -1,6 +1,11 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.3 - Current</b>'
+'<b>Version 0.34.4 - Current</b>'
+'- Fixed: Max All Skills & Attributes wrote the five volleyball sub-skills (block, receive, serve, set, spike) directly, but the game recomputes all five from the main Volleyball skill and the attributes on every stat refresh, so those writes were discarded immediately and never did anything. Removed - maxing Volleyball and the attributes already maxes all five.'
+'- Fixed: Granting an item the character already owned (Give Everything, Buy All, Give All, or a single item pick) kept its old dirt and tailor-alteration state instead of arriving factory-fresh. The base games own add_item purchase code resets those arrays on every purchase; the grant code now does the same.'
+'- Fixed: Body Mods listed the tattoo counter as out of 17 zones, but the game (and the mods own zone picker) has 18 tattoo zones.'
+*nl
+'<b>Version 0.34.3</b>'
 '- Fixed: The Misc clothing category (Give Everything, Buy By Store, and the per-item picker) granted a wall of blank, unlabeled clothing slots - as many as whatever category happened to run right before it internally. Root cause: this category was keyed to an array named misc, but the base game only ever defines images and descriptions for a differently-named misc_outfits array (which holds exactly one scripted item, not a real shop line) and has no official item count for misc at all, so the count silently carried over from the previous category in the buy-out list instead of stopping at zero. The broken Misc category has been removed entirely - there was never a real shop behind it to buy out.'
 *nl
 '<b>Version 0.34.2</b>'

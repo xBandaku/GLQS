@@ -149,11 +149,11 @@ if $ARGS[0] = 'stats':
 	gs 'shortgs', 'setStat', 'medcn', 100
 	gs 'shortgs', 'setStat', 'cleaning', 100
 	gs 'shortgs', 'setStat', 'mdlng', 100
-	pcs_vball_block = 100
-	pcs_vball_rec = 100
-	pcs_vball_serve = 100
-	pcs_vball_set = 100
-	pcs_vball_spike = 100
+	!! No direct pcs_vball_block/rec/serve/set/spike writes here - those five
+	!! are derived stats, recomputed from vball_lvl plus attributes by
+	!! stat_sklattrib_lvlset on every single gs stat call, so writing them
+	!! directly is overwritten immediately. Maxing vball and the attributes
+	!! above already maxes all five.
 end
 
 !! ===== CLOTHING =====

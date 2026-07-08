@@ -12,7 +12,7 @@ if $ARGS[0] = 'bodymod_menu':
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
 	$glqs_tbl += '<tr><td>Leg hair</td><td><<iif(pcs_leghair = 0, ''Removed'', ''Present'')>></td></tr>'
 	$glqs_tbl += '<tr><td>Pubic hair</td><td><<iif(pcs_pubes = 0, ''Removed'', ''Present'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Tattoos</td><td><<pcs_tattoos[''total'']>> / 17 zones</td></tr>'
+	$glqs_tbl += '<tr><td>Tattoos</td><td><<pcs_tattoos[''total'']>> / 18 zones</td></tr>'
 	$glqs_tbl += '<tr><td>Piercings</td><td><<pcs_piercings[''total'']>> / 8 slots</td></tr>'
 	$glqs_tbl += '<tr><td>Attractiveness</td><td><<pcs_apprnc>> (<<pcs_hotcat>>/10)</td></tr>'
 	$glqs_tbl += '</table>'
