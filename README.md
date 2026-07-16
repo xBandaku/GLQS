@@ -1,4 +1,11 @@
+<div align="center">
 # GLQS Rolling - Girl Life Quick Setup
+
+[![Version](https://img.shields.io/github/v/release/xBandaku/GLQS-Rolling?color=%230567ff&label=Latest%20Release&style=for-the-badge)](https://github.com/xBandaku/YACFRTGE/releases/latest)
+![Downloads](https://img.shields.io/github/downloads/xBandaku/GLQS-Rolling/total?label=Total%20Downloads&style=for-the-badge)
+[![License](https://img.shields.io/github/license/xBandaku/GLQS-Rolling?style=for-the-badge)](LICENSE)
+
+</div># GLQS Rolling - Girl Life Quick Setup
 
 *Girl Life is an 18+ game; this mod and repository are intended for adult audiences.*
 
