@@ -1,5 +1,6 @@
+<!-- markdownlint-disable MD033 MD041 -->
 <div align="center">
-   
+
 # GLQS Rolling - Girl Life Quick Setup
 
 [![Version](https://img.shields.io/github/v/release/xBandaku/GLQS-Rolling?color=%230567ff&label=Latest%20Release&style=for-the-badge)](https://github.com/xBandaku/YACFRTGE/releases/latest)
@@ -7,6 +8,7 @@
 [![License](https://img.shields.io/github/license/xBandaku/GLQS-Rolling?style=for-the-badge)](LICENSE)
 
 </div>
+<!-- markdownlint-enable MD033 MD041 -->
 
 *Girl Life is an 18+ game; this mod and repository are intended for adult audiences.*
 
@@ -88,6 +90,8 @@ actually use it until you register it once from inside the game:
 > GLQS version 0.34.4 shows up as **"0.34 fix 4"**. It's the same version,
 > not a mismatch.
 
+<!-- -->
+
 > **Using an existing save?** Girl Life tracks installed mods per save file.
 > If you have older saves from before you installed GLQS, load each one and
 > repeat steps 1-3 once, then save again so it sticks.
@@ -99,6 +103,7 @@ the top of nearly every screen in the game - click it to open GLQS's own
 cheat menu. It's on by default, so there's nothing else to turn on.
 
 The link intentionally does not appear:
+
 - while your character is still being created,
 - during the game's own scripted story or sex scenes, or
 - on the wardrobe or clothing-store screens.
