@@ -50,6 +50,7 @@ if $ARGS[0] = 'rel_menu' or $ARGS[0] = 'max_category':
 	$glqs_npc[glqs_n] = 'nerds|1|A151|Evgeny (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'nerds|1|A152|Feofan (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'nerds|1|A153|Gerasim (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'nerds|2|A142|Zina (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'nerds|2|A240|Nat (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'gopniks|1|A9|Vitek (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'gopniks|1|A10|Dan (M)' & glqs_n += 1

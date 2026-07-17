@@ -135,6 +135,7 @@ if $ARGS[0] = 'stats':
 	gs 'shortgs', 'setStat', 'heels', 100
 	!! --- Artistic Skills ---
 	gs 'shortgs', 'setStat', 'vokal', 100
+	gs 'shortgs', 'setStat', 'songwrit', 100
 	gs 'shortgs', 'setStat', 'instrmusic', 100
 	gs 'shortgs', 'setStat', 'photoskl', 100
 	gs 'shortgs', 'setStat', 'artskls', 100

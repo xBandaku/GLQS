@@ -9,10 +9,13 @@ if $ARGS[0] = 'money_menu':
 	*nl
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
-	$glqs_tbl += '<tr><td>Cash on hand</td><td><<money>> RUB</td></tr>'
+	$glqs_tbl += '<tr><td>Cash on hand</td><td>' + $func('money', 'format_balance', 'cash') + '</td></tr>'
 	$glqs_tbl += '<tr><td>Bank account</td><td><<iif(bankAccount = 1, ''Open'', ''Not opened'')>></td></tr>'
 	if bankAccount = 1:
-		$glqs_tbl += '<tr><td>Bank balance</td><td><<karta - bankDebtLimit>> RUB</td></tr>'
+		!! format_balance accounts for the overflow companion vars (money_overflow/
+		!! karta_overflow) that money.qsrc packs excess into past ~1B - a raw
+		!! <<karta>> interpolation would silently under-report past that point.
+		$glqs_tbl += '<tr><td>Bank balance</td><td>' + $func('money', 'format_balance', 'bank') + '</td></tr>'
 	end
 	$glqs_tbl += '</table>'
 	$glqs_tbl
