@@ -11,7 +11,7 @@ fragments that get stitched into one `.qsps` file and compiled to a binary `.qsp
 
 ## Build
 
-```
+```bash
 python3 build.py
 ```
 
@@ -146,7 +146,7 @@ source for how the screen is invoked.
 ## Reference: the base game's own source
 
 `reference/` (gitignored, not tracked) holds shallow clones of the game's real
-developer source, https://gitlab.com/kevinsmartstfg/girl-life. Only
+developer source, <https://gitlab.com/kevinsmartstfg/girl-life>. Only
 `reference/nightly/` is currently on disk:
 
 - **`reference/nightly/`** — `master` branch HEAD, matching the `Dev Life` folder's
