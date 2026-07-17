@@ -1,6 +1,11 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.4 - Current</b>'
+'<b>Version 0.34.5 - Current</b>'
+'- Fixed: Money submenu showed raw cash and bank balances instead of using the base games own overflow-safe formatter, so totals silently underreported once a balance passed the roughly 1 billion RUB point where the games own balance packing kicks in. Now uses the same formatter the games persistent money display uses.'
+'- Fixed: Relationships was missing Zina, a real Nerds-category relationship character the base game tracks - she could never be viewed or maxed from this menu.'
+'- Fixed: Max All Skills and Attributes, and the Skills and Attributes display, omitted Songwriting - a real, active skill the base game tracks alongside Singing and Instruments. Now included in both.'
+*nl
+'<b>Version 0.34.4</b>'
 '- Fixed: Max All Skills & Attributes wrote the five volleyball sub-skills (block, receive, serve, set, spike) directly, but the game recomputes all five from the main Volleyball skill and the attributes on every stat refresh, so those writes were discarded immediately and never did anything. Removed - maxing Volleyball and the attributes already maxes all five.'
 '- Fixed: Granting an item the character already owned (Give Everything, Buy All, Give All, or a single item pick) kept its old dirt and tailor-alteration state instead of arriving factory-fresh. The base games own add_item purchase code resets those arrays on every purchase; the grant code now does the same.'
 '- Fixed: Body Mods listed the tattoo counter as out of 17 zones, but the game (and the mods own zone picker) has 18 tattoo zones.'

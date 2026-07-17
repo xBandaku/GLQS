@@ -34,6 +34,7 @@ if $ARGS[0] = 'stats_menu':
 	$glqs_tbl += '<tr><td>Football</td><td><<ftbll_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Modern Dancing</td><td><<danc_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Singing</td><td><<vokal_lvl>></td></tr>'
+	$glqs_tbl += '<tr><td>Songwriting</td><td><<songwrit_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Computer Skill</td><td><<compskl_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Tailoring</td><td><<sewng_lvl>></td></tr>'
 	$glqs_tbl += '<tr><td>Medicine</td><td><<medcn_lvl>></td></tr>'
