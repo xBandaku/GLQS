@@ -1,6 +1,9 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.5 - Current</b>'
+'<b>Version 0.34.6 - Current</b>'
+'- Added: Health & Energy display and Full Restore Everything now include Faith, a new stat the base game added for the prude archetype.'
+*nl
+'<b>Version 0.34.5</b>'
 '- Fixed: Money submenu showed raw cash and bank balances instead of using the base games own overflow-safe formatter, so totals silently underreported once a balance passed the roughly 1 billion RUB point where the games own balance packing kicks in. Now uses the same formatter the games persistent money display uses.'
 '- Fixed: Relationships was missing Zina, a real Nerds-category relationship character the base game tracks - she could never be viewed or maxed from this menu.'
 '- Fixed: Max All Skills and Attributes, and the Skills and Attributes display, omitted Songwriting - a real, active skill the base game tracks alongside Singing and Instruments. Now included in both.'
