@@ -17,6 +17,7 @@ if $ARGS[0] = 'health_menu':
 	$glqs_tbl += '<tr><td>Mood</td><td><<pcs_mood>></td></tr>'
 	$glqs_tbl += '<tr><td>Hunger</td><td><<pcs_energy>></td></tr>'
 	$glqs_tbl += '<tr><td>Hydration</td><td><<pcs_hydra>></td></tr>'
+	$glqs_tbl += '<tr><td>Faith</td><td><<pcs_faith>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -30,6 +31,7 @@ if $ARGS[0] = 'health_menu':
 		pcs_mood = 100
 		pcs_energy = 200
 		pcs_hydra = 200
+		pcs_faith = 100
 		vgape = 0
 		agape = 0
 		nippain = 0
