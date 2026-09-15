@@ -1,6 +1,9 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.6 - Current</b>'
+'<b>Version 0.34.7 - Current</b>'
+'- Fixed: Full Restore Everything in Health & Energy set Hunger to 200, but the base games real cap is 100. The excess silently converted to body fat on the very next in-game hour, the opposite of a max stats cheat. Now sets it to the correct cap of 100.'
+*nl
+'<b>Version 0.34.6</b>'
 '- Added: Health & Energy display and Full Restore Everything now include Faith, a new stat the base game added for the prude archetype.'
 *nl
 '<b>Version 0.34.5</b>'
