@@ -1,6 +1,9 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.8 - Current</b>'
+'<b>Version 0.34.9 - Current</b>'
+'- Changed: Mod renamed from GLQS Rolling to GLQS (Girl Life Quick Start). Purely a branding change to the mods own description text - the mod id, save data, and everything else stay the same.'
+*nl
+'<b>Version 0.34.8</b>'
 '- Changed: Quick Setup link now only shows in the players own room - home bedroom, uni dorm room, or the therapist hotel room - instead of on almost every real location in the game. Restores the mods original pre-0.29.12 scope.'
 *nl
 '<b>Version 0.34.7</b>'
