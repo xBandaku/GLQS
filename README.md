@@ -3,7 +3,7 @@
 
 # GLQS Rolling - Girl Life Quick Setup
 
-[![Version](https://img.shields.io/github/v/release/xBandaku/GLQS-Rolling?color=%230567ff&label=Latest%20Release&style=for-the-badge)](https://github.com/xBandaku/YACFRTGE/releases/latest)
+[![Version](https://img.shields.io/github/v/release/xBandaku/GLQS-Rolling?color=%230567ff&label=Latest%20Release&style=for-the-badge)](https://github.com/xBandaku/GLQS-Rolling/releases/latest)
 ![Downloads](https://img.shields.io/github/downloads/xBandaku/GLQS-Rolling/total?label=Total%20Downloads&style=for-the-badge)
 [![License](https://img.shields.io/github/license/xBandaku/GLQS-Rolling?style=for-the-badge)](LICENSE)
 
@@ -99,25 +99,26 @@ actually use it until you register it once from inside the game:
 ### Using the mod
 
 Once installed, a bold **MOD Quick Setup MOD** link automatically appears near
-the top of nearly every screen in the game - click it to open GLQS's own
-cheat menu. It's on by default, so there's nothing else to turn on.
+the top of the screen whenever you're in your own room - click it to open
+GLQS's own cheat menu. It's on by default, so there's nothing else to turn on.
 
-The link intentionally does not appear:
-
-- while your character is still being created,
-- during the game's own scripted story or sex scenes, or
-- on the wardrobe or clothing-store screens.
+The link only shows up in your own room: your current home's bedroom, your
+uni dorm room, or the therapist's hotel room. It intentionally does not
+appear anywhere else, including while your character is still being created
+or during the game's own scripted story or sex scenes (even ones set in your
+bedroom).
 
 That's expected behavior, not a bug - it just keeps the link out of the way
-at those moments.
+everywhere except the one place you'd naturally check it.
 
 ## Troubleshooting / FAQ
 
 **I don't see the "Quick Setup" link anywhere.**
-First check you're not in one of the three situations listed just above. If
-it's still missing, open the game's own built-in cheat menu and look for a
-**"Quick Setup Mod: Enabled/Disabled"** toggle - click it to turn the link
-back on.
+First check you're actually in your own room (home bedroom, dorm room, or the
+therapist's hotel room) - the link only appears there. If it's still missing
+even in one of those rooms, open the game's own built-in cheat menu and look
+for a **"Quick Setup Mod: Enabled/Disabled"** toggle - click it to turn the
+link back on.
 
 **I keep seeing a message like "WARNING: mod_GLQS is not found!", or the Quick
 Setup link has disappeared after closing and reopening Girl Life.**
