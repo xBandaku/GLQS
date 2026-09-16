@@ -6,6 +6,7 @@ if $ARGS[0] = 'health_menu':
 	gs 'stat'
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Health & Energy</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'health_menu'
 	*nl
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
@@ -18,6 +19,7 @@ if $ARGS[0] = 'health_menu':
 	$glqs_tbl += '<tr><td>Hunger</td><td><<pcs_energy>></td></tr>'
 	$glqs_tbl += '<tr><td>Hydration</td><td><<pcs_hydra>></td></tr>'
 	$glqs_tbl += '<tr><td>Faith</td><td><<pcs_faith>></td></tr>'
+	$glqs_tbl += '<tr><td>Pregnant</td><td><<iif(preg > 0, ''Yes'', ''No'')>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -37,6 +39,24 @@ if $ARGS[0] = 'health_menu':
 		nippain = 0
 		gs 'stat'
 		gt 'mod_GLQS_main', 'health_menu'
+	end
+
+	if preg = 0:
+		act 'Force Pregnancy':
+			!! Reuses the base games own cheat handler rather than
+			!! reimplementing it - it spawns a throwaway donor NPC internally
+			!! (fertility.qsrc requires a real, known NPC ID; there is no
+			!! NPC-less path), so no NPC picker is needed here.
+			gs 'cheatmenu_din', 'force_preg'
+			gs 'stat'
+			gt 'mod_GLQS_main', 'health_menu'
+		end
+	else
+		act 'Remove Pregnancy':
+			gs 'cheatmenu_din', 'remove_preg'
+			gs 'stat'
+			gt 'mod_GLQS_main', 'health_menu'
+		end
 	end
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'

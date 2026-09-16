@@ -1,0 +1,171 @@
+!! MAGIC SUBMENU
+!! Only covers the three spell lists the base games own Magic character tab
+!! renders (Combat/Non-Combat/Story - see the magic arg handler in
+!! _menu_character.qsrc). Deliberately excludes the teleport spell for the
+!! same reason - it is not on that tab either, it is a separate
+!! fairy-circle-quest ability, not a normal learned spell.
+if $ARGS[0] = 'magic_spell_keys':
+	!! Builds $glqs_mg_all[] - flat list of every spell name across the three
+	!! categories, and glqs_mg_total - its length. Shared by magic_menu (status
+	!! count) and Learn All Spells so the two can never drift apart, same
+	!! pattern as clothing_cat_build in 06_clothing.qsps.
+	glqs_mg_n = 0
+	glqs_mg_i = 0
+	:glqs_mg_keys_combat
+	if glqs_mg_i < arrsize('$combatSpells'):
+		$glqs_mg_all[glqs_mg_n] = $combatSpells[glqs_mg_i]
+		glqs_mg_n += 1 & glqs_mg_i += 1
+		jump 'glqs_mg_keys_combat'
+	end
+	glqs_mg_i = 0
+	:glqs_mg_keys_noncom
+	if glqs_mg_i < arrsize('$nonComSpells'):
+		$glqs_mg_all[glqs_mg_n] = $nonComSpells[glqs_mg_i]
+		glqs_mg_n += 1 & glqs_mg_i += 1
+		jump 'glqs_mg_keys_noncom'
+	end
+	glqs_mg_i = 0
+	:glqs_mg_keys_story
+	if glqs_mg_i < arrsize('$storySpells'):
+		$glqs_mg_all[glqs_mg_n] = $storySpells[glqs_mg_i]
+		glqs_mg_n += 1 & glqs_mg_i += 1
+		jump 'glqs_mg_keys_story'
+	end
+	glqs_mg_total = glqs_mg_n
+	killvar 'glqs_mg_n' & killvar 'glqs_mg_i'
+end
+
+
+if $ARGS[0] = 'magic_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Magic</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'magic_menu'
+	*nl
+
+	if $start_type['magic'] = 'nomagic':
+		!! Matches the base games own Magic tab wording for this case
+		!! (_menu_character.qsrc) - this is a character-creation choice, not
+		!! something GLQS force-overrides, since other systems may branch on
+		!! $start_type[magic] in ways not auditable from here.
+		'You are unable to use magic.'
+		*nl
+		act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+	else
+		gs 'spellList'
+		gs 'mod_GLQS_main', 'magic_spell_keys'
+
+		glqs_mg_known = 0
+		glqs_mg_i = 0
+		:glqs_mg_count_loop
+		if glqs_mg_i < glqs_mg_total:
+			if spellKnown[$glqs_mg_all[glqs_mg_i]] = 1: glqs_mg_known += 1
+			glqs_mg_i += 1
+			jump 'glqs_mg_count_loop'
+		end
+		killvar 'glqs_mg_i'
+
+		$glqs_tbl = ''
+		$glqs_tbl += '<table width="80%" cellpadding=4>'
+		$glqs_tbl += '<tr><td>Mana</td><td><<pcs_mana>> / <<manamax>></td></tr>'
+		$glqs_tbl += '<tr><td>Spells Known</td><td><<glqs_mg_known>> / <<glqs_mg_total>></td></tr>'
+		$glqs_tbl += '</table>'
+		$glqs_tbl
+		*nl
+
+		killvar 'glqs_mg_known' & killvar 'glqs_mg_total' & killvar '$glqs_mg_all'
+
+		act 'Learn All Spells':
+			gs 'spellList'
+			gs 'mod_GLQS_main', 'magic_spell_keys'
+			glqs_mg_i = 0
+			:glqs_mg_learn_loop
+			if glqs_mg_i < glqs_mg_total:
+				spellKnown[$glqs_mg_all[glqs_mg_i]] = 1
+				glqs_mg_i += 1
+				jump 'glqs_mg_learn_loop'
+			end
+			killvar 'glqs_mg_i' & killvar 'glqs_mg_total' & killvar '$glqs_mg_all'
+			gt 'mod_GLQS_main', 'magic_menu'
+		end
+
+		act 'Max Mana':
+			pcs_mana = manamax
+			gt 'mod_GLQS_main', 'magic_menu'
+		end
+
+		!! The base games own character sheet renders Succubus Stats inside
+		!! this same Magic tab (_menu_character.qsrc), so it lives here too
+		!! rather than as its own top-level menu.
+		if succubusflag = 1:
+			$glqs_suc_tbl = ''
+			$glqs_suc_tbl += '<table width="80%" cellpadding=4>'
+			$glqs_suc_tbl += '<tr><td>Succubus Level</td><td><<succublvl>></td></tr>'
+			$glqs_suc_tbl += '<tr><td>Succubus XP</td><td><<succubxp>></td></tr>'
+			$glqs_suc_tbl += '<tr><td>Hunger</td><td><<succhungry>></td></tr>'
+			$glqs_suc_tbl += '<tr><td>Stored Energy</td><td><<sucexcess>> / <<sucstorecap>></td></tr>'
+			$glqs_suc_tbl += '<tr><td>Skill Tier</td><td><<sucskill>> / 4</td></tr>'
+			$glqs_suc_tbl += '</table>'
+			$glqs_suc_tbl
+			*nl
+
+			act 'Instant Max Succubus Level':
+				succubxp = 300
+				gs 'succubus', 'cikl'
+				gs 'stat'
+				gt 'mod_GLQS_main', 'magic_menu'
+			end
+
+			act 'Feed (Clear Hunger)':
+				succhungry = 0
+				sucexcess = sucstorecap
+				gt 'mod_GLQS_main', 'magic_menu'
+			end
+
+			act 'Max Succubus Skills':
+				sucskill = 4
+				sucpcinfo = 7
+				gt 'mod_GLQS_main', 'magic_menu'
+			end
+
+			act 'Remove Succubus Powers':
+				!! Reuses the base games own reset handler rather than
+				!! reimplementing its cleanup - it killvars the whole
+				!! succubus-related variable set.
+				gs 'cheatmenu_din', 'sucresetdo'
+				gs 'stat'
+				gt 'mod_GLQS_main', 'magic_menu'
+			end
+		else
+			act 'Become a Succubus':
+				!! Mirrors succubinit (pre_sleep_events.qsrc) - the real
+				!! post-conversion flow - so no state this sets is invented.
+				!! succubusQW jumps straight to 14 (fed/ready) rather than 11
+				!! (just converted) - values 3-13 between the initial offer
+				!! and full activation are either dead/unimplemented content
+				!! or the permanently-declined dead end, not skippable real
+				!! content, and 14 unlocks the feed prompt immediately instead
+				!! of leaving a few in-limbo days before it does.
+				succubusflag = 1
+				succublvl = 1
+				succubusQW = 14
+				suclezsnapshot = stat['lesbian_count']
+				succhungry = -2
+				sucwalkday = daystart + 2
+				$sucself1 = 'that feeling'
+				sucpcinfo = 4
+				if preg = 1:
+					gs 'medical_din', 'remove_preg'
+					RecovH = 0
+				end
+				gs 'stat'
+				gt 'mod_GLQS_main', 'magic_menu'
+			end
+		end
+
+		act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+	end
+end

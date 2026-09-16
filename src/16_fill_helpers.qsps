@@ -102,11 +102,19 @@ if $ARGS[0] = 'fill_coat':
 end
 
 if $ARGS[0] = 'fill_purse':
+	!! Purses have no durability/dirt arrays (unlike clo/shoe/bra/etc.), but
+	!! the real add_item still gates on purse_attributes/PursePrice before
+	!! granting - some brand/index combos are not real purses (PursePrice=0)
+	!! and the base game silently skips them. Mirror that guard here so this
+	!! never flags an index the game itself would refuse.
 	gs 'purses', 'totals', $ARGS[1] + '_purses'
 	glqs_i = 1
 	:glqs_purse_loop
 	if glqs_i <= total:
-		dyneval('<<$ARGS[1]>>_purses[glqs_i] = 1')
+		gs 'purse_attributes', $ARGS[1], glqs_i
+		if PursePrice <> 0:
+			dyneval('<<$ARGS[1]>>_purses[glqs_i] = 1')
+		end
 		glqs_i += 1
 		jump 'glqs_purse_loop'
 	end

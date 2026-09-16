@@ -112,17 +112,20 @@ def lint_unbalanced_template_markers(text):
     """<< >> template markers must open and close inside the same single-quoted
     string literal -- they cannot span a '+' concatenation. Both compile fine
     with qsp-cli (which never executes the code) and only fail in-game with
-    a 'Bracket not found' error. This scans each single-quoted literal on a
-    line (respecting QSP's '' escape) and flags any where << and >> counts
-    don't match."""
+    a 'Bracket not found' error. This scans every single-quoted literal in the
+    whole file (respecting QSP's '' escape), not line-by-line -- a literal
+    that itself spans multiple physical lines has no complete match on either
+    of its lines individually, so a per-line scan silently misses it. Flags
+    any literal where << and >> counts don't match, reporting the line the
+    literal starts on."""
     problems = []
     literal_re = re.compile(r"'(?:[^']|'')*'")
-    for i, line in enumerate(text.splitlines(), start=1):
-        for m in literal_re.finditer(line):
-            literal = m.group(0)
-            if literal.count("<<") != literal.count(">>"):
-                problems.append((i, line))
-                break
+    for m in literal_re.finditer(text):
+        literal = m.group(0)
+        if literal.count("<<") != literal.count(">>"):
+            lineno = text.count("\n", 0, m.start()) + 1
+            line = text.splitlines()[lineno - 1]
+            problems.append((lineno, line))
     return problems
 
 
@@ -131,12 +134,14 @@ def lint_empty_template_markers(text):
     QSP -- typically typed as literal text describing the << >> syntax
     itself (e.g. in a changelog string) rather than intended as real
     interpolation. Compiles fine with qsp-cli, fails in-game with a plain
-    'Syntax error'."""
+    'Syntax error'. Matched against the whole file rather than line-by-line
+    so a marker pair split across a multi-line literal is still caught."""
     problems = []
     empty_re = re.compile(r"<<\s*>>")
-    for i, line in enumerate(text.splitlines(), start=1):
-        if empty_re.search(line):
-            problems.append((i, line))
+    for m in empty_re.finditer(text):
+        lineno = text.count("\n", 0, m.start()) + 1
+        line = text.splitlines()[lineno - 1]
+        problems.append((lineno, line))
     return problems
 
 

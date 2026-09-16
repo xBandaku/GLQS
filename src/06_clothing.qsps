@@ -6,6 +6,7 @@ if $ARGS[0] = 'clothing_menu':
 	gs 'stat'
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Clothing & Accessories</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'clothing_menu'
 	*nl
 	'Buy out everything, or pick a single store from the submenu below. Items are granted at full durability so no tailor resize is needed.'
 	*nl
@@ -481,7 +482,10 @@ if $ARGS[0] = 'item_pick':
 		dyneval('<<$glqs_ip_key>>_coats_w[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'purse':
-		dyneval('<<$glqs_ip_key>>_purses[glqs_ip_idx] = 1')
+		gs 'purse_attributes', $glqs_ip_key, glqs_ip_idx
+		if PursePrice <> 0:
+			dyneval('<<$glqs_ip_key>>_purses[glqs_ip_idx] = 1')
+		end
 	end
 
 	killvar '$glqs_ip_type'

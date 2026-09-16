@@ -1,0 +1,98 @@
+!! HOUSING & PROPERTY SUBMENU
+!! Deliberately narrow scope: only acts on properties the player already has
+!! access to (current home, already-rented properties). Does NOT grant access
+!! to a new home or fix homelessness - $home_name/home_properties_attr map
+!! property codes differently per game start (e.g. the parents_home code is
+!! only ever granted for the city start type, not the sg start type), so a
+!! generic give-a-home cheat risks pointing $home[current] at a property code
+!! that does not exist for the current save, leaving the player worse off
+!! with no way back. Buying/renting new properties outright is also left to
+!! the normal in-game flow - the Money menu already covers affording anything.
+if $ARGS[0] = 'housing_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Housing & Property</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'housing_menu'
+	*nl
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Homeless</td><td><<iif(func(''homes_properties'', ''is_homeless''), ''Yes'', ''No'')>></td></tr>'
+	if func('homes_properties', 'is_homeless') = 0:
+		$glqs_tbl += '<tr><td>Current home</td><td>' + $func('homes_properties', 'get_home_desc') + '</td></tr>'
+		$glqs_tbl += '<tr><td>Renovated</td><td><<iif(func(''homes_properties'', ''is_property_renovated'', $home[''current'']), ''Yes'', ''No'')>></td></tr>'
+		$glqs_tbl += '<tr><td>Construction status</td><td><<func(''homes_properties'', ''get_property_construction_status'', $home[''current''])>> / 2</td></tr>'
+		glqs_hs_rentdays = func('homes_properties', 'get_rent_days', $home['current'])
+		if glqs_hs_rentdays <> 0:
+			$glqs_tbl += '<tr><td>Rent days left (current home)</td><td><<glqs_hs_rentdays>></td></tr>'
+			$glqs_tbl += '<tr><td>Rent amount (current home)</td><td><<func(''homes_properties'', ''get_rent_amount'', $home[''current''])>></td></tr>'
+		end
+		killvar 'glqs_hs_rentdays'
+	end
+	$glqs_tbl += '<tr><td>Car owned</td><td><<iif(car[''ID''] > 0, $car[''name''], ''None'')>></td></tr>'
+	if car['ID'] > 0:
+		$glqs_tbl += '<tr><td>Car condition</td><td><<car[''current_condition'']>> / <<car[''new_condition'']>></td></tr>'
+		$glqs_tbl += '<tr><td>Car fuel</td><td><<car[''fuel'']>> / <<car[''tank'']>></td></tr>'
+		$glqs_tbl += '<tr><td>Car wrecked</td><td><<iif(car[''wreck''] > 0, ''Yes'', ''No'')>></td></tr>'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	if car['ID'] = 0:
+		act 'Grant a Car':
+			!! car ID is not a free integer - car_attributes.qsrc only
+			!! defines a subset of IDs (a raw write leaves name/condition/tank
+			!! blank for an undefined one), so this always goes through the
+			!! real add_car gosub with a confirmed-valid ID instead.
+			gs 'car_funcs', 'add_car', 1
+			gt 'mod_GLQS_main', 'housing_menu'
+		end
+	else
+		act 'Repair & Un-wreck Car':
+			car['current_condition'] = car['new_condition']
+			car['wreck'] = 0
+			gt 'mod_GLQS_main', 'housing_menu'
+		end
+
+		act 'Full Tank':
+			car['fuel'] = car['tank']
+			gt 'mod_GLQS_main', 'housing_menu'
+		end
+	end
+
+	act 'Max Rent Days (All Rented Properties)':
+		!! Sets every currently-rented property (home or business) to 9999
+		!! days left, so rent never lapses and tenancy is never lost to
+		!! missed payments. Does not touch properties that are owned
+		!! outright or merely accessible (family homes etc.) - those have
+		!! no rent clock to extend.
+		gs 'homes_properties', 'get_rented_properties'
+		glqs_hs_count = arrsize('$property_code')
+		glqs_hs_i = 0
+		:glqs_housing_rent_loop
+		if glqs_hs_i < glqs_hs_count:
+			gs 'homes_properties', 'set_rent_days', $property_code[glqs_hs_i], 9999
+			glqs_hs_i += 1
+			jump 'glqs_housing_rent_loop'
+		end
+		killvar 'glqs_hs_count' & killvar 'glqs_hs_i'
+		killvar '$property_code' & killvar 'property_days' & killvar 'property_rent' & killvar '$property_display'
+		gt 'mod_GLQS_main', 'housing_menu'
+	end
+
+	if func('homes_properties', 'is_homeless') = 0 and func('homes_properties', 'get_property_construction_status', $home['current']) < 2:
+		act 'Finish Construction (Current Home)':
+			!! progress_construction_status only steps the status up by 1 and
+			!! caps at 2 (fully built), so two calls always reach max
+			!! regardless of the current value.
+			gs 'homes_properties', 'progress_construction_status', $home['current']
+			gs 'homes_properties', 'progress_construction_status', $home['current']
+			gt 'mod_GLQS_main', 'housing_menu'
+		end
+	end
+
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end

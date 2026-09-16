@@ -6,6 +6,7 @@ if $ARGS[0] = 'consumables_menu':
 	gs 'stat'
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Consumables</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'consumables_menu'
 	*nl
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'

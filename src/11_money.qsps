@@ -6,6 +6,7 @@ if $ARGS[0] = 'money_menu':
 	gs 'stat'
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Money</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'money_menu'
 	*nl
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
@@ -17,6 +18,7 @@ if $ARGS[0] = 'money_menu':
 		!! <<karta>> interpolation would silently under-report past that point.
 		$glqs_tbl += '<tr><td>Bank balance</td><td>' + $func('money', 'format_balance', 'bank') + '</td></tr>'
 	end
+	$glqs_tbl += '<tr><td>Outstanding legal fine</td><td><<policeQW[''legal_fine'']>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -44,6 +46,32 @@ if $ARGS[0] = 'money_menu':
 		act 'Give 1,000,000 to Both':
 			money += 1000000
 			karta += 1000000
+			gt 'mod_GLQS_main', 'money_menu'
+		end
+	end
+
+	if policeQW['legal_fine'] > 0 or policeQW['missed_court_dates'] > 0 or policeQW['missed_fine_deadlines'] > 0 or policeQW['arrest_gameover_flag'] > 0:
+		act 'Clear Arrest Record':
+			!! Direct writes, not a money debt_pay call - that spends real
+			!! cash, which defeats the point of a cheat. Also covers the
+			!! second, separate pav_station arrest tracker and the pending
+			!! court-date/hearing arrays - clearing legal_fine alone leaves
+			!! those live and the cycle re-triggers itself the next day
+			!! (cikl.qsrc re-derives missed_court_dates/missed_fine_deadlines
+			!! from them).
+			policeQW['legal_fine'] = 0
+			policeQW['fine_deadline'] = 0
+			policeQW['missed_fine_deadlines'] = 0
+			policeQW['missed_court_dates'] = 0
+			policeQW['arrest_gameover_flag'] = 0
+			policeQW['shoplift_booked'] = 0
+			policeQW['prostitution_booked'] = 0
+			policeQW['shoplift_booked_pav'] = 0
+			policeQW['prostitution_booked_pav'] = 0
+			killvar 'policeQW_courtletter_dates'
+			killvar '$policeQW_courtletter_subjects'
+			killvar 'policeQW_courthearing_dates'
+			killvar '$policeQW_courthearing_subjects'
 			gt 'mod_GLQS_main', 'money_menu'
 		end
 	end

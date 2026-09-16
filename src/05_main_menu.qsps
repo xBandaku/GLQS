@@ -1,4 +1,29 @@
 !! MAIN MENU (start)
+if $ARGS[0] = 'nav_build':
+	!! One flat pipe-delimited array (key|label) of the 14 top-level
+	!! submenus, shared by start (Index) and navbar so the two navigation
+	!! renderers - buttons or text links, per glqs_nav_style - can never
+	!! drift apart or list a different set of menus.
+	glqs_nb_n = 0
+	$glqs_nb[glqs_nb_n] = 'clothing_menu|Clothing & Accessories' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'consumables_menu|Consumables' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'stats_menu|Skills & Attributes' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'recurrent|Recurrent Cheats' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'grades|Grades & Academics' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'money_menu|Money' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'rel_menu|Relationships' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'health_menu|Health & Energy' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'bodymod_menu|Body Mods' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'fame_menu|Fame & Reputation' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'housing_menu|Housing & Property' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'magic_menu|Magic' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'jobs_menu|Jobs & Career' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'lifestyle_menu|Lifestyle' & glqs_nb_n += 1
+	glqs_nb_total = glqs_nb_n
+	killvar 'glqs_nb_n'
+end
+
+
 if $ARGS[0] = 'start':
 	menu_off = 0
 	usehtml = 1
@@ -8,27 +33,9 @@ if $ARGS[0] = 'start':
 	gs 'stat'
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Quick Setup Mod</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'start'
 	'<br>Instantly give your character everything she needs.'
-
-	act 'Clothing & Accessories': gt 'mod_GLQS_main', 'clothing_menu'
-
-	act 'Consumables': gt 'mod_GLQS_main', 'consumables_menu'
-
-	act 'Skills & Attributes': gt 'mod_GLQS_main', 'stats_menu'
-
-	act 'Recurrent Cheats': gt 'mod_GLQS_main', 'recurrent'
-
-	act 'School Grades': gt 'mod_GLQS_main', 'grades'
-
-	act 'Money': gt 'mod_GLQS_main', 'money_menu'
-
-	act 'Relationships': gt 'mod_GLQS_main', 'rel_menu'
-
-	act 'Health & Energy': gt 'mod_GLQS_main', 'health_menu'
-
-	act 'Body Mods': gt 'mod_GLQS_main', 'bodymod_menu'
-
-	act 'Fame & Reputation': gt 'mod_GLQS_main', 'fame_menu'
+	*nl
 
 	act 'Return':
 		$menu_loc = $shopreturn
@@ -37,6 +44,92 @@ if $ARGS[0] = 'start':
 		killvar '$shoparg'
 		gt $menu_loc, $menu_arg
 	end
+end
+
+
+if $ARGS[0] = 'navbar':
+	!! Quick-nav bar for the Index plus the 14 top-level submenus, shown
+	!! under every ones own title (including the Index itself - previously
+	!! the Index rendered its own separate 14-item list with no self-entry
+	!! while every other page showed this 15-item one with one, so the bar
+	!! visibly reshaped/rewrapped depending which page you were on; now
+	!! every page renders the exact same list, the same way, with only the
+	!! current page swapped from a link to bold text). Not on nested
+	!! sub-screens (store detail, tattoo/piercing pickers, fame by region,
+	!! etc.) - those already have their own Return/Back and adding this
+	!! everywhere would be more clutter than shortcut.
+	!! Respects glqs_nav_style: action buttons (default, matches how every
+	!! other GLQS action already looks) or inline text links (a persistent
+	!! row under the title, like the base games own Cheat Menu tab bar).
+	!! ARGS[1] = the calling menus own routing key (e.g. recurrent), passed
+	!! explicitly by every caller - $loc_arg turned out NOT to reflect this
+	!! mods own internal gt calls (it only tracks real cross-location moves,
+	!! and every GLQS screen shares the one mod_GLQS_main location, so it
+	!! stayed stuck on whatever the very first entry set it to). Captured
+	!! into $glqs_current before the nested gs nav_build call below, since
+	!! $ARGS is one shared array in QSP and that call would otherwise
+	!! clobber it first - same class of bug as every other nested-gs capture
+	!! elsewhere in this mod.
+	$glqs_current = $ARGS[1]
+	if glqs_nav_style = 1:
+		gs 'mod_GLQS_main', 'nav_build'
+		$glqs_nav = '<center><font size="2">'
+		$glqs_nav += '<font color="gray"><b>Text Links</b></font> | <a href="exec: glqs_nav_style = 0 & gt ''mod_GLQS_main'', ''' + $glqs_current + '''">Action Buttons</a><br>'
+		$glqs_nav += iif($glqs_current = 'start', '<font color="gray"><b>Index</b></font>', '<a href="exec: gt ''mod_GLQS_main'', ''start''">Index</a>') + ' | '
+		glqs_i = 0
+		:glqs_navbar_link_loop
+		if glqs_i < glqs_nb_total:
+			$glqs_row = $glqs_nb[glqs_i]
+			glqs_p1 = instr($glqs_row, '|')
+			$glqs_key = $mid($glqs_row, 1, glqs_p1 - 1)
+			$glqs_label = $mid($glqs_row, glqs_p1 + 1)
+			if $glqs_key = $glqs_current:
+				$glqs_nav += '<font color="gray"><b>' + $glqs_label + '</b></font>'
+			else
+				$glqs_nav += '<a href="exec: gt ''mod_GLQS_main'', ''' + $glqs_key + '''">' + $glqs_label + '</a>'
+			end
+			if glqs_i < glqs_nb_total - 1: $glqs_nav += ' | '
+			glqs_i += 1
+			jump 'glqs_navbar_link_loop'
+		end
+		$glqs_nav += '</font></center>'
+		$glqs_nav
+		*nl
+		killvar 'glqs_i' & killvar 'glqs_p1' & killvar '$glqs_row' & killvar '$glqs_key' & killvar '$glqs_label'
+		killvar '$glqs_nb' & killvar 'glqs_nb_total'
+	else
+		!! Explicit acts, not a loop over nav_build - QSP resolves act
+		!! bodies at click time, not at definition time (same stray-killvar
+		!! class of bug as the tattoo/piercing pickers elsewhere in this
+		!! mod), so a loop reusing one $glqs_key variable across iterations
+		!! would make every generated button navigate wherever the last
+		!! iteration left that variable, not its own target. Each entry is
+		!! skipped on whichever page it points to, instead of bolded like
+		!! the text-link branch above - action buttons have no way to show
+		!! disabled/current state inline, so omitting it is the closest
+		!! equivalent.
+		act 'Switch Menu Display to Text Links': glqs_nav_style = 1 & gt 'mod_GLQS_main', $glqs_current
+		if $glqs_current <> 'start': act 'Index': gt 'mod_GLQS_main', 'start'
+		if $glqs_current <> 'clothing_menu': act 'Clothing & Accessories': gt 'mod_GLQS_main', 'clothing_menu'
+		if $glqs_current <> 'consumables_menu': act 'Consumables': gt 'mod_GLQS_main', 'consumables_menu'
+		if $glqs_current <> 'stats_menu': act 'Skills & Attributes': gt 'mod_GLQS_main', 'stats_menu'
+		if $glqs_current <> 'recurrent': act 'Recurrent Cheats': gt 'mod_GLQS_main', 'recurrent'
+		if $glqs_current <> 'grades': act 'Grades & Academics': gt 'mod_GLQS_main', 'grades'
+		if $glqs_current <> 'money_menu': act 'Money': gt 'mod_GLQS_main', 'money_menu'
+		if $glqs_current <> 'rel_menu': act 'Relationships': gt 'mod_GLQS_main', 'rel_menu'
+		if $glqs_current <> 'health_menu': act 'Health & Energy': gt 'mod_GLQS_main', 'health_menu'
+		if $glqs_current <> 'bodymod_menu': act 'Body Mods': gt 'mod_GLQS_main', 'bodymod_menu'
+		if $glqs_current <> 'fame_menu': act 'Fame & Reputation': gt 'mod_GLQS_main', 'fame_menu'
+		if $glqs_current <> 'housing_menu': act 'Housing & Property': gt 'mod_GLQS_main', 'housing_menu'
+		if $glqs_current <> 'magic_menu': act 'Magic': gt 'mod_GLQS_main', 'magic_menu'
+		if $glqs_current <> 'jobs_menu': act 'Jobs & Career': gt 'mod_GLQS_main', 'jobs_menu'
+		if $glqs_current <> 'lifestyle_menu': act 'Lifestyle': gt 'mod_GLQS_main', 'lifestyle_menu'
+	end
+	!! $glqs_current is NOT killed here - the Switch Menu Display act above
+	!! references it directly, and QSP resolves act bodies at click time,
+	!! not at definition time. Killing it here would clear it before the
+	!! player could ever click, same stray-killvar bug as the tattoo/
+	!! piercing pickers elsewhere in this mod.
 end
 
 !! ===== CLOTHING MENU =====
