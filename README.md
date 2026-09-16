@@ -145,7 +145,7 @@ GLQS's entry in your installed mods list.
 
 ## License
 
-GLQS Rolling's own source code is licensed under the [GNU GPL v3](LICENSE). This
+GLQS Rolling's own source code is licensed under the [MIT License](LICENSE). This
 covers the mod's `.qsps`/`.qsp` files and build tooling only - it has no
 bearing on **Girl Life** itself, which remains its own separate, independently
 licensed game.
