@@ -1,6 +1,9 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.7 - Current</b>'
+'<b>Version 0.34.8 - Current</b>'
+'- Changed: Quick Setup link now only shows in the players own room - home bedroom, uni dorm room, or the therapist hotel room - instead of on almost every real location in the game. Restores the mods original pre-0.29.12 scope.'
+*nl
+'<b>Version 0.34.7</b>'
 '- Fixed: Full Restore Everything in Health & Energy set Hunger to 200, but the base games real cap is 100. The excess silently converted to body fat on the very next in-game hour, the opposite of a max stats cheat. Now sets it to the correct cap of 100.'
 *nl
 '<b>Version 0.34.6</b>'

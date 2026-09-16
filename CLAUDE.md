@@ -53,11 +53,12 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   `mod_<$mod_info[0]>` naming the base game's mod loader expects), which the
   base game auto-invokes after every real `gt` transition anywhere in the
   game via `$onnewloc = 'LOCA'` (`start.qsrc`) chaining into `core_loop` in
-  `mod_system.qsrc` - not just the bedroom. Whether the "Quick Setup" link
-  actually renders into `mod_GLQS_main` is gated inside the file itself
-  (skipped during character creation, during the game's own scripted events,
-  and on the wardrobe/clothing-store screens); there is no `$locclass` check
-  anywhere in the current file.
+  `mod_system.qsrc` - not just the bedroom, though the hook fires on every
+  real `gt` location, the link itself only renders in the player's own
+  room: the current home bedroom (`func('homes_properties',
+  'is_current_home', $curloc)` plus `$locclass = 'bedr'`), the uni dorm
+  room, or the therapist hotel room - also skipped during character
+  creation and the game's own scripted events.
 - File numbering (`01`, `02`, `03`, `05`...`17`) controls both display order in the
   standalone list and concatenation order in the shared location — it's advisory
   (gaps are fine), just keep related menus grouped.
