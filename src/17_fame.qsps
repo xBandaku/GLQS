@@ -38,6 +38,7 @@ if $ARGS[0] = 'fame_menu':
 	gs 'stat'
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Fame & Reputation</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'fame_menu'
 	'<br>Maxes fame in acting, dance, painting, music, ballet, modelling, porn, stripping, kickboxing, running, volleyball, chess, teaching, media, sex, prostitution and flashing. Derived stats (performer, sex industry, slut, sport, intellectual, social) recalculate automatically from these.'
 	*nl
 

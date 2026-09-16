@@ -6,6 +6,7 @@ if $ARGS[0] = 'bodymod_menu':
 	gs 'stat'
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Body Mods</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'bodymod_menu'
 	'<br>Electrolysis is free through this menu (normally 80,000 RUB at the clinic).'
 	*nl
 	$glqs_tbl = ''
@@ -211,6 +212,7 @@ if $ARGS[0] = 'piercing_design_menu':
 	!! and QSP resolves act bodies at click time, not at definition time.
 	!! Killing it here would clear it before the player could ever click,
 	!! same stray-killvar bug as fame_detail (see comment there).
+	!! No Return to Top Menu here, matching the v0.28.1 tattoo design screen
+	!! decision - Back to Slots already covers it at this depth.
 	act 'Back to Slots': gt 'mod_GLQS_main', 'piercing_slot_menu'
-	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end

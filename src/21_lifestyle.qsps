@@ -1,0 +1,83 @@
+!! LIFESTYLE SUBMENU
+!! Bundles three small, self-contained systems that do not each warrant their
+!! own top-level menu entry - same reasoning as Recurrent Cheats bundling
+!! many small unrelated toggles under one roof.
+if $ARGS[0] = 'lifestyle_menu':
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Lifestyle</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'lifestyle_menu'
+	*nl
+
+	$glqs_tbl = ''
+	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl += '<tr><td>Casino chips</td><td><<casino_chips>></td></tr>'
+	$glqs_tbl += '<tr><td>Pain level</td><td><<pain[''total'']>></td></tr>'
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	*nl
+
+	act 'Max Casino Chips':
+		!! casino_chips is capped at 1000 by the games own cashier/buy-in
+		!! logic (casino.qsrc) - matching that cap here rather than a bigger
+		!! number that only the cashier UI would silently clamp anyway.
+		casino_chips = 1000
+		gt 'mod_GLQS_main', 'lifestyle_menu'
+	end
+
+	act 'Clear All Pain':
+		!! Reuses the base games own cheat handler exactly - pain[total] is
+		!! recomputed from every pain[<bodypart>] entry plus vgape/agape/
+		!! spanked, not an independent value, so killvar-ing the whole array
+		!! and recalculating is the real reset, not just zeroing total.
+		killvar 'pain'
+		gs 'pain', 'calc'
+		gt 'mod_GLQS_main', 'lifestyle_menu'
+	end
+
+	'<b>Fetish Preferences & Experience</b> (0-100 experience, -100 to 100 preference)'
+	$glqs_tbl2 = '<table width="80%" cellpadding=3>'
+	$glqs_tbl2 += '<tr><th align="left">Fetish</th><th align="left">Experience</th><th align="left">Preference</th></tr>'
+	glqs_lf_i = 0
+	:glqs_fetish_render_loop
+	if glqs_lf_i < arrsize('$fetish_name'):
+		$glqs_lf_key = $fetish_name[glqs_lf_i]
+		$glqs_tbl2 += '<tr><td>' + $glqs_lf_key + '</td><td>' + fetishes[$glqs_lf_key + '_exp'] + '</td><td>' + fetishes[$glqs_lf_key + '_pref'] + '</td></tr>'
+		glqs_lf_i += 1
+		jump 'glqs_fetish_render_loop'
+	end
+	$glqs_tbl2 += '</table>'
+	$glqs_tbl2
+	*nl
+
+	killvar 'glqs_lf_i' & killvar '$glqs_lf_key'
+
+	act 'Max All Fetish Experience':
+		glqs_lf_i = 0
+		:glqs_fetish_exp_loop
+		if glqs_lf_i < arrsize('$fetish_name'):
+			gs 'fetish', 'set_exp', $fetish_name[glqs_lf_i], 100
+			glqs_lf_i += 1
+			jump 'glqs_fetish_exp_loop'
+		end
+		killvar 'glqs_lf_i'
+		gt 'mod_GLQS_main', 'lifestyle_menu'
+	end
+
+	act 'Max All Fetish Preferences':
+		glqs_lf_i = 0
+		:glqs_fetish_pref_loop
+		if glqs_lf_i < arrsize('$fetish_name'):
+			gs 'fetish', 'set_pref', $fetish_name[glqs_lf_i], 100
+			glqs_lf_i += 1
+			jump 'glqs_fetish_pref_loop'
+		end
+		killvar 'glqs_lf_i'
+		gt 'mod_GLQS_main', 'lifestyle_menu'
+	end
+
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end

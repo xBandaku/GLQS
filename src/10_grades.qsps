@@ -5,7 +5,8 @@ if $ARGS[0] = 'grades':
 	$location_type = 'event'
 	gs 'stat'
 	gs 'themes', 'indoors'
-	'<center><b><font color="maroon">School Grades</font></b></center>'
+	'<center><b><font color="maroon">Grades & Academics</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'grades'
 	'<br>Only applies on school start. Grades reset weekly based on class attendance.'
 	*nl
 	$glqs_tbl = ''
@@ -24,6 +25,8 @@ if $ARGS[0] = 'grades':
 	$glqs_tbl += '<tr><td>Music</td><td><<class[''school_mus_grade'']>></td></tr>'
 	$glqs_tbl += '<tr><td>P.E.</td><td><<class[''school_pe_grade'']>></td></tr>'
 	$glqs_tbl += '<tr><td>Absences</td><td><<gschoolVars[''absence_count'']>></td></tr>'
+	$glqs_tbl += '<tr><td>University</td><td><<iif(university[''student''] = 1, ''Enrolled ('' + $university[''enrolled_in''] + '')'', ''Not enrolled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>University diploma</td><td><<iif(university[''diploma''] > 0, ''Yes'', ''No'')>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -49,6 +52,33 @@ if $ARGS[0] = 'grades':
 	act 'Zero Absences':
 		gschoolVars['absence_count'] = 0
 		gt 'mod_GLQS_main', 'grades'
+	end
+
+	if university['student'] = 0:
+		act 'Force Enroll - Nursing':
+			gs 'uni_admin', 'courses', 'enroll_nursing', 1
+			gt 'mod_GLQS_main', 'grades'
+		end
+
+		act 'Force Enroll - Teaching Studies':
+			gs 'uni_admin', 'courses', 'enroll_teaching', 1
+			gt 'mod_GLQS_main', 'grades'
+		end
+	end
+
+	if university['diploma'] = 0:
+		act 'Grant University Diploma':
+			!! Deliberately not attempting to instant-pass semester-by-semester
+			!! grades - each semesters classes are created by the real
+			!! enroll_* gosub with grade formulas that reference the prior
+			!! semesters grade (uni_admin.qsrc), and $university[semester_passed]
+			!! vs semeter_passed] is a base-game variable-name typo pair used
+			!! inconsistently between files - not confidently safe to drive by
+			!! hand. Jumping straight to the diploma flag skips that
+			!! entirely instead of risking a half-consistent semester state.
+			university['diploma'] = 1
+			gt 'mod_GLQS_main', 'grades'
+		end
 	end
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'

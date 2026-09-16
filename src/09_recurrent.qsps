@@ -6,6 +6,7 @@ if $ARGS[0] = 'recurrent':
 	gs 'stat'
 	gs 'themes', 'indoors'
 	'<center><b><font color="maroon">Recurrent Cheats</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'recurrent'
 	*nl
 	'Each row below toggles individually on click; Enable All / Disable All further down still set all of them at once:'
 	*nl
@@ -44,6 +45,26 @@ if $ARGS[0] = 'recurrent':
 
 	act 'Disable All':
 		gs 'mod_GLQS_main', 'recurrent_off'
+		gt 'mod_GLQS_main', 'recurrent'
+	end
+
+	act 'Clear Addiction Levels':
+		!! The immunity toggle above (drugs_immune) only stops NEW addiction
+		!! from accumulating - it never touches existing tolerance/dependency
+		!! built up before it was turned on, so a save with prior drug use
+		!! keeps suffering withdrawal even with the toggle enabled. This
+		!! clears the actual dependency/withdrawal counters directly.
+		drugVars['painkiller_tolerance'] = 0
+		drugVars['painkiller_addict'] = 0
+		drugVars['painkiller_points'] = 0
+		drugVars['caffeine_addict'] = 0
+		drugVars['caffeine_need'] = 0
+		drugVars['caffeine_dose'] = 0
+		drugVars['cocaine_system'] = 0
+		drugVars['heroin_hours_addicted'] = 0
+		drugVars['heroin_taper'] = 0
+		drugVars['cigarettes_need'] = 0
+		drugVars['amphetamine_withdrawl'] = 0
 		gt 'mod_GLQS_main', 'recurrent'
 	end
 
