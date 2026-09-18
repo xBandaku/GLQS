@@ -14,8 +14,10 @@ file and compiled to a binary `.qsp`.
 ## Build
 
 ```bash
-python3 build.py
+python build.py
 ```
+
+(`python3` resolves to a broken Windows Store shim on this machine — use `python`, which is the real 3.13 interpreter, confirmed 2026-09-18.)
 
 Requires the QSP compiler once: `npm install -g @qsp/cli`
 
@@ -197,14 +199,34 @@ filename shows).
 
 ## Adding functionality
 
-**New submenu inside `mod_GLQS_main`:** add an `if $ARGS[0] = 'name': ... end` block
-to an existing fragment (if related) or a new `src/NN_description.qsps` file (no
-`#`/`---` wrapper needed — build.py adds it). Add a link/button to it, typically in
-`05_main_menu.qsps`, via `gt 'mod_GLQS_main', 'name'`.
+**New submenu inside `mod_GLQS_main`:** use the `/new-submenu` skill (see Automation
+below) — it scaffolds the router block, and correctly handles the difference between
+a top-level menu (registered in `05_main_menu.qsps`'s `$glqs_nb` nav array) and a
+nested submenu (a plain `act` link from its parent, no nav entry), which is easy to
+get wrong by hand.
 
 **New standalone QSP location (rare — only for something outside `mod_GLQS_main`):**
 create `src/NN_name.qsps` with its own full `# location_name` / `--- location_name ---`
 wrapper, and add `"NN_name.qsps"` to `STANDALONE_FILES` in `build.py`.
+
+## Automation
+
+Project-local Claude Code config under `.claude/` (set up 2026-09-18):
+
+- **`reference-lookup` subagent** — searches `reference/nightly/locations/*.qsrc`
+  for game-engine internals before writing new `src/` code. Use it instead of
+  grepping the reference tree inline for anything beyond a one-off lookup.
+- **`/release <patch|minor> <what changed>` skill** — bumps `$mod_info[1]` +
+  changelog together, builds, commits, tags, pushes, and publishes the GitHub
+  release in one pass. Runs `avoiding-ai-code-tells` and `avoiding-ai-writing-tells`
+  at both the commit and the release-notes step.
+- **`/new-submenu` skill** — scaffolds a new cheat-menu screen (see "Adding
+  functionality" above).
+- **PostToolUse hook** on `src/*.qsps` edits — re-runs `build.py`'s lint checks
+  immediately after the edit (`.claude/hooks/lint_check.py`).
+- **PreToolUse hook** — blocks edits to `build/GLQS.qsps`/`build/GLQS.qsp`
+  (generated output, overwritten every build) with a pointer to edit the `src/`
+  fragment instead (`.claude/hooks/protect_build_output.py`).
 
 ## Keeping this file accurate
 
