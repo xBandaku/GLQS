@@ -13,15 +13,22 @@
 *Girl Life is an 18+ game; this mod and repository are intended for adult audiences.*
 
 GLQS is a quick-setup cheat mod for **Girl Life**. Once installed, it adds a
-single in-game link that opens a menu for instantly maxing out money,
-consumables, stats, skills, school grades, relationships, health/energy, fame
-and reputation, unlocking all clothing and body mods, and toggling a long list
-of quality-of-life cheats - no save editing or outside tools required.
+single in-game link, reachable from your own room, that opens a menu covering
+15 top-level screens - no save editing or outside tools required.
 
 This guide covers everything a player needs: getting the mod, installing it,
 and turning it on in-game. (Developers who want to build GLQS from
 source instead of downloading it should see [`CLAUDE.md`](CLAUDE.md) - not
 needed for normal play.)
+
+## What's in the Menu
+
+- Clothing & Accessories, Body Mods - every outfit, tattoo, and piercing available at once
+- Consumables, Money, Skills & Attributes, Grades & Academics
+- Health & Energy, Recurrent Cheats - standing toggles like never needing to eat, sleep, or shave
+- Relationships - status overview plus marry/divorce controls
+- Fame & Reputation, Jobs & Career, Housing & Property - your homes and your car
+- Magic, Lifestyle - casino chips, pain, and fetish preferences
 
 ## Contents
 

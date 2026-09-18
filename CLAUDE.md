@@ -6,9 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 GLQS is a QSP (Quest Soft Player) mod for the game "Girl Life". It's a cheat/debug
 menu (clothing, consumables, stats/attributes, school grades, money, relationships,
-body mods, health) accessible from the player's own room in-game (home bedroom, uni
-dorm room, or the therapist hotel room). Source is plain-text `.qsps` fragments that
-get stitched into one `.qsps` file and compiled to a binary `.qsp`.
+body mods, health, jobs/career, magic, housing/property, lifestyle) accessible from
+the player's own room in-game (home bedroom, uni dorm room, or the therapist hotel
+room). Source is plain-text `.qsps` fragments that get stitched into one `.qsps`
+file and compiled to a binary `.qsp`.
 
 ## Build
 
