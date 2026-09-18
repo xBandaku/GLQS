@@ -79,5 +79,26 @@ if $ARGS[0] = 'lifestyle_menu':
 		gt 'mod_GLQS_main', 'lifestyle_menu'
 	end
 
+	'<b>Phone Plans</b>'
+	$glqs_tbl3 = '<table width="80%" cellpadding=3>'
+	$glqs_tbl3 += '<tr><td>Mobile Internet</td><td>' + iif(subscription['mobile'] = 1, 'Active', 'Inactive') + '</td></tr>'
+	$glqs_tbl3 += '<tr><td>Calls &amp; Texts</td><td>' + iif(subscription['monthly_calls'] = 1, 'Active', 'Inactive') + '</td></tr>'
+	$glqs_tbl3 += '</table>'
+	$glqs_tbl3
+	*nl
+
+	act 'Grant Unlimited Phone Plans':
+		!! Bypasses the games own bankAccount <> 0 purchase gate and the
+		!! monthly charge entirely - price/discount 0 means a renewal (if
+		!! one ever ran) would cost nothing, and date 0 matches the built-in
+		!! free plans own never-expires convention (internet_mobile.qsrc),
+		!! so check_subscription_actions never even tries to renew these.
+		gs 'internet_mobile', 'buy_subscription', 'mobile', 0, 0
+		subscription['mobile-date'] = 0
+		gs 'internet_mobile', 'buy_subscription', 'monthly_calls', 0, 0
+		subscription['monthly_calls-date'] = 0
+		gt 'mod_GLQS_main', 'lifestyle_menu'
+	end
+
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end

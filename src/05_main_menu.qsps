@@ -4,21 +4,24 @@ if $ARGS[0] = 'nav_build':
 	!! submenus, shared by start (Index) and navbar so the two navigation
 	!! renderers - buttons or text links, per glqs_nav_style - can never
 	!! drift apart or list a different set of menus.
+	!! Grouped by function - appearance, then character systems, then
+	!! social, then economy/resources, with the toggle-heavy Recurrent
+	!! Cheats last since its a meta menu rather than a character system.
 	glqs_nb_n = 0
 	$glqs_nb[glqs_nb_n] = 'clothing_menu|Clothing & Accessories' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'consumables_menu|Consumables' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'stats_menu|Skills & Attributes' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'recurrent|Recurrent Cheats' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'grades|Grades & Academics' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'money_menu|Money' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'rel_menu|Relationships' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'health_menu|Health & Energy' & glqs_nb_n += 1
 	$glqs_nb[glqs_nb_n] = 'bodymod_menu|Body Mods' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'fame_menu|Fame & Reputation' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'housing_menu|Housing & Property' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'stats_menu|Skills & Attributes' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'health_menu|Health & Energy' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'grades|Grades & Academics' & glqs_nb_n += 1
 	$glqs_nb[glqs_nb_n] = 'magic_menu|Magic' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'rel_menu|Relationships' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'fame_menu|Fame & Reputation' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'money_menu|Money' & glqs_nb_n += 1
 	$glqs_nb[glqs_nb_n] = 'jobs_menu|Jobs & Career' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'housing_menu|Housing & Property' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'consumables_menu|Consumables' & glqs_nb_n += 1
 	$glqs_nb[glqs_nb_n] = 'lifestyle_menu|Lifestyle' & glqs_nb_n += 1
+	$glqs_nb[glqs_nb_n] = 'recurrent|Recurrent Cheats' & glqs_nb_n += 1
 	glqs_nb_total = glqs_nb_n
 	killvar 'glqs_nb_n'
 end
@@ -111,19 +114,19 @@ if $ARGS[0] = 'navbar':
 		act 'Switch Menu Display to Text Links': glqs_nav_style = 1 & gt 'mod_GLQS_main', $glqs_current
 		if $glqs_current <> 'start': act 'Index': gt 'mod_GLQS_main', 'start'
 		if $glqs_current <> 'clothing_menu': act 'Clothing & Accessories': gt 'mod_GLQS_main', 'clothing_menu'
-		if $glqs_current <> 'consumables_menu': act 'Consumables': gt 'mod_GLQS_main', 'consumables_menu'
-		if $glqs_current <> 'stats_menu': act 'Skills & Attributes': gt 'mod_GLQS_main', 'stats_menu'
-		if $glqs_current <> 'recurrent': act 'Recurrent Cheats': gt 'mod_GLQS_main', 'recurrent'
-		if $glqs_current <> 'grades': act 'Grades & Academics': gt 'mod_GLQS_main', 'grades'
-		if $glqs_current <> 'money_menu': act 'Money': gt 'mod_GLQS_main', 'money_menu'
-		if $glqs_current <> 'rel_menu': act 'Relationships': gt 'mod_GLQS_main', 'rel_menu'
-		if $glqs_current <> 'health_menu': act 'Health & Energy': gt 'mod_GLQS_main', 'health_menu'
 		if $glqs_current <> 'bodymod_menu': act 'Body Mods': gt 'mod_GLQS_main', 'bodymod_menu'
-		if $glqs_current <> 'fame_menu': act 'Fame & Reputation': gt 'mod_GLQS_main', 'fame_menu'
-		if $glqs_current <> 'housing_menu': act 'Housing & Property': gt 'mod_GLQS_main', 'housing_menu'
+		if $glqs_current <> 'stats_menu': act 'Skills & Attributes': gt 'mod_GLQS_main', 'stats_menu'
+		if $glqs_current <> 'health_menu': act 'Health & Energy': gt 'mod_GLQS_main', 'health_menu'
+		if $glqs_current <> 'grades': act 'Grades & Academics': gt 'mod_GLQS_main', 'grades'
 		if $glqs_current <> 'magic_menu': act 'Magic': gt 'mod_GLQS_main', 'magic_menu'
+		if $glqs_current <> 'rel_menu': act 'Relationships': gt 'mod_GLQS_main', 'rel_menu'
+		if $glqs_current <> 'fame_menu': act 'Fame & Reputation': gt 'mod_GLQS_main', 'fame_menu'
+		if $glqs_current <> 'money_menu': act 'Money': gt 'mod_GLQS_main', 'money_menu'
 		if $glqs_current <> 'jobs_menu': act 'Jobs & Career': gt 'mod_GLQS_main', 'jobs_menu'
+		if $glqs_current <> 'housing_menu': act 'Housing & Property': gt 'mod_GLQS_main', 'housing_menu'
+		if $glqs_current <> 'consumables_menu': act 'Consumables': gt 'mod_GLQS_main', 'consumables_menu'
 		if $glqs_current <> 'lifestyle_menu': act 'Lifestyle': gt 'mod_GLQS_main', 'lifestyle_menu'
+		if $glqs_current <> 'recurrent': act 'Recurrent Cheats': gt 'mod_GLQS_main', 'recurrent'
 	end
 	!! $glqs_current is NOT killed here - the Switch Menu Display act above
 	!! references it directly, and QSP resolves act bodies at click time,

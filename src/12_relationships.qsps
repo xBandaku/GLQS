@@ -7,12 +7,14 @@
 !! uses (see mid(ARGS[0], 1, instr(ARGS[0], space) - 1) in its source).
 if $ARGS[0] = 'rel_menu' or $ARGS[0] = 'max_category':
 	$glqs_cat_label['family'] = 'Family'
+	$glqs_cat_label['gadukino'] = 'Gadukino (Village)'
 	$glqs_cat_label['popular'] = 'Popular Kids'
 	$glqs_cat_label['athletes'] = 'Athletes'
 	$glqs_cat_label['nerds'] = 'Nerds'
 	$glqs_cat_label['gopniks'] = 'Gopniks'
 	$glqs_cat_label['outcasts'] = 'Outcasts'
 	$glqs_cat_label['teachers'] = 'Teachers'
+	$glqs_cat_label['university'] = 'University'
 	$glqs_cat_label['others'] = 'Others'
 
 	glqs_n = 0
@@ -20,6 +22,21 @@ if $ARGS[0] = 'rel_menu' or $ARGS[0] = 'max_category':
 	$glqs_npc[glqs_n] = 'family|2|A29|Mother (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'family|2|A33|Sister (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'family|1|A34|Kolka (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'family|2|A30|Lyudmila (Aunt) (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'family|2|A31|Elena (Great Grandmother) (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'family|1|A32|Zlatek (Great Grandfather) (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'family|1|A35|Mikhail Kuznetsov (Father) (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'family|1|A54|Uncle Misha (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'family|1|A55|Olu (Aunts Boyfriend) (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A63|Mitka Ruslanov (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A61|Kolyamba Rostislav (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A62|Vasyan Makarovich (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A64|Afanasiy Maximov (Miras Father) (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A65|Vitaliy Maximov (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A221|Grigory Chekov (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A172|Andrei Saveliev (Hunter) (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A173|Igor Danilovich (Hunter) (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'gadukino|1|A174|Sergei Kirillov (Hunter) (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'popular|1|A1|Dimka (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'popular|1|A4|Igor (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'popular|2|A14|Katja (F)' & glqs_n += 1
@@ -82,6 +99,24 @@ if $ARGS[0] = 'rel_menu' or $ARGS[0] = 'max_category':
 	$glqs_npc[glqs_n] = 'teachers|2|A136|Olga (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'teachers|2|A137|Raven (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'teachers|2|A138|Arina (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A77|Tryndin Maximovich (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A82|Djibril Maina (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A83|Goshi Sidorov (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|2|A84|Kendra Abiodun (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A242|Lebo Kayode (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A243|Ermias Okeke (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A244|Farai Ihejirika (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A245|Haruna Babatunde (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A246|Arendse Idowu (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|2|A247|Liliya Lyubimova (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|2|A267|Mia Radimova (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|2|A268|Yana Radimova (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A254|Klim Kovalyov (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A255|Grigorii Pasternak (M)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|2|A256|Selena Kovalchuk (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|2|A269|Raina Marinova (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|2|A270|Olena Kudelina (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'university|1|A271|Nikita Borisov (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'others|2|A60|Mira (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'others|2|A219|Kat (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'others|2|A220|Vika (F)' & glqs_n += 1
@@ -159,12 +194,57 @@ if $ARGS[0] = 'rel_menu':
 					$glqs_action = '<a href="exec: gs ''lover'', ''add_wife'', ''' + $glqs_key + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a>'
 				end
 			end
+			if $glqs_action <> '': $glqs_action += ' | '
+			$glqs_action += '<a href="exec: gt ''mod_GLQS_main'', ''rel_status'', ''' + $glqs_key + '''">Status</a>'
 			$glqs_tbl += '<tr><td>' + $glqs_name + '</td><td>' + npc_rel[$glqs_key] + '</td><td>' + $glqs_status + '</td><td>' + $glqs_action + '</td></tr>'
 		end
 
 		glqs_i += 1
 		jump 'glqs_rel_render_loop'
 	end
+
+	!! Procedurally-generated NPCs (B#-id, promoted via npcpreservec) have no
+	!! static roster entry - $npc_index is the base games own enumerable list
+	!! of them (npcgeneratec.qsrc/npcpreservec.qsrc), so scan it here. Only
+	!! entries with an active relationship status are shown, not every
+	!! throwaway background character the game has ever spawned.
+	$glqs_gen_rows = ''
+	glqs_gi = 0
+	glqs_gtotal = arrsize('$npc_index')
+	:glqs_gen_scan_loop
+	if glqs_gi < glqs_gtotal:
+		$glqs_gid = $npc_index[glqs_gi]
+		if mid($glqs_gid, 1, 1) = 'B' and $npc_rel_type[$glqs_gid] <> '':
+			glqs_ggender = npc_gender[$glqs_gid] + 1
+			if glqs_rel_filter = 0 or glqs_rel_filter = glqs_ggender:
+				$glqs_gaction = ''
+				if glqs_ggender = 1:
+					if $npc_rel_type[$glqs_gid] = 'husband':
+						$glqs_gaction = '<a href="exec: gs ''lover'', ''remove_husband'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a>'
+					elseif $husID = '':
+						$glqs_gaction = '<a href="exec: gs ''lover'', ''add_husband'', ''' + $glqs_gid + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a>'
+					end
+				elseif glqs_ggender = 2:
+					if $npc_rel_type[$glqs_gid] = 'wife':
+						$glqs_gaction = '<a href="exec: gs ''lover'', ''remove_wife'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a>'
+					elseif $wifID = '':
+						$glqs_gaction = '<a href="exec: gs ''lover'', ''add_wife'', ''' + $glqs_gid + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a>'
+					end
+				end
+				if $glqs_gaction <> '': $glqs_gaction += ' | '
+				$glqs_gaction += '<a href="exec: gt ''mod_GLQS_main'', ''rel_status'', ''' + $glqs_gid + '''">Status</a>'
+				$glqs_gen_rows += '<tr><td>' + $npc_usedname[$glqs_gid] + '</td><td>' + npc_rel[$glqs_gid] + '</td><td>' + $npc_rel_type[$glqs_gid] + '</td><td>' + $glqs_gaction + '</td></tr>'
+			end
+		end
+		glqs_gi += 1
+		jump 'glqs_gen_scan_loop'
+	end
+	if $glqs_gen_rows <> '':
+		$glqs_tbl += '<tr><td colspan="4"><b>Generated NPCs (this save)</b> <a href="exec: gs ''mod_GLQS_main'', ''max_generated'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+		$glqs_tbl += $glqs_gen_rows
+	end
+	killvar 'glqs_gi' & killvar 'glqs_gtotal' & killvar 'glqs_ggender' & killvar '$glqs_gid' & killvar '$glqs_gaction' & killvar '$glqs_gen_rows'
+
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
@@ -176,15 +256,21 @@ if $ARGS[0] = 'rel_menu':
 
 	act 'Max All (filtered)':
 		gs 'mod_GLQS_main', 'max_category', 'family'
+		gs 'mod_GLQS_main', 'max_category', 'gadukino'
 		gs 'mod_GLQS_main', 'max_category', 'popular'
 		gs 'mod_GLQS_main', 'max_category', 'athletes'
 		gs 'mod_GLQS_main', 'max_category', 'nerds'
 		gs 'mod_GLQS_main', 'max_category', 'gopniks'
 		gs 'mod_GLQS_main', 'max_category', 'outcasts'
 		gs 'mod_GLQS_main', 'max_category', 'teachers'
+		gs 'mod_GLQS_main', 'max_category', 'university'
 		gs 'mod_GLQS_main', 'max_category', 'others'
+		gs 'mod_GLQS_main', 'max_generated'
 		gt 'mod_GLQS_main', 'rel_menu'
 	end
+
+	act 'Trigger Random Lover Encounter (Male)': gt 'dateM', 'start'
+	act 'Trigger Random Lover Encounter (Female)': gt 'dateF', 'start'
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
@@ -221,4 +307,66 @@ if $ARGS[0] = 'max_category':
 	killvar 'glqs_j' & killvar 'glqs_p1' & killvar 'glqs_p2' & killvar 'glqs_p3' & killvar 'glqs_gender'
 	killvar '$glqs_row' & killvar '$glqs_rest' & killvar '$glqs_cat' & killvar '$glqs_key' & killvar '$glqs_mc_target'
 	killvar '$glqs_npc' & killvar '$glqs_cat_label' & killvar 'glqs_rel_total'
+end
+
+
+if $ARGS[0] = 'max_generated':
+	glqs_mg_i = 0
+	glqs_mg_total = arrsize('$npc_index')
+	:glqs_maxgen_loop
+	if glqs_mg_i < glqs_mg_total:
+		$glqs_mg_id = $npc_index[glqs_mg_i]
+		if mid($glqs_mg_id, 1, 1) = 'B' and $npc_rel_type[$glqs_mg_id] <> '':
+			glqs_mg_gender = npc_gender[$glqs_mg_id] + 1
+			if glqs_rel_filter = 0 or glqs_rel_filter = glqs_mg_gender:
+				npc_rel[$glqs_mg_id] = 100
+			end
+		end
+		glqs_mg_i += 1
+		jump 'glqs_maxgen_loop'
+	end
+	killvar 'glqs_mg_i' & killvar 'glqs_mg_total' & killvar 'glqs_mg_gender' & killvar '$glqs_mg_id'
+end
+
+
+if $ARGS[0] = 'rel_status':
+	!! $glqs_rs_key is NOT killed below - the Set/Clear acts reference it
+	!! directly and QSP resolves act bodies at click time, not at definition
+	!! time, same stray-killvar bug class as the navbars $glqs_current.
+	$glqs_rs_key = $ARGS[1]
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+	'<center><b><font color="maroon">Relationship Status</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'rel_menu'
+	'<center><b>' + $npc_usedname[$glqs_rs_key] + '</b></center>'
+	$glqs_rs_current = $npc_rel_type[$glqs_rs_key]
+	if $glqs_rs_current = '': $glqs_rs_current = '-'
+	'Current status: <b>' + $glqs_rs_current + '</b>'
+	*nl
+
+	if $npc_rel_type[$glqs_rs_key] <> 'dating': act 'Set to Dating': gs 'lover', 'add_dating', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'boyfriend': act 'Set to Boyfriend': gs 'lover', 'add_boyfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'girlfriend': act 'Set to Girlfriend': gs 'lover', 'add_girlfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'fuckbuddy': act 'Set to Fuckbuddy': gs 'lover', 'add_fuckbuddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'sugar_daddy': act 'Set to Sugar Daddy': gs 'lover', 'add_sugar_daddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+
+	if $npc_rel_type[$glqs_rs_key] = 'boyfriend':
+		act 'Clear / End Relationship': gs 'lover', 'remove_boyfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	elseif $npc_rel_type[$glqs_rs_key] = 'girlfriend':
+		act 'Clear / End Relationship': gs 'lover', 'remove_girlfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	elseif $npc_rel_type[$glqs_rs_key] = 'fuckbuddy':
+		act 'Clear / End Relationship': gs 'lover', 'remove_fuckbuddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	elseif $npc_rel_type[$glqs_rs_key] = 'sugar_daddy':
+		act 'Clear / End Relationship': gs 'lover', 'remove_sugar_daddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	elseif $npc_rel_type[$glqs_rs_key] = 'dating':
+		!! No remove_dating handler exists in the base game (lover.qsrc) -
+		!! the generic remove still correctly ex-prefixes $npc_rel_type, it
+		!! just leaves stat[dating_current] uncorrected, same as vanilla.
+		act 'Clear / End Relationship': gs 'lover', 'remove', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	end
+
+	act 'Return to Relationships': gt 'mod_GLQS_main', 'rel_menu'
 end
