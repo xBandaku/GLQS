@@ -1,6 +1,8 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.35.0 - Current</b>'
+'<b>Version 0.35.1 - Current</b>'
+'- Fixed: Recurrent Cheats Clear Addiction Levels only zeroed secondary withdrawal-timer counters (heroin_hours_addicted/taper, caffeine_need/dose, amphetamine_withdrawl) and never the underlying heroin_used, heroin_need, caffeine_system, and amphetamine_used counters that heroin_stat/caffeine_stat/amphetamine_stat re-derive addiction from on every gs stat pass - so those three substances silently re-addicted on the very next menu load even though painkiller and cocaine, whose root counters were already cleared, worked correctly.'
+'<b>Version 0.35.0</b>'
 '- Added: Quick-nav bar under every top-level menus title, including the Index - one click between any two of the 15 top-level screens instead of Return to Top Menu then drill back in, with the current screen shown in place of its own link so it cannot be clicked again. Not on nested sub-screens (store detail, tattoo/piercing pickers, fame by region) - those already have their own Return/Back.'
 '- Added: Menu display style toggle, available from every top-level menu - Action Buttons (default, the original look everywhere) or Text Links (renders the nav bar as inline hyperlinks instead, closer to the base games own Cheat Menu tab bar). Switching reloads whichever screen you are currently on. Every other menus own action buttons (Give Everything, Max All, etc.) are unaffected either way.'
 '- Added: Jobs & Career submenu - Instant-Hire at any of the games 28 defined jobs (bypasses the interview/hiring quest entirely, matching how set_employed itself only guards against double-hiring), Max Rank / Boost Pay / Clear Penalties per currently-held job, and Ignore Job Schedule Conflicts (reuses the games own existing cheatVars[work] debug hook).'
