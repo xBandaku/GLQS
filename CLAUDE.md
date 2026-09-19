@@ -61,9 +61,9 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   clothing mutator. `07_consumables_data.qsps` is the single consumable
   metadata table used by the menu and bulk action. `07_consumables_actions.qsps`
   and `08_stats_actions.qsps` handle feature mutators,
-  `16_fill_data.qsps` owns the shared single-item clothing grant route,
+  `15_fill_data.qsps` owns the shared single-item clothing grant route,
   `16_fill_helpers.qsps` handles bulk-grant loops like `'fill_clo'`, and
-  `20_jobs_data.qsps` owns the job ID/title table used by `20_jobs.qsps`.
+  `21_jobs_data.qsps` owns the job ID/title table used by `20_jobs.qsps`.
   `10_grades_data.qsps` owns the grade rows used by the grades menu and
   max-all action, while `12_relationships_data.qsps` owns relationship category
   labels.
@@ -82,12 +82,12 @@ at runtime, so almost everything lives inside **one shared QSP location**,
 - File numbering groups related files for readability, but `SHARED_FILES` in
   `build.py` controls assembly order. Add every new shared fragment to that
   manifest or the build fails.
-- `build.py` expands the navigation registry in `05_main_menu.qsps` into literal
+- `build.py` expands the navigation registry in `04_main_menu.qsps` into literal
   action-button entries because QSP evaluates `act` bodies at click time. Keep the
   `GLQS_NAV_ACTIONS_BEGIN`/`GLQS_NAV_ACTIONS_END` markers in that source file.
   It also expands the clothing catalog into literal store labels and category
-  actions between the clothing markers in `06_clothing_store.qsps`. Keep the
-  catalog rows in `06_clothing_data.qsps` labeled as
+  actions between the clothing markers in `05_clothing_store.qsps`. Keep the
+  catalog rows in `05_clothing_data.qsps` labeled as
   `store|type|key|category label`; do not hand-add picker actions.
   The build validates route coverage, fragment wrappers, navigation consistency,
   consumable metadata roles, clothing catalog
@@ -231,7 +231,7 @@ filename shows).
 
 **New submenu inside `mod_GLQS_main`:** use the `/new-submenu` skill (see Automation
 below) — it scaffolds the router block, and correctly handles the difference between
-a top-level menu (registered in `05_main_menu.qsps`'s `$glqs_nb` nav array) and a
+a top-level menu (registered in `04_main_menu.qsps`'s `$glqs_nb` nav array) and a
 nested submenu (a plain `act` link from its parent, no nav entry), which is easy to
 get wrong by hand.
 

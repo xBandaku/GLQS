@@ -1,6 +1,9 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.36.0 - Current</b>'
+'<b>Version 0.36.1 - Current</b>'
+'- Fixed: Normalized the source fragment numbering after the menu/clothing/consumables reorganization so there are no missing numbered files and the build manifest matches the actual file layout.'
+'- Fixed: Cleared stale filename references in the build validation and docs so the assembled mod, clothing catalog, and job data continue to resolve correctly after the renumbering cleanup.'
+'<b>Version 0.36.0</b>'
 '- Changed: Top-level menu tabs reordered by function instead of their old ad-hoc order - Appearance (Clothing, Body Mods), Character (Skills & Attributes, Health & Energy, Grades & Academics, Magic), Social (Relationships, Fame & Reputation), Economy (Money, Jobs & Career, Housing & Property, Consumables, Lifestyle), with Recurrent Cheats last since its a toggle-heavy meta menu rather than a character system.'
 '- Added: Relationships roster grew by 33 NPCs across two new categories - Gadukino (village residents) and University (friends and professors) - plus six additional family members, all pulled from the base games own NPC data rather than guessed.'
 '- Added: Relationships now has a Status link per NPC opening a picker for Dating/Boyfriend/Girlfriend/Fuckbuddy/Sugar Daddy, using the games own lover gosub handlers so old-status cleanup and stat counters stay correct exactly like a real relationship change would.'

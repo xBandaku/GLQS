@@ -20,11 +20,11 @@ class BuildValidationTests(unittest.TestCase):
         build.validate_recurrent_metadata(text)
         self.assertEqual(build.lint_non_ascii(text), [])
         build.validate_consumable_metadata(
-            (build.SRC_DIR / "07_consumables_data.qsps").read_text(
+            (build.SRC_DIR / "06_consumables_data.qsps").read_text(
                 encoding="utf-8"
             )
         )
-        catalog = (build.SRC_DIR / "06_clothing_data.qsps").read_text(
+        catalog = (build.SRC_DIR / "05_clothing_data.qsps").read_text(
             encoding="utf-8"
         )
         picker_actions = [
