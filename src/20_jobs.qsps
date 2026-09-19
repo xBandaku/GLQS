@@ -1,44 +1,4 @@
 !! JOBS & CAREER SUBMENU
-!! Job list is one flat pipe-delimited array (id|title), the same pattern as
-!! the NPC roster in 12_relationships.qsps - there is no master enumeration
-!! array in the real game (each job is only a lazily-defined gosub branch in
-!! jobs_list.qsrc), so this is a hand-maintained copy of every job id/title
-!! pair currently defined there.
-if $ARGS[0] = 'job_list_build':
-	glqs_jb_n = 0
-	$glqs_jb[glqs_jb_n] = 'city_office_secretary|Office Secretary' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_cafe_waitress|Cafe Waitress' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_hospital_nurse|Hospital Nurse' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_diner_dishwasher|Diner Cleaning Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_diner_floor_washer|Diner Floor Washing' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_office_cleaner|Office Cleaning Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_office_toilet_cleaner|Toilet Cleaning Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_diner_secretary|Diner Secretary' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_strip_bargirl|Strip Club Bargirl' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_strip_stripper|Stripper' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_pussycats_clerk|Shop Clerk' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_pornstudio_actress|Porn Actress' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_pornstudio_delivery|Delivery Courier' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_aphrodite_model|Model' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_hotel_maid|Hotel Cleaning Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_clinic_cleaner|Clinic Cleaning Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_factory|Factory Worker' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_mailgirl|Mail Delivery Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_tour_guide|Tour Guide Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_barbershop_cleaner|Barbershop Cleaning Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_train_cleaner|Train Station Cleaning Gig' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_pool_lifeguard|Lifeguard' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_voc_school_teacher|Teacher' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_market_saleswoman|Market Saleswoman' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'highway_brothel_prostitute|Highway Brothel Prostitute' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'nich_maid|Live-in Maid' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'city_salon_masseuse|Masseuse' & glqs_jb_n += 1
-	$glqs_jb[glqs_jb_n] = 'pav_leonid_slave|Slave' & glqs_jb_n += 1
-	glqs_jb_total = glqs_jb_n
-	killvar 'glqs_jb_n'
-end
-
-
 if $ARGS[0] = 'jobs_menu':
 	menu_off = 0
 	usehtml = 1

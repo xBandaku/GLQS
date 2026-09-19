@@ -1,0 +1,68 @@
+!! STATS ACTION HANDLER
+if $ARGS[0] = 'stats':
+
+	gs 'shortgs', 'setStat', 'stren', 100
+	gs 'shortgs', 'setStat', 'agil', 100
+	gs 'shortgs', 'setStat', 'vital', 100
+	gs 'shortgs', 'setStat', 'intel', 100
+	gs 'shortgs', 'setStat', 'react', 100
+	gs 'shortgs', 'setStat', 'sprt', 100
+	gs 'shortgs', 'setStat', 'chrsm', 100
+	gs 'shortgs', 'setStat', 'prcptn', 100
+	gs 'shortgs', 'setStat', 'magik', 100
+	gs 'shortgs', 'setStat', 'inhib', 100
+	willpowermax = 150
+	!! --- Mental Skills (direct setStat - no cheat menu redirect) ---
+	gs 'shortgs', 'setStat', 'splcstng', 100
+	gs 'shortgs', 'setStat', 'humint', 100
+	gs 'shortgs', 'setStat', 'persuas', 100
+	gs 'shortgs', 'setStat', 'observ', 100
+	!! --- Combat Skills ---
+	gs 'shortgs', 'setStat', 'jab', 100
+	gs 'shortgs', 'setStat', 'punch', 100
+	gs 'shortgs', 'setStat', 'kick', 100
+	gs 'shortgs', 'setStat', 'def', 100
+	gs 'shortgs', 'setStat', 'shoot', 100
+	gs 'shortgs', 'setStat', 'bushcraft', 100
+	!! --- Sport Skills ---
+	gs 'shortgs', 'setStat', 'run', 100
+	gs 'shortgs', 'setStat', 'vball', 100
+	gs 'shortgs', 'setStat', 'ftbll', 100
+	gs 'shortgs', 'setStat', 'bkbll', 100
+	gs 'shortgs', 'setStat', 'wrstlng', 100
+	gs 'shortgs', 'setStat', 'icesktng', 100
+	gs 'shortgs', 'setStat', 'gaming', 100
+	gs 'shortgs', 'setStat', 'chess', 100
+	gs 'shortgs', 'setStat', 'pool', 100
+	!! --- Beauty Skills ---
+	gs 'shortgs', 'setStat', 'makupskl', 100
+	gs 'shortgs', 'setStat', 'danc', 100
+	gs 'shortgs', 'setStat', 'dancero', 100
+	gs 'shortgs', 'setStat', 'dancpol', 100
+	gs 'shortgs', 'setStat', 'cheer', 100
+	gs 'shortgs', 'setStat', 'heels', 100
+	!! --- Artistic Skills ---
+	gs 'shortgs', 'setStat', 'vokal', 100
+	gs 'shortgs', 'setStat', 'songwrit', 100
+	gs 'shortgs', 'setStat', 'instrmusic', 100
+	gs 'shortgs', 'setStat', 'photoskl', 100
+	gs 'shortgs', 'setStat', 'artskls', 100
+	gs 'shortgs', 'setStat', 'perform', 100
+	gs 'shortgs', 'setStat', 'musicprod', 100
+	!! --- Work Skills ---
+	gs 'shortgs', 'setStat', 'compskl', 100
+	gs 'shortgs', 'setStat', 'comphckng', 100
+	gs 'shortgs', 'setStat', 'hndiwrk', 100
+	gs 'shortgs', 'setStat', 'sewng', 100
+	gs 'shortgs', 'setStat', 'servng', 100
+	gs 'shortgs', 'setStat', 'medcn', 100
+	gs 'shortgs', 'setStat', 'cleaning', 100
+	gs 'shortgs', 'setStat', 'mdlng', 100
+	!! No direct pcs_vball_block/rec/serve/set/spike writes here - those five
+	!! are derived stats, recomputed from vball_lvl plus attributes by
+	!! stat_sklattrib_lvlset on every single gs stat call, so writing them
+	!! directly is overwritten immediately. Maxing vball and the attributes
+	!! above already maxes all five.
+end
+
+!! ===== CLOTHING =====

@@ -21,14 +21,20 @@ python build.py
 
 Requires the QSP compiler once: `npm install -g @qsp/cli`
 
-- Reads every `src/*.qsps` fragment, assembles `build/GLQS.qsps`, runs lint checks,
+- Reads the explicit `SHARED_FILES` manifest in `build.py`, assembles `build/GLQS.qsps`, runs lint checks,
   then compiles with `qsp-cli` to `build/GLQS.qsp`.
 - On `SUCCESS`, copy `build/GLQS.qsp` into the Girl Life `mod/` folder to test in-game.
 - On `Lint checks FAILED`, the output names the exact file/line — fix the `src/`
   fragment and rerun. The assembled `.qsps` is still written even on failure, useful
   for inspection.
-- There is no test suite; the lint checks in `build.py` and manual in-game testing
-  are the only verification.
+- The build-contract tests cover static assembly assumptions; manual in-game
+  testing is still required for QSP runtime behavior.
+- `python -m unittest discover -s tests -v` runs build-contract tests without
+  requiring the QSP compiler. These cover fragment wrappers, route references,
+  generated navigation actions, recurrent metadata coverage, and recurrent
+  bulk-toggle coverage. Recurrent metadata rows in `09_recurrent.qsps` classify
+  each toggle as `bulk`, `special`, or `individual`; special handlers (addiction,
+  vibrator, and clothing dirt) must remain excluded from Enable/Disable All.
 
 ## Architecture: how src/*.qsps assemble into one location
 
@@ -42,16 +48,26 @@ at runtime, so almost everything lives inside **one shared QSP location**,
     `03_hook.qsps`) — each already contains its own `# location_name` header and
     `--- location_name ---` footer, and is passed through unwrapped, in the order
     listed in `STANDALONE_FILES` (not filename order).
-  - **Everything else** — treated as a body-only fragment of the shared
+  - **`SHARED_FILES`** — an explicit ordered manifest of body-only fragments of the shared
     `mod_GLQS_main` location (no `#`/`---` wrapper of its own). These are
-    concatenated in **filename sort order** (hence the `NN_` numeric prefixes),
-    and `build.py` wraps the whole batch in one `# mod_GLQS_main` /
+    concatenated in manifest order, and `build.py` wraps the whole batch in one
+    `# mod_GLQS_main` /
     `--- mod_GLQS_main ---` pair automatically.
 - Inside `mod_GLQS_main`, each fragment is an `if $ARGS[0] = 'submenu_name': ... end`
-  block acting as a sub-router — e.g. `06_clothing.qsps` handles
-  `'clothing_menu'` and `'store_buy'`, `15_actions.qsps` handles action verbs like
-  `'consumables'`/`'stats'`, `16_fill_helpers.qsps` handles bulk-grant loops like
-  `'fill_clo'`. Menus link to each other via
+  block acting as a sub-router — e.g. `06_clothing.qsps` handles the clothing
+  menu, `06_clothing_data.qsps` owns the clothing catalog,
+  `06_clothing_store.qsps` handles store routes, `06_clothing_picker.qsps`
+  handles item picker routes, and `06_clothing_actions.qsps` handles the
+  clothing mutator. `07_consumables_data.qsps` is the single consumable
+  metadata table used by the menu and bulk action. `07_consumables_actions.qsps`
+  and `08_stats_actions.qsps` handle feature mutators,
+  `16_fill_data.qsps` owns the shared single-item clothing grant route,
+  `16_fill_helpers.qsps` handles bulk-grant loops like `'fill_clo'`, and
+  `20_jobs_data.qsps` owns the job ID/title table used by `20_jobs.qsps`.
+  `10_grades_data.qsps` owns the grade rows used by the grades menu and
+  max-all action, while `12_relationships_data.qsps` owns relationship category
+  labels.
+  Menus link to each other via
   `gt 'mod_GLQS_main', 'other_menu_name'`.
 - `03_hook.qsps` defines its own location, `mod_GLQS` (matching the
   `mod_<$mod_info[0]>` naming the base game's mod loader expects), which the
@@ -63,9 +79,23 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   'is_current_home', $curloc)` plus `$locclass = 'bedr'`), the uni dorm
   room, or the therapist hotel room - also skipped during character
   creation and the game's own scripted events.
-- File numbering (`01`, `02`, `03`, `05`...`17`) controls both display order in the
-  standalone list and concatenation order in the shared location — it's advisory
-  (gaps are fine), just keep related menus grouped.
+- File numbering groups related files for readability, but `SHARED_FILES` in
+  `build.py` controls assembly order. Add every new shared fragment to that
+  manifest or the build fails.
+- `build.py` expands the navigation registry in `05_main_menu.qsps` into literal
+  action-button entries because QSP evaluates `act` bodies at click time. Keep the
+  `GLQS_NAV_ACTIONS_BEGIN`/`GLQS_NAV_ACTIONS_END` markers in that source file.
+  It also expands the clothing catalog into literal store labels and category
+  actions between the clothing markers in `06_clothing_store.qsps`. Keep the
+  catalog rows in `06_clothing_data.qsps` labeled as
+  `store|type|key|category label`; do not hand-add picker actions.
+  The build validates route coverage, fragment wrappers, navigation consistency,
+  consumable metadata roles and bulk-only inventory visibility, clothing catalog
+  coverage, and that the recurrent menu's bulk enable/disable handlers cover
+  its primary toggle table and individual toggles have displayed states.
+  When `reference/nightly/` is available, the build also compares the job
+  manifest against `jobs_list.qsrc`; without it, duplicate and malformed IDs
+  are still rejected.
 
 ## Lint rules (enforced by build.py, not qsp-cli)
 
@@ -125,7 +155,7 @@ e.g. `pcs_vball_block/rec/serve/set/spike` are all derived from `vball_lvl` and
 attribute values. Writing such a variable directly compiles and even displays
 fine, but the next `gs 'stat'` (which every GLQS menu itself runs) silently
 overwrites it, so the write does nothing. This shipped as dead code once: five
-direct `pcs_vball_*` writes sat in `15_actions.qsps` across many releases until
+direct `pcs_vball_*` writes sat in `08_stats_actions.qsps` across many releases until
 the v0.34.4 reference audit caught them. Before assigning any `pcs_*` variable
 directly, grep `reference/nightly/locations/stat_sklattrib_lvlset.qsrc` for it —
 if it's assigned there, set the underlying skill/attribute via

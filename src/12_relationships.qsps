@@ -6,16 +6,7 @@
 !! are parsed with instr/mid below, the same technique the base game itself
 !! uses (see mid(ARGS[0], 1, instr(ARGS[0], space) - 1) in its source).
 if $ARGS[0] = 'rel_menu' or $ARGS[0] = 'max_category':
-	$glqs_cat_label['family'] = 'Family'
-	$glqs_cat_label['gadukino'] = 'Gadukino (Village)'
-	$glqs_cat_label['popular'] = 'Popular Kids'
-	$glqs_cat_label['athletes'] = 'Athletes'
-	$glqs_cat_label['nerds'] = 'Nerds'
-	$glqs_cat_label['gopniks'] = 'Gopniks'
-	$glqs_cat_label['outcasts'] = 'Outcasts'
-	$glqs_cat_label['teachers'] = 'Teachers'
-	$glqs_cat_label['university'] = 'University'
-	$glqs_cat_label['others'] = 'Others'
+	gs 'mod_GLQS_main', 'rel_category_labels'
 
 	glqs_n = 0
 	$glqs_npc[glqs_n] = 'family|1|A28|Dad (M)' & glqs_n += 1

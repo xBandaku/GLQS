@@ -101,32 +101,14 @@ if $ARGS[0] = 'navbar':
 		killvar 'glqs_i' & killvar 'glqs_p1' & killvar '$glqs_row' & killvar '$glqs_key' & killvar '$glqs_label'
 		killvar '$glqs_nb' & killvar 'glqs_nb_total'
 	else
-		!! Explicit acts, not a loop over nav_build - QSP resolves act
-		!! bodies at click time, not at definition time (same stray-killvar
-		!! class of bug as the tattoo/piercing pickers elsewhere in this
-		!! mod), so a loop reusing one $glqs_key variable across iterations
-		!! would make every generated button navigate wherever the last
-		!! iteration left that variable, not its own target. Each entry is
-		!! skipped on whichever page it points to, instead of bolded like
-		!! the text-link branch above - action buttons have no way to show
-		!! disabled/current state inline, so omitting it is the closest
-		!! equivalent.
+		!! QSP resolves act bodies at click time, so build.py expands the
+		!! single nav_build registry into literal actions here. Each entry
+		!! is skipped on whichever page it points to, instead of bolded like
+		!! the text-link branch above.
 		act 'Switch Menu Display to Text Links': glqs_nav_style = 1 & gt 'mod_GLQS_main', $glqs_current
 		if $glqs_current <> 'start': act 'Index': gt 'mod_GLQS_main', 'start'
-		if $glqs_current <> 'clothing_menu': act 'Clothing & Accessories': gt 'mod_GLQS_main', 'clothing_menu'
-		if $glqs_current <> 'bodymod_menu': act 'Body Mods': gt 'mod_GLQS_main', 'bodymod_menu'
-		if $glqs_current <> 'stats_menu': act 'Skills & Attributes': gt 'mod_GLQS_main', 'stats_menu'
-		if $glqs_current <> 'health_menu': act 'Health & Energy': gt 'mod_GLQS_main', 'health_menu'
-		if $glqs_current <> 'grades': act 'Grades & Academics': gt 'mod_GLQS_main', 'grades'
-		if $glqs_current <> 'magic_menu': act 'Magic': gt 'mod_GLQS_main', 'magic_menu'
-		if $glqs_current <> 'rel_menu': act 'Relationships': gt 'mod_GLQS_main', 'rel_menu'
-		if $glqs_current <> 'fame_menu': act 'Fame & Reputation': gt 'mod_GLQS_main', 'fame_menu'
-		if $glqs_current <> 'money_menu': act 'Money': gt 'mod_GLQS_main', 'money_menu'
-		if $glqs_current <> 'jobs_menu': act 'Jobs & Career': gt 'mod_GLQS_main', 'jobs_menu'
-		if $glqs_current <> 'housing_menu': act 'Housing & Property': gt 'mod_GLQS_main', 'housing_menu'
-		if $glqs_current <> 'consumables_menu': act 'Consumables': gt 'mod_GLQS_main', 'consumables_menu'
-		if $glqs_current <> 'lifestyle_menu': act 'Lifestyle': gt 'mod_GLQS_main', 'lifestyle_menu'
-		if $glqs_current <> 'recurrent': act 'Recurrent Cheats': gt 'mod_GLQS_main', 'recurrent'
+		!! GLQS_NAV_ACTIONS_BEGIN
+		!! GLQS_NAV_ACTIONS_END
 	end
 	!! $glqs_current is NOT killed here - the Switch Menu Display act above
 	!! references it directly, and QSP resolves act bodies at click time,
