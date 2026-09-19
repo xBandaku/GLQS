@@ -1,0 +1,13 @@
+!! RELATIONSHIP CATEGORY LABELS
+if $ARGS[0] = 'rel_category_labels':
+	$glqs_cat_label['family'] = 'Family'
+	$glqs_cat_label['gadukino'] = 'Gadukino (Village)'
+	$glqs_cat_label['popular'] = 'Popular Kids'
+	$glqs_cat_label['athletes'] = 'Athletes'
+	$glqs_cat_label['nerds'] = 'Nerds'
+	$glqs_cat_label['gopniks'] = 'Gopniks'
+	$glqs_cat_label['outcasts'] = 'Outcasts'
+	$glqs_cat_label['teachers'] = 'Teachers'
+	$glqs_cat_label['university'] = 'University'
+	$glqs_cat_label['others'] = 'Others'
+end
