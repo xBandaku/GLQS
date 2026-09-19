@@ -1,0 +1,127 @@
+!! CONSUMABLE METADATA
+if $ARGS[0] = 'consumables_data':
+	glqs_con_n = 0
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'Condoms (equipped)' & $glqs_con_key[glqs_con_n] = 'equipped_condoms' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'Condoms (normal)' & $glqs_con_key[glqs_con_n] = 'normal_condoms' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'Birth control pills' & $glqs_con_key[glqs_con_n] = 'contraceptive_pill' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'Pregnancy tests' & $glqs_con_key[glqs_con_n] = 'pregnancy_test' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'Morning after pill' & $glqs_con_key[glqs_con_n] = 'morning_after_pill' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Painkillers' & $glqs_con_key[glqs_con_n] = 'painkillers' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Vitamins' & $glqs_con_key[glqs_con_n] = 'vitamins' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Antibiotics' & $glqs_con_key[glqs_con_n] = 'antibiotics' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Tampons' & $glqs_con_key[glqs_con_n] = 'tampons' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Sanitary pads' & $glqs_con_key[glqs_con_n] = 'sanitary_pads' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Shampoo' & $glqs_con_key[glqs_con_n] = 'shampoo' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Mouthwash' & $glqs_con_key[glqs_con_n] = 'mouthwash' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Deodorant' & $glqs_con_key[glqs_con_n] = 'deodorant' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Breastmilk bottle S' & $glqs_con_key[glqs_con_n] = 'bottle_s' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Breastmilk bottle M' & $glqs_con_key[glqs_con_n] = 'bottle_m' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Thrush medication' & $glqs_con_key[glqs_con_n] = 'thrush_meds' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'Morning sickness pills' & $glqs_con_key[glqs_con_n] = 'meds_morning_sick' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'Lipbalm' & $glqs_con_key[glqs_con_n] = 'lipbalm' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'Cosmetics' & $glqs_con_key[glqs_con_n] = 'cosmetics' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'Moisturiser' & $glqs_con_key[glqs_con_n] = 'moisturiser' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'Scrunchies' & $glqs_con_key[glqs_con_n] = 'scrunchies' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'Hair extension shampoo' & $glqs_con_key[glqs_con_n] = 'hair_extensioncream' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Neuroboosters (Mentats)' & $glqs_con_key[glqs_con_n] = 'mentats' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Steroids' & $glqs_con_key[glqs_con_n] = 'steroids' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Aphrodisiac' & $glqs_con_key[glqs_con_n] = 'aphrodisiac' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Breast cream' & $glqs_con_key[glqs_con_n] = 'breastcream' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Lubricant' & $glqs_con_key[glqs_con_n] = 'lubricant' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Butt growth injection' & $glqs_con_key[glqs_con_n] = 'butt_injection' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Joints' & $glqs_con_key[glqs_con_n] = 'joints' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Cocaine' & $glqs_con_key[glqs_con_n] = 'cocaine' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'Amphetamine' & $glqs_con_key[glqs_con_n] = 'amphetamine' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'Berries' & $glqs_con_key[glqs_con_n] = 'berries' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'Mushrooms' & $glqs_con_key[glqs_con_n] = 'mushrooms' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Household' & $glqs_con_label[glqs_con_n] = 'Dishwashing detergent' & $glqs_con_key[glqs_con_n] = 'dish_soap' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Household' & $glqs_con_label[glqs_con_n] = 'Clothing detergent' & $glqs_con_key[glqs_con_n] = 'laundry_soap' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'quantity' & $glqs_con_category[glqs_con_n] = 'Household' & $glqs_con_label[glqs_con_n] = 'Plates' & $glqs_con_key[glqs_con_n] = 'dish_plates' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'Bottle of water' & $glqs_con_key[glqs_con_n] = 'food_water' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'Sandwich' & $glqs_con_key[glqs_con_n] = 'food_sandwich' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'Cheap bottle of wine' & $glqs_con_key[glqs_con_n] = 'food_wine' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Pregnancy' & $glqs_con_label[glqs_con_n] = 'Pregnancy ball' & $glqs_con_key[glqs_con_n] = 'preg_ball' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Pregnancy' & $glqs_con_label[glqs_con_n] = 'Pregnancy brace' & $glqs_con_key[glqs_con_n] = 'preg_brace' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Pregnancy' & $glqs_con_label[glqs_con_n] = 'Pregnancy pillow' & $glqs_con_key[glqs_con_n] = 'preg_pillow' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Exercise Equipment' & $glqs_con_label[glqs_con_n] = 'Skipping rope' & $glqs_con_key[glqs_con_n] = 'skipping_rope' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Exercise Equipment' & $glqs_con_label[glqs_con_n] = 'Hula hoop' & $glqs_con_key[glqs_con_n] = 'hula_hoop' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Exercise Equipment' & $glqs_con_label[glqs_con_n] = 'Book on yoga' & $glqs_con_key[glqs_con_n] = 'book_yoga' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Exercise Equipment' & $glqs_con_label[glqs_con_n] = 'Ice skates' & $glqs_con_key[glqs_con_n] = 'ice_skates' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Exercise Equipment' & $glqs_con_label[glqs_con_n] = 'Skis' & $glqs_con_key[glqs_con_n] = 'ski' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'toggle' & $glqs_con_category[glqs_con_n] = 'Exercise Equipment' & $glqs_con_label[glqs_con_n] = 'Refillable water bottle' & $glqs_con_key[glqs_con_n] = 'refill_bottle' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'equipped_condoms' & $glqs_con_key[glqs_con_n] = 'equipped_condoms' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'normal_condoms' & $glqs_con_key[glqs_con_n] = 'normal_condoms' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'contraceptive_pill' & $glqs_con_key[glqs_con_n] = 'contraceptive_pill' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'pregnancy_test' & $glqs_con_key[glqs_con_n] = 'pregnancy_test' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Contraceptives' & $glqs_con_label[glqs_con_n] = 'morning_after_pill' & $glqs_con_key[glqs_con_n] = 'morning_after_pill' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'painkillers' & $glqs_con_key[glqs_con_n] = 'painkillers' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'vitamins' & $glqs_con_key[glqs_con_n] = 'vitamins' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'antibiotics' & $glqs_con_key[glqs_con_n] = 'antibiotics' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'tampons' & $glqs_con_key[glqs_con_n] = 'tampons' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'sanitary_pads' & $glqs_con_key[glqs_con_n] = 'sanitary_pads' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'shampoo' & $glqs_con_key[glqs_con_n] = 'shampoo' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'mouthwash' & $glqs_con_key[glqs_con_n] = 'mouthwash' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'deodorant' & $glqs_con_key[glqs_con_n] = 'deodorant' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'razor' & $glqs_con_key[glqs_con_n] = 'razor' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'suncream' & $glqs_con_key[glqs_con_n] = 'suncream' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'chafing_cream' & $glqs_con_key[glqs_con_n] = 'chafing_cream' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'weight_loss_pill' & $glqs_con_key[glqs_con_n] = 'weight_loss_pill' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'nipple_cream' & $glqs_con_key[glqs_con_n] = 'nipple_cream' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'bottle_s' & $glqs_con_key[glqs_con_n] = 'bottle_s' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'bottle_m' & $glqs_con_key[glqs_con_n] = 'bottle_m' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'thrush_meds' & $glqs_con_key[glqs_con_n] = 'thrush_meds' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Medical / Hygiene' & $glqs_con_label[glqs_con_n] = 'meds_morning_sick' & $glqs_con_key[glqs_con_n] = 'meds_morning_sick' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'lipbalm' & $glqs_con_key[glqs_con_n] = 'lipbalm' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'cosmetics' & $glqs_con_key[glqs_con_n] = 'cosmetics' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'moisturiser' & $glqs_con_key[glqs_con_n] = 'moisturiser' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'travel_makeup' & $glqs_con_key[glqs_con_n] = 'travel_makeup' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'makeup_wipes' & $glqs_con_key[glqs_con_n] = 'makeup_wipes' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'scrunchies' & $glqs_con_key[glqs_con_n] = 'scrunchies' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'kirbygrips' & $glqs_con_key[glqs_con_n] = 'kirbygrips' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'eyelash_fake' & $glqs_con_key[glqs_con_n] = 'eyelash_fake' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'eyelash_mink' & $glqs_con_key[glqs_con_n] = 'eyelash_mink' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Beauty' & $glqs_con_label[glqs_con_n] = 'hair_extensioncream' & $glqs_con_key[glqs_con_n] = 'hair_extensioncream' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Sexual' & $glqs_con_label[glqs_con_n] = 'lubricant' & $glqs_con_key[glqs_con_n] = 'lubricant' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Sexual' & $glqs_con_label[glqs_con_n] = 'breastcream' & $glqs_con_key[glqs_con_n] = 'breastcream' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Sexual' & $glqs_con_label[glqs_con_n] = 'aphrodisiac' & $glqs_con_key[glqs_con_n] = 'aphrodisiac' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Sexual' & $glqs_con_label[glqs_con_n] = 'butt_injection' & $glqs_con_key[glqs_con_n] = 'butt_injection' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'mentats' & $glqs_con_key[glqs_con_n] = 'mentats' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'steroids' & $glqs_con_key[glqs_con_n] = 'steroids' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'joints' & $glqs_con_key[glqs_con_n] = 'joints' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'cocaine' & $glqs_con_key[glqs_con_n] = 'cocaine' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Drugs' & $glqs_con_label[glqs_con_n] = 'amphetamine' & $glqs_con_key[glqs_con_n] = 'amphetamine' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'food_basic' & $glqs_con_key[glqs_con_n] = 'food_basic' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'food_diet' & $glqs_con_key[glqs_con_n] = 'food_diet' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'food_biscuits' & $glqs_con_key[glqs_con_n] = 'food_biscuits' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'berries' & $glqs_con_key[glqs_con_n] = 'berries' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Food' & $glqs_con_label[glqs_con_n] = 'mushrooms' & $glqs_con_key[glqs_con_n] = 'mushrooms' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Misc consumables' & $glqs_con_label[glqs_con_n] = 'cigarettes' & $glqs_con_key[glqs_con_n] = 'cigarettes' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Misc consumables' & $glqs_con_label[glqs_con_n] = 'sewing_fabric' & $glqs_con_key[glqs_con_n] = 'sewing_fabric' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Household' & $glqs_con_label[glqs_con_n] = 'dish_soap' & $glqs_con_key[glqs_con_n] = 'dish_soap' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Household' & $glqs_con_label[glqs_con_n] = 'laundry_soap' & $glqs_con_key[glqs_con_n] = 'laundry_soap' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'bulk' & $glqs_con_category[glqs_con_n] = 'Household' & $glqs_con_label[glqs_con_n] = 'dish_plates' & $glqs_con_key[glqs_con_n] = 'dish_plates' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Unique items (max 1)' & $glqs_con_label[glqs_con_n] = 'comb' & $glqs_con_key[glqs_con_n] = 'comb' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Unique items (max 1)' & $glqs_con_label[glqs_con_n] = 'travel_mirror' & $glqs_con_key[glqs_con_n] = 'travel_mirror' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Unique items (max 1)' & $glqs_con_label[glqs_con_n] = 'umbrella' & $glqs_con_key[glqs_con_n] = 'umbrella' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Unique items (max 1)' & $glqs_con_label[glqs_con_n] = 'sewing_kit' & $glqs_con_key[glqs_con_n] = 'sewing_kit' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Unique items (max 1)' & $glqs_con_label[glqs_con_n] = 'enema_kit' & $glqs_con_key[glqs_con_n] = 'enema_kit' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Unique items (max 1)' & $glqs_con_label[glqs_con_n] = 'breast_pump' & $glqs_con_key[glqs_con_n] = 'breast_pump' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'vibe' & $glqs_con_key[glqs_con_n] = 'vibe' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'buttplug' & $glqs_con_key[glqs_con_n] = 'buttplug' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'strapon' & $glqs_con_key[glqs_con_n] = 'strapon' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'dildo_suction' & $glqs_con_key[glqs_con_n] = 'dildo_suction' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'dildo_small' & $glqs_con_key[glqs_con_n] = 'dildo_small' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'dildo_normal' & $glqs_con_key[glqs_con_n] = 'dildo_normal' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'dildo_big' & $glqs_con_key[glqs_con_n] = 'dildo_big' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'dildo_large' & $glqs_con_key[glqs_con_n] = 'dildo_large' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'dildo_huge' & $glqs_con_key[glqs_con_n] = 'dildo_huge' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'dildo_enormous' & $glqs_con_key[glqs_con_n] = 'dildo_enormous' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Sex toys' & $glqs_con_label[glqs_con_n] = 'dildo_gigantic' & $glqs_con_key[glqs_con_n] = 'dildo_gigantic' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Magazines' & $glqs_con_label[glqs_con_n] = 'mag_fashion' & $glqs_con_key[glqs_con_n] = 'mag_fashion' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Magazines' & $glqs_con_label[glqs_con_n] = 'mag_computer' & $glqs_con_key[glqs_con_n] = 'mag_computer' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Magazines' & $glqs_con_label[glqs_con_n] = 'mag_biography' & $glqs_con_key[glqs_con_n] = 'mag_biography' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Magazines' & $glqs_con_label[glqs_con_n] = 'mag_cooking' & $glqs_con_key[glqs_con_n] = 'mag_cooking' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Magazines' & $glqs_con_label[glqs_con_n] = 'mag_knitting' & $glqs_con_key[glqs_con_n] = 'mag_knitting' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Magazines' & $glqs_con_label[glqs_con_n] = 'mag_fitness' & $glqs_con_key[glqs_con_n] = 'mag_fitness' & glqs_con_n += 1
+	$glqs_con_kind[glqs_con_n] = 'unique' & $glqs_con_category[glqs_con_n] = 'Magazines' & $glqs_con_label[glqs_con_n] = 'mag_porn' & $glqs_con_key[glqs_con_n] = 'mag_porn' & glqs_con_n += 1
+end

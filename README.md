@@ -30,6 +30,10 @@ needed for normal play.)
 - Fame & Reputation, Jobs & Career, Housing & Property - your homes and your car
 - Magic, Lifestyle - casino chips, pain, and fetish preferences
 
+The Consumables screen shows the available inventory in its main list.
+The Set All actions also fill the additional consumable entries used by the
+base game without adding a separate duplicate section to the menu.
+
 ## Contents
 
 - [1. How to Get the Mod](#1-how-to-get-the-mod)

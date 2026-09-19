@@ -16,17 +16,16 @@ Folder layout expected:
     src/01_setup.qsps        <- standalone location (has # name / --- name --- wrapper)
     src/02_readme.qsps       <- standalone location
     src/03_hook.qsps         <- standalone location
-    src/04_*.qsps ... 16_*.qsps
-                              <- body fragments of the single big 'mod_GLQS_main'
-                                 location, NO # header or --- footer of their own.
-                                 build.py wraps them all in one shared location,
-                                 in filename sort order.
+    src/05_*.qsps ... 21_*.qsps
+                              <- body fragments listed in SHARED_FILES for the
+                                 single big 'mod_GLQS_main' location, with no
+                                 # header or --- footer of their own.
+                                 build.py wraps them all in one shared location.
 
 To add a new submenu/feature:
-    1. Create a new src/NN_description.qsps fragment (body only, no # / --- lines)
-       with a number that places it where you want in mod_GLQS_main, OR add your
-       code to an existing fragment file if it belongs there.
-    2. Run this script. It handles the rest.
+    1. Create a new src/NN_description.qsps fragment (body only, no # / --- lines).
+    2. Add its filename to SHARED_FILES in the desired assembly position.
+    3. Run this script. It handles the rest.
 
 To add a whole new standalone location (rare):
     1. Create src/NN_name.qsps with its own '# location_name' header and
@@ -35,223 +34,53 @@ To add a whole new standalone location (rare):
        pass it through unwrapped.
 """
 
-import re
 import subprocess
 import sys
 from pathlib import Path
 
-SRC_DIR = Path(__file__).parent / "src"
-BUILD_DIR = Path(__file__).parent / "build"
-OUTPUT_QSPS = BUILD_DIR / "GLQS.qsps"
-OUTPUT_QSP = BUILD_DIR / "GLQS.qsp"
+import build_support
 
-# Files that already contain their own '# LocationName' / '--- LocationName ---'
-# wrapper and should be included as-is, IN THIS ORDER, before the shared
-# mod_GLQS_main location is assembled from every other fragment.
-STANDALONE_FILES = [
-    "01_setup.qsps",
-    "02_readme.qsps",
-    "03_hook.qsps",
-]
+SRC_DIR = build_support.SRC_DIR
+BUILD_DIR = build_support.BUILD_DIR
+OUTPUT_QSPS = build_support.OUTPUT_QSPS
+OUTPUT_QSP = build_support.OUTPUT_QSP
 
-SHARED_LOCATION_NAME = "mod_GLQS_main"
+STANDALONE_FILES = build_support.STANDALONE_FILES
+SHARED_FILES = build_support.SHARED_FILES
+SHARED_LOCATION_NAME = build_support.SHARED_LOCATION_NAME
+NAVIGATION_FILE = build_support.NAVIGATION_FILE
+NAVIGATION_BEGIN = build_support.NAVIGATION_BEGIN
+NAVIGATION_END = build_support.NAVIGATION_END
+CLOTHING_ACTIONS_BEGIN = build_support.CLOTHING_ACTIONS_BEGIN
+CLOTHING_ACTIONS_END = build_support.CLOTHING_ACTIONS_END
+CLOTHING_LABELS_BEGIN = build_support.CLOTHING_LABELS_BEGIN
+CLOTHING_LABELS_END = build_support.CLOTHING_LABELS_END
 
-
-def collect_fragments():
-    all_files = sorted(SRC_DIR.glob("*.qsps"))
-    standalone = [f for f in all_files if f.name in STANDALONE_FILES]
-    standalone.sort(key=lambda f: STANDALONE_FILES.index(f.name))
-    shared = [f for f in all_files if f.name not in STANDALONE_FILES]
-    return standalone, shared
-
-
-def assemble(standalone_files, shared_files):
-    parts = []
-    for f in standalone_files:
-        parts.append(f.read_text())
-
-    parts.append(f"# {SHARED_LOCATION_NAME}\n")
-    for f in shared_files:
-        parts.append(f.read_text())
-    parts.append(
-        f"--- {SHARED_LOCATION_NAME} ---------------------------------\n"
-    )
-
-    return "\n".join(p.rstrip("\n") + "\n" for p in parts)
-
-
-def lint_apostrophes_in_comments(text):
-    """QSP comments starting with !! do NOT reliably suppress quote-parsing.
-    A raw apostrophe (e.g. in "game's") inside a !! comment can open an
-    unterminated string that corrupts all block-nesting after it, producing
-    a misleading '[end] not found' error somewhere else entirely.
-    Doubled '' (the QSP escape) is fine and ignored here."""
-    problems = []
-    for i, line in enumerate(text.splitlines(), start=1):
-        stripped = line.strip()
-        if stripped.startswith("!!"):
-            cleaned = stripped.replace("''", "")
-            if "'" in cleaned:
-                problems.append((i, line))
-    return problems
-
-
-def lint_non_ascii(text):
-    """QSP's parser only handles ASCII. Smart quotes, em-dashes, etc.
-    anywhere -- including inside comments -- throw a syntax error."""
-    problems = []
-    for i, line in enumerate(text.splitlines(), start=1):
-        for ch in line:
-            if not (ch == "\t" or 0x20 <= ord(ch) <= 0x7E):
-                problems.append((i, line))
-                break
-    return problems
-
-
-def lint_unbalanced_template_markers(text):
-    """<< >> template markers must open and close inside the same single-quoted
-    string literal -- they cannot span a '+' concatenation. Both compile fine
-    with qsp-cli (which never executes the code) and only fail in-game with
-    a 'Bracket not found' error. This scans every single-quoted literal in the
-    whole file (respecting QSP's '' escape), not line-by-line -- a literal
-    that itself spans multiple physical lines has no complete match on either
-    of its lines individually, so a per-line scan silently misses it. Flags
-    any literal where << and >> counts don't match, reporting the line the
-    literal starts on."""
-    problems = []
-    literal_re = re.compile(r"'(?:[^']|'')*'")
-    for m in literal_re.finditer(text):
-        literal = m.group(0)
-        if literal.count("<<") != literal.count(">>"):
-            lineno = text.count("\n", 0, m.start()) + 1
-            line = text.splitlines()[lineno - 1]
-            problems.append((lineno, line))
-    return problems
-
-
-def lint_empty_template_markers(text):
-    """'<< >>' (nothing but whitespace between the markers) is always invalid
-    QSP -- typically typed as literal text describing the << >> syntax
-    itself (e.g. in a changelog string) rather than intended as real
-    interpolation. Compiles fine with qsp-cli, fails in-game with a plain
-    'Syntax error'. Matched against the whole file rather than line-by-line
-    so a marker pair split across a multi-line literal is still caught."""
-    problems = []
-    empty_re = re.compile(r"<<\s*>>")
-    for m in empty_re.finditer(text):
-        lineno = text.count("\n", 0, m.start()) + 1
-        line = text.splitlines()[lineno - 1]
-        problems.append((lineno, line))
-    return problems
-
-
-def lint_version_mismatch(text):
-    """$mod_info[1] (01_setup.qsps, shown on the game's mod-selection screen) and
-    the top changelog entry (02_readme.qsps, shown on the in-game readme screen)
-    encode the same version independently and must be bumped together. Nothing
-    else catches drift between them -- it compiles fine and only shows up as the
-    wrong version displayed in one of the two places in-game. Returns None if
-    they agree, else (mod_info_version, changelog_version) as 'X.Y.Z' strings."""
-    mod_info_match = re.search(r"\$mod_info\[1\]\s*=\s*'(\d)(\d{2})(\d{2})'", text)
-    changelog_match = re.search(
-        r"'<b>Version (\d+)\.(\d+)(?:\.(\d+))?\s*(?:-\s*Current)?</b>'", text
-    )
-    if not mod_info_match or not changelog_match:
-        return None
-
-    mi_major, mi_minor, mi_patch = mod_info_match.groups()
-    mod_info_version = f"{int(mi_major)}.{int(mi_minor)}.{int(mi_patch)}"
-
-    cl_major, cl_minor, cl_patch = changelog_match.groups()
-    changelog_version = f"{int(cl_major)}.{int(cl_minor)}.{int(cl_patch or 0)}"
-
-    if mod_info_version != changelog_version:
-        return (mod_info_version, changelog_version)
-    return None
-
-
-def lint_block_balance(text):
-    """Rough check that every multi-line 'if ...:' and 'act 'x':' block has
-    a matching 'end'. Not a full parser -- doesn't understand elseif chains
-    perfectly or single-line if/act -- but catches the common mistake of a
-    missing/extra end before you waste time in-game hunting for it."""
-    depth = 0
-    stack = []
-    lines = text.splitlines()
-    for i, line in enumerate(lines, start=1):
-        l = line.strip()
-        if re.match(r"^if\s.*:$", l):
-            depth += 1
-            stack.append((i, l[:60]))
-        elif re.match(r"^act\s+'[^']*':$", l):
-            depth += 1
-            stack.append((i, l[:60]))
-        elif l == "end":
-            if stack:
-                stack.pop()
-            depth -= 1
-    return depth, stack
-
-
-def run_lints(text):
-    ok = True
-
-    apostrophe_hits = lint_apostrophes_in_comments(text)
-    if apostrophe_hits:
-        ok = False
-        print("\n[LINT] Raw apostrophes found inside !! comments:")
-        print("       (these can corrupt QSP's parser -- remove the apostrophe")
-        print("        or rephrase the comment)")
-        for lineno, line in apostrophe_hits:
-            print(f"    line {lineno}: {line.strip()}")
-
-    non_ascii_hits = lint_non_ascii(text)
-    if non_ascii_hits:
-        ok = False
-        print("\n[LINT] Non-ASCII characters found (smart quotes, em-dashes, etc.):")
-        for lineno, line in non_ascii_hits:
-            print(f"    line {lineno}: {line.strip()}")
-
-    template_hits = lint_unbalanced_template_markers(text)
-    if template_hits:
-        ok = False
-        print("\n[LINT] Unbalanced << >> template markers inside a string literal:")
-        print("       (<< and >> must open/close in the same literal -- they can't")
-        print("        span a '+' concatenation)")
-        for lineno, line in template_hits:
-            print(f"    line {lineno}: {line.strip()}")
-
-    empty_template_hits = lint_empty_template_markers(text)
-    if empty_template_hits:
-        ok = False
-        print("\n[LINT] Empty << >> template markers found:")
-        print("       (nothing between << and >> is always invalid QSP -- if you")
-        print("        meant to describe the << >> syntax as plain text, add a")
-        print("        space or word between them so QSP doesn't parse it as a")
-        print("        marker, e.g. '<< >>' -> '<<  >>' won't help; rephrase instead)")
-        for lineno, line in empty_template_hits:
-            print(f"    line {lineno}: {line.strip()}")
-
-    depth, stack = lint_block_balance(text)
-    if depth != 0:
-        ok = False
-        print(f"\n[LINT] if/act/end block imbalance -- final depth {depth} (should be 0)")
-        print("       Unclosed blocks (most likely culprits):")
-        for lineno, snippet in stack:
-            print(f"    line {lineno}: {snippet}")
-
-    version_mismatch = lint_version_mismatch(text)
-    if version_mismatch:
-        ok = False
-        mod_info_version, changelog_version = version_mismatch
-        print("\n[LINT] Version mismatch between mod_info and changelog:")
-        print(f"       01_setup.qsps $mod_info[1] says {mod_info_version}")
-        print(f"       02_readme.qsps top changelog entry says {changelog_version}")
-        print("       Bump both together -- $mod_info[1] drives the version shown")
-        print("       on the game's mod-selection screen, the changelog entry drives")
-        print("       the in-game readme screen, and nothing else keeps them in sync.")
-
-    return ok
+# Support functions are implemented in build_support.py so build.py stays focused
+# on the build pipeline orchestration.
+collect_fragments = build_support.collect_fragments
+validate_fragment_contract = build_support.validate_fragment_contract
+extract_route_definitions = build_support.extract_route_definitions
+validate_route_definitions = build_support.validate_route_definitions
+extract_route_calls = build_support.extract_route_calls
+validate_route_coverage = build_support.validate_route_coverage
+validate_navigation_registry = build_support.validate_navigation_registry
+validate_navigation_template = build_support.validate_navigation_template
+validate_recurrent_bulk_handlers = build_support.validate_recurrent_bulk_handlers
+validate_recurrent_toggle_contract = build_support.validate_recurrent_toggle_contract
+validate_recurrent_metadata = build_support.validate_recurrent_metadata
+expand_navigation_actions = build_support.expand_navigation_actions
+expand_clothing_store = build_support.expand_clothing_store
+assemble = build_support.assemble
+lint_apostrophes_in_comments = build_support.lint_apostrophes_in_comments
+lint_non_ascii = build_support.lint_non_ascii
+lint_unbalanced_template_markers = build_support.lint_unbalanced_template_markers
+lint_empty_template_markers = build_support.lint_empty_template_markers
+lint_version_mismatch = build_support.lint_version_mismatch
+lint_block_balance = build_support.lint_block_balance
+run_lints = build_support.run_lints
+validate_consumable_metadata = build_support.validate_consumable_metadata
+validate_job_ids = build_support.validate_job_ids
 
 
 def main():
@@ -262,6 +91,7 @@ def main():
     BUILD_DIR.mkdir(exist_ok=True)
 
     standalone_files, shared_files = collect_fragments()
+    validate_fragment_contract(standalone_files, shared_files)
 
     print("Standalone locations (in order):")
     for f in standalone_files:
@@ -271,7 +101,25 @@ def main():
         print(f"  {f.name}")
 
     assembled = assemble(standalone_files, shared_files)
-    OUTPUT_QSPS.write_text(assembled)
+    validate_route_definitions(assembled)
+    validate_route_coverage(assembled)
+    validate_navigation_registry(
+        assembled, extract_route_definitions(assembled)
+    )
+    validate_recurrent_bulk_handlers(assembled)
+    validate_recurrent_toggle_contract(assembled)
+    validate_recurrent_metadata(assembled)
+    validate_consumable_metadata(
+        (SRC_DIR / "07_consumables_data.qsps").read_text(encoding="utf-8")
+    )
+    job_manifest = (SRC_DIR / "20_jobs_data.qsps").read_text(encoding="utf-8")
+    reference_jobs = (
+        build_support.REFERENCE_JOBS_LIST.read_text(encoding="utf-8")
+        if build_support.REFERENCE_JOBS_LIST.exists()
+        else None
+    )
+    validate_job_ids(job_manifest, reference_jobs)
+    OUTPUT_QSPS.write_text(assembled, encoding="ascii")
     print(f"\nAssembled -> {OUTPUT_QSPS} ({len(assembled.splitlines())} lines)")
 
     print("\nRunning lint checks...")
