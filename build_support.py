@@ -17,37 +17,37 @@ STANDALONE_FILES = [
 ]
 
 SHARED_FILES = [
-    "05_main_menu.qsps",
-    "06_clothing_data.qsps",
-    "06_clothing.qsps",
-    "06_clothing_actions.qsps",
-    "06_clothing_store.qsps",
-    "06_clothing_picker.qsps",
-    "07_consumables_data.qsps",
-    "07_consumables_actions.qsps",
-    "07_consumables_menu.qsps",
-    "08_stats_actions.qsps",
-    "08_stats_menu.qsps",
-    "09_recurrent.qsps",
-    "10_grades.qsps",
-    "10_grades_data.qsps",
-    "11_money.qsps",
-    "12_relationships.qsps",
-    "12_relationships_data.qsps",
-    "13_bodymod.qsps",
-    "14_health.qsps",
-    "16_fill_helpers.qsps",
-    "16_fill_data.qsps",
-    "17_fame.qsps",
-    "18_housing.qsps",
-    "19_magic.qsps",
-    "20_jobs.qsps",
+    "04_main_menu.qsps",
+    "05_clothing_data.qsps",
+    "05_clothing.qsps",
+    "05_clothing_actions.qsps",
+    "05_clothing_store.qsps",
+    "05_clothing_picker.qsps",
+    "06_consumables_data.qsps",
+    "06_consumables_actions.qsps",
+    "06_consumables_menu.qsps",
+    "07_stats_actions.qsps",
+    "07_stats_menu.qsps",
+    "08_recurrent.qsps",
+    "09_grades.qsps",
+    "09_grades_data.qsps",
+    "10_money.qsps",
+    "11_relationships.qsps",
+    "11_relationships_data.qsps",
+    "12_bodymod.qsps",
+    "13_health.qsps",
+    "14_fill_data.qsps",
+    "15_fill_helpers.qsps",
+    "16_fame.qsps",
+    "17_housing.qsps",
+    "18_magic.qsps",
+    "19_jobs.qsps",
     "20_jobs_data.qsps",
     "21_lifestyle.qsps",
 ]
 
 SHARED_LOCATION_NAME = "mod_GLQS_main"
-NAVIGATION_FILE = "05_main_menu.qsps"
+NAVIGATION_FILE = "04_main_menu.qsps"
 NAVIGATION_BEGIN = "!! GLQS_NAV_ACTIONS_BEGIN"
 NAVIGATION_END = "!! GLQS_NAV_ACTIONS_END"
 CLOTHING_ACTIONS_BEGIN = "!! GLQS_CLOTHING_ACTIONS_BEGIN"
@@ -251,9 +251,9 @@ def assemble(standalone_files, shared_files):
         if f.name == NAVIGATION_FILE:
             validate_navigation_template(text)
             text = expand_navigation_actions(text)
-        if f.name == "06_clothing_store.qsps":
-            catalog = (SRC_DIR / "06_clothing_data.qsps").read_text(encoding="utf-8")
-            menu = (SRC_DIR / "06_clothing.qsps").read_text(encoding="utf-8")
+        if f.name == "05_clothing_store.qsps":
+            catalog = (SRC_DIR / "05_clothing_data.qsps").read_text(encoding="utf-8")
+            menu = (SRC_DIR / "05_clothing.qsps").read_text(encoding="utf-8")
             text = expand_clothing_store(text, catalog, menu)
         parts.append(text)
     parts.append(f"--- {SHARED_LOCATION_NAME} ---------------------------------\n")

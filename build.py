@@ -110,7 +110,7 @@ def main():
     validate_recurrent_toggle_contract(assembled)
     validate_recurrent_metadata(assembled)
     validate_consumable_metadata(
-        (SRC_DIR / "07_consumables_data.qsps").read_text(encoding="utf-8")
+        (SRC_DIR / "06_consumables_data.qsps").read_text(encoding="utf-8")
     )
     job_manifest = (SRC_DIR / "20_jobs_data.qsps").read_text(encoding="utf-8")
     reference_jobs = (
