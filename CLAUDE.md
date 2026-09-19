@@ -90,7 +90,7 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   catalog rows in `06_clothing_data.qsps` labeled as
   `store|type|key|category label`; do not hand-add picker actions.
   The build validates route coverage, fragment wrappers, navigation consistency,
-  consumable metadata roles and bulk-only inventory visibility, clothing catalog
+  consumable metadata roles, clothing catalog
   coverage, and that the recurrent menu's bulk enable/disable handlers cover
   its primary toggle table and individual toggles have displayed states.
   When `reference/nightly/` is available, the build also compares the job

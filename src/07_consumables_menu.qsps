@@ -64,26 +64,5 @@ if $ARGS[0] = 'consumables_menu':
 	$glqs_tbl2
 	*nl
 
-	'<b>Bulk-only inventory</b> (included by Set All, but not normally shown in the base-game shop):'
-	*nl
-	$glqs_tbl3 = '<table width="80%" cellpadding=4>'
-	glqs_con_i = 0
-	$glqs_con_last_category = ''
-:glqs_consumables_bulk_loop
-	if glqs_con_i >= glqs_con_n: jump 'glqs_consumables_bulk_done'
-	if $glqs_con_kind[glqs_con_i] = 'bulk':
-		if $glqs_con_category[glqs_con_i] <> $glqs_con_last_category:
-			$glqs_tbl3 += '<tr><td><b>' + $glqs_con_category[glqs_con_i] + '</b></td><td></td></tr>'
-			$glqs_con_last_category = $glqs_con_category[glqs_con_i]
-		end
-		$glqs_tbl3 += '<tr><td>' + $glqs_con_label[glqs_con_i] + '</td><td>' + mc_inventory[$glqs_con_key[glqs_con_i]] + '</td></tr>'
-	end
-	glqs_con_i += 1
-	jump 'glqs_consumables_bulk_loop'
-:glqs_consumables_bulk_done
-	$glqs_tbl3 += '</table>'
-	$glqs_tbl3
-	*nl
-
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
