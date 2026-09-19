@@ -1,122 +1,124 @@
-!! FILL HELPERS: per-category item granting loops
+!! CLOTHING TYPE DISPATCH AND FILL HELPERS
 !! Each helper mirrors the full array set the games own add_item handlers do
 !! (clothing.qsrc / shoes.qsrc / bras.qsrc / panties.qsrc /
 !! underwear_bodysuits.qsrc / coats.qsrc / purses.qsrc), including zeroing the
 !! alteration and dirt state arrays - without those, re-granting an item the
 !! player already owned kept its old dirt/alteration instead of arriving
 !! factory-fresh like a real purchase.
+if $ARGS[0] = 'clothing_totals':
+	$glqs_type = $ARGS[1]
+	$glqs_key = $ARGS[2]
+	if $glqs_type = 'clo': gs 'clothing', 'totals', $glqs_key
+	if $glqs_type = 'shoe': gs 'shoes', 'totals', $glqs_key + '_shoe'
+	if $glqs_type = 'bra': gs 'bras', 'totals', $glqs_key + '_bras'
+	if $glqs_type = 'panty': gs 'panties', 'totals', $glqs_key + '_panties'
+	if $glqs_type = 'body': gs 'underwear_bodysuits', 'totals', $glqs_key + '_bodysuits'
+	if $glqs_type = 'coat': gs 'coats', 'totals', $glqs_key + '_coats'
+	if $glqs_type = 'purse': gs 'purses', 'totals', $glqs_key + '_purses'
+	killvar '$glqs_type' & killvar '$glqs_key'
+end
+
+if $ARGS[0] = 'fill_by_type':
+	$glqs_fill_type = $ARGS[1]
+	$glqs_fill_key = $ARGS[2]
+	if $glqs_fill_type = 'clo': gs 'mod_GLQS_main', 'fill_clo', $glqs_fill_key
+	if $glqs_fill_type = 'shoe': gs 'mod_GLQS_main', 'fill_shoe', $glqs_fill_key
+	if $glqs_fill_type = 'bra': gs 'mod_GLQS_main', 'fill_bra', $glqs_fill_key
+	if $glqs_fill_type = 'panty': gs 'mod_GLQS_main', 'fill_panty', $glqs_fill_key
+	if $glqs_fill_type = 'body': gs 'mod_GLQS_main', 'fill_body', $glqs_fill_key
+	if $glqs_fill_type = 'coat': gs 'mod_GLQS_main', 'fill_coat', $glqs_fill_key
+	if $glqs_fill_type = 'purse': gs 'mod_GLQS_main', 'fill_purse', $glqs_fill_key
+	killvar '$glqs_fill_type' & killvar '$glqs_fill_key'
+end
+
 if $ARGS[0] = 'fill_clo':
-	gs 'clothing', 'totals', $ARGS[1]
+	$glqs_fill_key = $ARGS[1]
+	gs 'mod_GLQS_main', 'clothing_totals', 'clo', $glqs_fill_key
+	glqs_fill_total = total
 	glqs_i = 1
 	:glqs_clo_loop
-	if glqs_i <= total:
-		dyneval('<<$ARGS[1]>>[glqs_i] = 1')
-		gs 'clothing_attributes', $ARGS[1], glqs_i
-		dyneval('<<$ARGS[1]>>_h[glqs_i] = CloMaxStrength')
-		dyneval('<<$ARGS[1]>>_b[glqs_i] = pcs_hips')
-		dyneval('<<$ARGS[1]>>_s[glqs_i] = 0')
-		dyneval('<<$ARGS[1]>>_dirt[glqs_i] = 0')
+	if glqs_i <= glqs_fill_total:
+		gs 'mod_GLQS_main', 'item_grant', 'clo', $glqs_fill_key, glqs_i
 		glqs_i += 1
 		jump 'glqs_clo_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_i' & killvar 'glqs_fill_total' & killvar '$glqs_fill_key'
 end
-
 if $ARGS[0] = 'fill_shoe':
-	gs 'shoes', 'totals', $ARGS[1] + '_shoe'
+	$glqs_fill_key = $ARGS[1]
+	gs 'mod_GLQS_main', 'clothing_totals', 'shoe', $glqs_fill_key
+	glqs_fill_total = total
 	glqs_i = 1
 	:glqs_shoe_loop
-	if glqs_i <= total:
-		dyneval('<<$ARGS[1]>>_shoe[glqs_i] = 1')
-		gs 'shoe_attributes', $ARGS[1], glqs_i
-		dyneval('<<$ARGS[1]>>_shoe_h[glqs_i] = ShoMaxStrength')
-		dyneval('<<$ARGS[1]>>_shoe_s[glqs_i] = 0')
+	if glqs_i <= glqs_fill_total:
+		gs 'mod_GLQS_main', 'item_grant', 'shoe', $glqs_fill_key, glqs_i
 		glqs_i += 1
 		jump 'glqs_shoe_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_i' & killvar 'glqs_fill_total' & killvar '$glqs_fill_key'
 end
-
 if $ARGS[0] = 'fill_bra':
-	gs 'bras', 'totals', $ARGS[1] + '_bras'
+	$glqs_fill_key = $ARGS[1]
+	gs 'mod_GLQS_main', 'clothing_totals', 'bra', $glqs_fill_key
+	glqs_fill_total = total
 	glqs_i = 1
 	:glqs_bra_loop
-	if glqs_i <= total:
-		dyneval('<<$ARGS[1]>>_bras[glqs_i] = 1')
-		gs 'underwear_attributes', $ARGS[1] + '_bras', glqs_i
-		dyneval('<<$ARGS[1]>>_bras_h[glqs_i] = BraMaxStrength')
-		dyneval('<<$ARGS[1]>>_brasS[glqs_i] = 0')
-		dyneval('<<$ARGS[1]>>_bras_dirt[glqs_i] = 0')
+	if glqs_i <= glqs_fill_total:
+		gs 'mod_GLQS_main', 'item_grant', 'bra', $glqs_fill_key, glqs_i
 		glqs_i += 1
 		jump 'glqs_bra_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_i' & killvar 'glqs_fill_total' & killvar '$glqs_fill_key'
 end
-
 if $ARGS[0] = 'fill_panty':
-	gs 'panties', 'totals', $ARGS[1] + '_panties'
+	$glqs_fill_key = $ARGS[1]
+	gs 'mod_GLQS_main', 'clothing_totals', 'panty', $glqs_fill_key
+	glqs_fill_total = total
 	glqs_i = 1
 	:glqs_panty_loop
-	if glqs_i <= total:
-		dyneval('<<$ARGS[1]>>_panties[glqs_i] = 1')
-		gs 'underwear_attributes', $ARGS[1] + '_panties', glqs_i
-		dyneval('<<$ARGS[1]>>_panties_h[glqs_i] = PanMaxStrength')
-		dyneval('<<$ARGS[1]>>_pantiesS[glqs_i] = 0')
-		dyneval('<<$ARGS[1]>>_panties_dirt[glqs_i] = 0')
+	if glqs_i <= glqs_fill_total:
+		gs 'mod_GLQS_main', 'item_grant', 'panty', $glqs_fill_key, glqs_i
 		glqs_i += 1
 		jump 'glqs_panty_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_i' & killvar 'glqs_fill_total' & killvar '$glqs_fill_key'
 end
-
 if $ARGS[0] = 'fill_body':
-	gs 'underwear_bodysuits', 'totals', $ARGS[1] + '_bodysuits'
+	$glqs_fill_key = $ARGS[1]
+	gs 'mod_GLQS_main', 'clothing_totals', 'body', $glqs_fill_key
+	glqs_fill_total = total
 	glqs_i = 1
 	:glqs_body_loop
-	if glqs_i <= total:
-		dyneval('<<$ARGS[1]>>_bodysuits[glqs_i] = 1')
-		gs 'underwear_attributes', $ARGS[1] + '_bodysuits', glqs_i
-		dyneval('<<$ARGS[1]>>_bodysuits_h[glqs_i] = BraMaxStrength')
-		dyneval('<<$ARGS[1]>>_bodysuits_s[glqs_i] = 0')
-		dyneval('<<$ARGS[1]>>_bodysuits_dirt[glqs_i] = 0')
+	if glqs_i <= glqs_fill_total:
+		gs 'mod_GLQS_main', 'item_grant', 'body', $glqs_fill_key, glqs_i
 		glqs_i += 1
 		jump 'glqs_body_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_i' & killvar 'glqs_fill_total' & killvar '$glqs_fill_key'
 end
-
 if $ARGS[0] = 'fill_coat':
-	gs 'coats', 'totals', $ARGS[1] + '_coats'
+	$glqs_fill_key = $ARGS[1]
+	gs 'mod_GLQS_main', 'clothing_totals', 'coat', $glqs_fill_key
+	glqs_fill_total = total
 	glqs_i = 1
 	:glqs_coat_loop
-	if glqs_i <= total:
-		dyneval('<<$ARGS[1]>>_coats[glqs_i] = 1')
-		gs 'coat_attributes', $ARGS[1], glqs_i
-		dyneval('<<$ARGS[1]>>_coats_h[glqs_i] = CoatMaxStrength')
-		dyneval('<<$ARGS[1]>>_coats_s[glqs_i] = 0')
-		dyneval('<<$ARGS[1]>>_coats_w[glqs_i] = 0')
+	if glqs_i <= glqs_fill_total:
+		gs 'mod_GLQS_main', 'item_grant', 'coat', $glqs_fill_key, glqs_i
 		glqs_i += 1
 		jump 'glqs_coat_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_i' & killvar 'glqs_fill_total' & killvar '$glqs_fill_key'
 end
-
 if $ARGS[0] = 'fill_purse':
-	!! Purses have no durability/dirt arrays (unlike clo/shoe/bra/etc.), but
-	!! the real add_item still gates on purse_attributes/PursePrice before
-	!! granting - some brand/index combos are not real purses (PursePrice=0)
-	!! and the base game silently skips them. Mirror that guard here so this
-	!! never flags an index the game itself would refuse.
-	gs 'purses', 'totals', $ARGS[1] + '_purses'
+	$glqs_fill_key = $ARGS[1]
+	gs 'mod_GLQS_main', 'clothing_totals', 'purse', $glqs_fill_key
+	glqs_fill_total = total
 	glqs_i = 1
 	:glqs_purse_loop
-	if glqs_i <= total:
-		gs 'purse_attributes', $ARGS[1], glqs_i
-		if PursePrice <> 0:
-			dyneval('<<$ARGS[1]>>_purses[glqs_i] = 1')
-		end
+	if glqs_i <= glqs_fill_total:
+		gs 'mod_GLQS_main', 'item_grant', 'purse', $glqs_fill_key, glqs_i
 		glqs_i += 1
 		jump 'glqs_purse_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_i' & killvar 'glqs_fill_total' & killvar '$glqs_fill_key'
 end

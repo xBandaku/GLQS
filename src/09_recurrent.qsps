@@ -1,4 +1,32 @@
 !! RECURRENT CHEATS SUBMENU + ON/OFF HANDLERS
+!! RECURRENT_METADATA_BEGIN
+!! bulk|willpower|Willpower cost always zero
+!! bulk|inf_willpower|Infinite willpower
+!! bulk|always_brushed|Always combed
+!! bulk|makeup_smear|Cosmetics never smeared
+!! bulk|no_sweat|Never sweat
+!! bulk|hunger|Never eat
+!! bulk|thirst|Never drink
+!! bulk|sleep|Never sleep
+!! bulk|no_dream_chance|No dream chance
+!! bulk|mood|Never unhappy
+!! bulk|no_leghair|Never shave legs
+!! bulk|fat|Never lose or gain weight
+!! bulk|body_staticAssets|Bust and butt unaffected by weight
+!! bulk|school_clothing|Allow any clothing for school
+!! bulk|edit_porn|Porn schedule editor
+!! bulk|always_horny|Always aroused
+!! bulk|suc_bimbo|Succubus clothing invulnerability
+!! special|drugs_immune|Never get addicted
+!! special|sleep_vib|Enable sleeping with vibrator inserted
+!! special|clothes_dirt|Clothes never dirty
+!! individual|bimbo|Clothing archetypes
+!! individual|no_periods|Periods and pregnancies
+!! individual|no_pregnancy|Impregnation
+!! individual|no_lactation|Lactation
+!! individual|no_cum_leak|Cum leaking
+!! individual|std|STDs
+!! RECURRENT_METADATA_END
 if $ARGS[0] = 'recurrent':
 	menu_off = 0
 	usehtml = 1

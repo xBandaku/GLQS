@@ -2,3 +2,4 @@ build/
 reference/
 __pycache__/
 .claude/
+CLAUDE.md

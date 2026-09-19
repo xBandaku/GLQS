@@ -1,0 +1,60 @@
+!! CLOTHING STORE ROUTES
+if $ARGS[0] = 'store_buy':
+	!! Buys out every category a given store/brand carries, matching the
+	!! games actual catalog (not every store sells every category).
+	!! Driven by the shared clothing_cat_build table below so this can
+	!! never drift from store_detail or the top-level clothing handler.
+	!! Captured before the nested gs call - $ARGS is one shared array in
+	!! QSP, not scoped per gosub, so calling clothing_cat_build would
+	!! clobber ARGS[1] before we get to read it.
+	$glqs_sb_store = $ARGS[1]
+	gs 'mod_GLQS_main', 'clothing_cat_build'
+	glqs_sb_i = 0
+	:glqs_store_buy_loop
+	if glqs_sb_i < glqs_cc_total:
+		$glqs_sb_row = $glqs_cc[glqs_sb_i]
+		glqs_sb_p1 = instr($glqs_sb_row, '|')
+		$glqs_sb_rowstore = $mid($glqs_sb_row, 1, glqs_sb_p1 - 1)
+		if $glqs_sb_rowstore = $glqs_sb_store:
+			$glqs_sb_rest = $mid($glqs_sb_row, glqs_sb_p1 + 1)
+			glqs_sb_p2 = instr($glqs_sb_rest, '|')
+			$glqs_sb_type = $mid($glqs_sb_rest, 1, glqs_sb_p2 - 1)
+			$glqs_sb_key = $mid($glqs_sb_rest, glqs_sb_p2 + 1)
+			gs 'mod_GLQS_main', 'fill_by_type', $glqs_sb_type, $glqs_sb_key
+		end
+		glqs_sb_i += 1
+		jump 'glqs_store_buy_loop'
+	end
+
+	killvar 'glqs_sb_i' & killvar 'glqs_sb_p1' & killvar 'glqs_sb_p2'
+	killvar '$glqs_sb_row' & killvar '$glqs_sb_rowstore' & killvar '$glqs_sb_rest'
+	killvar '$glqs_sb_type' & killvar '$glqs_sb_key' & killvar '$glqs_sb_store'
+	killvar '$glqs_cc' & killvar 'glqs_cc_total'
+end
+
+
+
+if $ARGS[0] = 'store_detail':
+	!! Per-store category breakdown. Mirrors the store_buy dispatcher above,
+	!! but exposes each category the store carries as its own button instead
+	!! of buying everything in one shot.
+	!! Capture before any nested gs call - $ARGS is one shared array in QSP,
+	!! not scoped per gosub, so calling gs stat / gs themes below would
+	!! clobber ARGS[1] before we get to read it.
+	$glqs_store = $ARGS[1]
+	menu_off = 0
+	usehtml = 1
+	$location_type = 'event'
+	gs 'stat'
+	gs 'themes', 'indoors'
+
+	!! GLQS_CLOTHING_LABELS_BEGIN
+	!! GLQS_CLOTHING_LABELS_END
+
+	!! GLQS_CLOTHING_ACTIONS_BEGIN
+	!! GLQS_CLOTHING_ACTIONS_END
+	*nl
+	act 'Buy All (this store)': gs 'mod_GLQS_main', 'store_buy', $glqs_store & gt 'mod_GLQS_main', 'store_detail', $glqs_store
+	act 'Return': gt 'mod_GLQS_main', 'store_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
