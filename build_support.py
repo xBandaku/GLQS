@@ -20,12 +20,12 @@ SHARED_FILES = [
     "04_main_menu.qsps",
     "05_clothing_data.qsps",
     "05_clothing.qsps",
-    "05_clothing_actions.qsps",
     "05_clothing_store.qsps",
     "05_clothing_picker.qsps",
     "06_consumables_data.qsps",
     "06_consumables_actions.qsps",
     "06_consumables_menu.qsps",
+    "07_stats_data.qsps",
     "07_stats_actions.qsps",
     "07_stats_menu.qsps",
     "08_recurrent.qsps",
@@ -149,37 +149,41 @@ def validate_navigation_template(text):
         raise ValueError(f"{NAVIGATION_FILE} contains no navigation entries")
 
 
-def validate_recurrent_bulk_handlers(text):
-    """Keep the primary recurrent-toggle table aligned with bulk handlers."""
-    menu_match = re.search(r"if \$ARGS\[0\] = 'recurrent':(.*?)if \$ARGS\[0\] = 'recurrent_on':", text, flags=re.DOTALL)
-    if not menu_match:
+def extract_recurrent_menu(text):
+    """The recurrent menu body, delimited by the bulk handler that follows it."""
+    match = re.search(
+        r"if \$ARGS\[0\] = 'recurrent':(.*?)if \$ARGS\[0\] = 'recurrent_set':",
+        text,
+        flags=re.DOTALL,
+    )
+    if not match:
         raise ValueError("Recurrent menu route is missing")
-    primary_table = menu_match.group(1).split("$glqs_tbl2 =", 1)[0]
+    return match.group(1)
+
+
+def validate_recurrent_bulk_handlers(text):
+    """Keep every toggle the primary table renders covered by recurrent_set.
+    The old recurrent_on/recurrent_off pair also needed a check that both
+    halves assigned the same keys; one parameterised route makes that kind of
+    mismatch impossible, so only the menu-vs-handler coverage check remains."""
+    primary_table = extract_recurrent_menu(text).split("$glqs_tbl2 =", 1)[0]
     rendered = set(re.findall(r"cheatVars\['([^']+)'\]\s*=\s*iif", primary_table))
-
-    def handler_keys(route):
-        match = re.search(rf"if \$ARGS\[0\] = '{route}':(.*?)(?=\nif \$ARGS\[0\] = |\Z)", text, flags=re.DOTALL)
-        return set(re.findall(r"cheatVars\['([^']+)'\]\s*=", match.group(1)))
-
-    enabled = handler_keys("recurrent_on")
-    disabled = handler_keys("recurrent_off")
-    if enabled != disabled:
-        raise ValueError(
-            "Recurrent bulk handlers assign different toggle sets: "
-            f"on-only={sorted(enabled - disabled)}, "
-            f"off-only={sorted(disabled - enabled)}"
-        )
-    missing = sorted(rendered - enabled)
+    handler = re.search(
+        r"if \$ARGS\[0\] = 'recurrent_set':(.*?)(?=\nif \$ARGS\[0\] = |\Z)",
+        text,
+        flags=re.DOTALL,
+    )
+    if not handler:
+        raise ValueError("Recurrent bulk handler (recurrent_set) is missing")
+    assigned = set(re.findall(r"cheatVars\['([^']+)'\]\s*=", handler.group(1)))
+    missing = sorted(rendered - assigned)
     if missing:
-        raise ValueError("Recurrent menu toggles missing from bulk handlers: " + ", ".join(missing))
+        raise ValueError("Recurrent menu toggles missing from recurrent_set: " + ", ".join(missing))
 
 
 def validate_recurrent_toggle_contract(text):
     """Keep individually rendered cheat variables paired with their states."""
-    menu_match = re.search(r"if \$ARGS\[0\] = 'recurrent':(.*?)if \$ARGS\[0\] = 'recurrent_on':", text, flags=re.DOTALL)
-    if not menu_match:
-        raise ValueError("Recurrent menu route is missing")
-    individual = menu_match.group(1).split("$glqs_tbl2 =", 1)
+    individual = extract_recurrent_menu(text).split("$glqs_tbl2 =", 1)
     if len(individual) != 2:
         raise ValueError("Recurrent individual-toggle table is missing")
     table = individual[1]
@@ -286,14 +290,7 @@ def validate_recurrent_metadata(text):
     duplicates = sorted({key for key in keys if keys.count(key) > 1})
     if duplicates:
         raise ValueError("Duplicate recurrent metadata keys: " + ", ".join(duplicates))
-    menu_match = re.search(
-        r"if \$ARGS\[0\] = 'recurrent':(.*?)if \$ARGS\[0\] = 'recurrent_on':",
-        text,
-        flags=re.DOTALL,
-    )
-    if not menu_match:
-        raise ValueError("Recurrent menu route is missing")
-    menu = menu_match.group(1)
+    menu = extract_recurrent_menu(text)
     missing = sorted(
         key for role, key, _ in rows
         if key not in menu

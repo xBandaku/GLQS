@@ -28,11 +28,7 @@
 !! individual|std|STDs
 !! RECURRENT_METADATA_END
 if $ARGS[0] = 'recurrent':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Recurrent Cheats</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'recurrent'
 	*nl
@@ -67,12 +63,12 @@ if $ARGS[0] = 'recurrent':
 	*nl
 
 	act 'Enable All':
-		gs 'mod_GLQS_main', 'recurrent_on'
+		gs 'mod_GLQS_main', 'recurrent_set', 1
 		gt 'mod_GLQS_main', 'recurrent'
 	end
 
 	act 'Disable All':
-		gs 'mod_GLQS_main', 'recurrent_off'
+		gs 'mod_GLQS_main', 'recurrent_set', 0
 		gt 'mod_GLQS_main', 'recurrent'
 	end
 
@@ -128,66 +124,47 @@ if $ARGS[0] = 'recurrent':
 end
 
 
-if $ARGS[0] = 'recurrent_on':
-	cheatVars['willpower'] = 1
-	cheatVars['inf_willpower'] = 1
-	cheatVars['always_brushed'] = 1
-	cheatVars['makeup_smear'] = 1
-	cheatVars['no_sweat'] = 1
-	cheatVars['hunger'] = 1
-	cheatVars['thirst'] = 1
-	cheatVars['sleep'] = 1
-	cheatVars['no_dream_chance'] = 100
-	cheatVars['mood'] = 1
-	cheatVars['no_leghair'] = 1
-	cheatVars['fat'] = 1
-	cheatVars['body_staticAssets'] = 1
-	cheatVars['school_clothing'] = 1
-	cheatVars['edit_porn'] = 1
-	!! Matches the base games own addict handler (cheatmenu_din.qsrc) so
-	!! enabling here also clears existing addiction progress, not just the flag.
-	cheatVars['drugs_immune'] = 1
-	drugVars['cigarettes_used'] = 0
-	drugVars['cigarettes_need'] = 0
-	drugVars['weed_used'] = 0
-	drugVars['alcohol_used'] = 0
-	drugVars['cocaine_used'] = 0
-	drugVars['amphetamine_used'] = 0
-	drugVars['heroin_used'] = 0
-	!! Matches the base games own Vibrator handler - sleepVars[bedVibrator]
-	!! is the flag pre_sleep/bed2 actually check, cheatVars alone only
-	!! unlocks the option, so both need to be set for this to take effect.
-	cheatVars['sleep_vib'] = 1
-	sleepVars['bedVibrator'] = 1
-	!! Matches the base games own clothes_dirt handler - also washes
-	!! everything currently dirty instead of only preventing new dirt.
-	cheatVars['clothes_dirt'] = 1
-	gs 'washer', 'wash_all'
-	cheatVars['always_horny'] = 1
-	cheatVars['suc_bimbo'] = 1
-end
-
-
-if $ARGS[0] = 'recurrent_off':
-	cheatVars['willpower'] = 0
-	cheatVars['inf_willpower'] = 0
-	cheatVars['always_brushed'] = 0
-	cheatVars['makeup_smear'] = 0
-	cheatVars['no_sweat'] = 0
-	cheatVars['hunger'] = 0
-	cheatVars['thirst'] = 0
-	cheatVars['sleep'] = 0
-	cheatVars['no_dream_chance'] = 0
-	cheatVars['mood'] = 0
-	cheatVars['no_leghair'] = 0
-	cheatVars['fat'] = 0
-	cheatVars['body_staticAssets'] = 0
-	cheatVars['school_clothing'] = 0
-	cheatVars['edit_porn'] = 0
-	cheatVars['drugs_immune'] = 0
-	cheatVars['sleep_vib'] = 0
-	sleepVars['bedVibrator'] = 0
-	cheatVars['clothes_dirt'] = 0
-	cheatVars['always_horny'] = 0
-	cheatVars['suc_bimbo'] = 0
+if $ARGS[0] = 'recurrent_set':
+	!! ARGS[1] = 1 to enable every bulk toggle, 0 to disable. These were two
+	!! routes listing the same 21 keys in the same order, which is the only
+	!! reason the build had to lint them against each other.
+	glqs_rs_on = ARGS[1]
+	cheatVars['willpower'] = glqs_rs_on
+	cheatVars['inf_willpower'] = glqs_rs_on
+	cheatVars['always_brushed'] = glqs_rs_on
+	cheatVars['makeup_smear'] = glqs_rs_on
+	cheatVars['no_sweat'] = glqs_rs_on
+	cheatVars['hunger'] = glqs_rs_on
+	cheatVars['thirst'] = glqs_rs_on
+	cheatVars['sleep'] = glqs_rs_on
+	cheatVars['no_dream_chance'] = iif(glqs_rs_on, 100, 0)
+	cheatVars['mood'] = glqs_rs_on
+	cheatVars['no_leghair'] = glqs_rs_on
+	cheatVars['fat'] = glqs_rs_on
+	cheatVars['body_staticAssets'] = glqs_rs_on
+	cheatVars['school_clothing'] = glqs_rs_on
+	cheatVars['edit_porn'] = glqs_rs_on
+	cheatVars['drugs_immune'] = glqs_rs_on
+	cheatVars['sleep_vib'] = glqs_rs_on
+	sleepVars['bedVibrator'] = glqs_rs_on
+	cheatVars['clothes_dirt'] = glqs_rs_on
+	cheatVars['always_horny'] = glqs_rs_on
+	cheatVars['suc_bimbo'] = glqs_rs_on
+	if glqs_rs_on = 1:
+		!! Enable-only, each matching the base games own handler in
+		!! cheatmenu_din.qsrc: the addict cheat also clears existing addiction
+		!! progress rather than just setting the flag, and clothes_dirt also
+		!! washes whatever is already dirty instead of only preventing new dirt.
+		!! sleepVars[bedVibrator] above is the flag pre_sleep/bed2 actually
+		!! check - cheatVars alone only unlocks the option.
+		drugVars['cigarettes_used'] = 0
+		drugVars['cigarettes_need'] = 0
+		drugVars['weed_used'] = 0
+		drugVars['alcohol_used'] = 0
+		drugVars['cocaine_used'] = 0
+		drugVars['amphetamine_used'] = 0
+		drugVars['heroin_used'] = 0
+		gs 'washer', 'wash_all'
+	end
+	killvar 'glqs_rs_on'
 end

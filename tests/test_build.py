@@ -86,13 +86,22 @@ class BuildValidationTests(unittest.TestCase):
             "if $ARGS[0] = 'recurrent':\n"
             "$glqs_tbl += \"cheatVars['willpower'] = iif(cheatVars['willpower'], 0, 1)\"\n"
             "$glqs_tbl2 = \"cheatVars[''no_pregnancy''] = iif(cheatVars[''no_pregnancy''], 0, 1)\"\n"
-            "if $ARGS[0] = 'recurrent_on':\n"
-            "cheatVars['willpower'] = 1\n"
-            "if $ARGS[0] = 'recurrent_off':\n"
-            "cheatVars['willpower'] = 0\n"
+            "if $ARGS[0] = 'recurrent_set':\n"
+            "cheatVars['willpower'] = glqs_rs_on\n"
         )
         build.validate_recurrent_bulk_handlers(text)
         build.validate_recurrent_toggle_contract(text)
+
+    def test_recurrent_toggle_missing_from_bulk_handler_is_rejected(self):
+        text = (
+            "if $ARGS[0] = 'recurrent':\n"
+            "$glqs_tbl += \"cheatVars['willpower'] = iif(cheatVars['willpower'], 0, 1)\"\n"
+            "$glqs_tbl2 = \"\"\n"
+            "if $ARGS[0] = 'recurrent_set':\n"
+            "cheatVars['mood'] = glqs_rs_on\n"
+        )
+        with self.assertRaisesRegex(ValueError, "willpower"):
+            build.validate_recurrent_bulk_handlers(text)
 
     def test_job_ids_match_reference_source(self):
         ref_path = (

@@ -125,11 +125,7 @@ end
 
 
 if $ARGS[0] = 'rel_menu':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Relationships</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'rel_menu'
 	'Values 0-100. Only affects characters you have met. Each category has its own [Max] link.'
@@ -325,11 +321,7 @@ if $ARGS[0] = 'rel_status':
 	!! directly and QSP resolves act bodies at click time, not at definition
 	!! time, same stray-killvar bug class as the navbars $glqs_current.
 	$glqs_rs_key = $ARGS[1]
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Relationship Status</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'rel_menu'
 	'<center><b>' + $npc_usedname[$glqs_rs_key] + '</b></center>'

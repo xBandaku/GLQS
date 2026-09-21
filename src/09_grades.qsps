@@ -1,10 +1,6 @@
 !! SCHOOL GRADES SUBMENU
 if $ARGS[0] = 'grades':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Grades & Academics</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'grades'
 	'<br>Only applies on school start. Grades reset weekly based on class attendance.'

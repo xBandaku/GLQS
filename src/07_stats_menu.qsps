@@ -1,76 +1,47 @@
 !! SKILLS & ATTRIBUTES SUBMENU
 if $ARGS[0] = 'stats_menu':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Skills & Attributes</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'stats_menu'
 	*nl
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
-	$glqs_tbl += '<tr><td><b>Attributes</b></td><td></td></tr>'
-	$glqs_tbl += '<tr><td>Strength</td><td><<stren_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Agility</td><td><<agil_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Endurance</td><td><<vital_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Intelligence</td><td><<intel_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Reaction</td><td><<react_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Spirit</td><td><<sprt_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Charisma</td><td><<chrsm_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Perception</td><td><<prcptn_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Magic</td><td><<magik_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Inhibition (100=uninhibited, 0=fully inhibited)</td><td><<inhib_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Willpower max</td><td><<willpowermax>></td></tr>'
-	$glqs_tbl += '<tr><td><b>Mental Skills (visible level)</b></td><td></td></tr>'
-	$glqs_tbl += '<tr><td>Spell Casting</td><td><<splcstng_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>People Skills</td><td><<humint_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Persuasion</td><td><<persuas_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Observation</td><td><<observ_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td><b>Combat Skills</b></td><td></td></tr>'
-	$glqs_tbl += '<tr><td>Jabs</td><td><<jab_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Power Strikes</td><td><<punch_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Kicks</td><td><<kick_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Defense</td><td><<def_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Marksmanship</td><td><<shoot_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Bushcraft</td><td><<bushcraft_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td><b>Sport Skills</b></td><td></td></tr>'
-	$glqs_tbl += '<tr><td>Running</td><td><<run_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Volleyball</td><td><<vball_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Football</td><td><<ftbll_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Basketball</td><td><<bkbll_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Wrestling</td><td><<wrstlng_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Ice Skating</td><td><<icesktng_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Gaming</td><td><<gaming_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Chess</td><td><<chess_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Pool</td><td><<pool_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td><b>Beauty Skills</b></td><td></td></tr>'
-	$glqs_tbl += '<tr><td>Makeup</td><td><<makupskl_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Modern Dancing</td><td><<danc_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Erotic Dancing</td><td><<dancero_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Pole Dancing</td><td><<dancpol_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Cheerleading</td><td><<cheer_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Heels</td><td><<heels_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td><b>Artistic Skills</b></td><td></td></tr>'
-	$glqs_tbl += '<tr><td>Singing</td><td><<vokal_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Songwriting</td><td><<songwrit_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Instruments</td><td><<instrmusic_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Photography</td><td><<photoskl_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Art Skills</td><td><<artskls_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Performance</td><td><<perform_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Music Prod</td><td><<musicprod_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td><b>Work Skills</b></td><td></td></tr>'
-	$glqs_tbl += '<tr><td>Computer Skill</td><td><<compskl_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Hacking</td><td><<comphckng_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Handiwork</td><td><<hndiwrk_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Tailoring</td><td><<sewng_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Serving</td><td><<servng_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Medicine</td><td><<medcn_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Cleaning</td><td><<cleaning_lvl>></td></tr>'
-	$glqs_tbl += '<tr><td>Modelling</td><td><<mdlng_lvl>></td></tr>'
+	gs 'mod_GLQS_main', 'stats_data'
+	$glqs_sm_prevgrp = ''
+	glqs_sm_i = 0
+	:glqs_stats_tbl_loop
+	if glqs_sm_i < glqs_st_total:
+		$glqs_sm_row = $glqs_st[glqs_sm_i]
+		glqs_sm_p1 = instr($glqs_sm_row, '|')
+		$glqs_sm_grp = $mid($glqs_sm_row, 1, glqs_sm_p1 - 1)
+		$glqs_sm_rest = $mid($glqs_sm_row, glqs_sm_p1 + 1)
+		glqs_sm_p2 = instr($glqs_sm_rest, '|')
+		$glqs_sm_kind = $mid($glqs_sm_rest, 1, glqs_sm_p2 - 1)
+		$glqs_sm_rest2 = $mid($glqs_sm_rest, glqs_sm_p2 + 1)
+		glqs_sm_p3 = instr($glqs_sm_rest2, '|')
+		$glqs_sm_key = $mid($glqs_sm_rest2, 1, glqs_sm_p3 - 1)
+		$glqs_sm_label = $mid($glqs_sm_rest2, glqs_sm_p3 + 1)
+		if $glqs_sm_grp <> $glqs_sm_prevgrp:
+			$glqs_tbl += '<tr><td><b>' + $glqs_sm_grp + '</b></td><td></td></tr>'
+			$glqs_sm_prevgrp = $glqs_sm_grp
+		end
+		if $glqs_sm_kind = 'lvl':
+			glqs_sm_val = dyneval('result = <<$glqs_sm_key>>_lvl')
+		else
+			glqs_sm_val = dyneval('result = <<$glqs_sm_key>>')
+		end
+		$glqs_tbl += '<tr><td>' + $glqs_sm_label + '</td><td><<glqs_sm_val>></td></tr>'
+		glqs_sm_i += 1
+		jump 'glqs_stats_tbl_loop'
+	end
 	$glqs_tbl += '</table>'
 	$glqs_tbl
 	*nl
+	killvar 'glqs_sm_i' & killvar 'glqs_sm_p1' & killvar 'glqs_sm_p2' & killvar 'glqs_sm_p3'
+	killvar '$glqs_sm_row' & killvar '$glqs_sm_rest' & killvar '$glqs_sm_rest2'
+	killvar '$glqs_sm_grp' & killvar '$glqs_sm_prevgrp' & killvar '$glqs_sm_kind'
+	killvar '$glqs_sm_key' & killvar '$glqs_sm_label' & killvar 'glqs_sm_val'
+	killvar '$glqs_st' & killvar 'glqs_st_total'
 
 	act 'Max All Skills & Attributes':
 		gs 'mod_GLQS_main', 'stats'
