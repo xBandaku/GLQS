@@ -21,7 +21,7 @@ python build.py
 
 Requires the QSP compiler once: `npm install -g @qsp/cli`
 
-- Reads the explicit `SHARED_FILES` manifest in `build.py`, assembles `build/GLQS.qsps`, runs lint checks,
+- Reads the explicit `SHARED_FILES` manifest in `build_support.py`, assembles `build/GLQS.qsps`, runs lint checks,
   then compiles with `qsp-cli` to `build/GLQS.qsp`.
 - On `SUCCESS`, copy `build/GLQS.qsp` into the Girl Life `mod/` folder to test in-game.
 - On `Lint checks FAILED`, the output names the exact file/line — fix the `src/`
@@ -32,7 +32,7 @@ Requires the QSP compiler once: `npm install -g @qsp/cli`
 - `python -m unittest discover -s tests -v` runs build-contract tests without
   requiring the QSP compiler. These cover fragment wrappers, route references,
   generated navigation actions, recurrent metadata coverage, and recurrent
-  bulk-toggle coverage. Recurrent metadata rows in `09_recurrent.qsps` classify
+  bulk-toggle coverage. Recurrent metadata rows in `08_recurrent.qsps` classify
   each toggle as `bulk`, `special`, or `individual`; special handlers (addiction,
   vibrator, and clothing dirt) must remain excluded from Enable/Disable All.
 
@@ -43,7 +43,9 @@ at runtime, so almost everything lives inside **one shared QSP location**,
 `mod_GLQS_main`, built by concatenating fragment bodies and dispatching on
 `$ARGS[0]`.
 
-- `build.py` splits `src/*.qsps` into two groups:
+- `build.py` is only the pipeline orchestrator; the manifests, validators and
+  lint rules all live in `build_support.py`, which is where edits below belong.
+  The build splits `src/*.qsps` into two groups:
   - **`STANDALONE_FILES`** (currently `01_setup.qsps`, `02_readme.qsps`,
     `03_hook.qsps`) — each already contains its own `# location_name` header and
     `--- location_name ---` footer, and is passed through unwrapped, in the order
@@ -54,18 +56,18 @@ at runtime, so almost everything lives inside **one shared QSP location**,
     `# mod_GLQS_main` /
     `--- mod_GLQS_main ---` pair automatically.
 - Inside `mod_GLQS_main`, each fragment is an `if $ARGS[0] = 'submenu_name': ... end`
-  block acting as a sub-router — e.g. `06_clothing.qsps` handles the clothing
-  menu, `06_clothing_data.qsps` owns the clothing catalog,
-  `06_clothing_store.qsps` handles store routes, `06_clothing_picker.qsps`
-  handles item picker routes, and `06_clothing_actions.qsps` handles the
-  clothing mutator. `07_consumables_data.qsps` is the single consumable
-  metadata table used by the menu and bulk action. `07_consumables_actions.qsps`
-  and `08_stats_actions.qsps` handle feature mutators,
-  `15_fill_data.qsps` owns the shared single-item clothing grant route,
-  `16_fill_helpers.qsps` handles bulk-grant loops like `'fill_clo'`, and
-  `21_jobs_data.qsps` owns the job ID/title table used by `20_jobs.qsps`.
-  `10_grades_data.qsps` owns the grade rows used by the grades menu and
-  max-all action, while `12_relationships_data.qsps` owns relationship category
+  block acting as a sub-router — e.g. `05_clothing.qsps` handles the clothing
+  menu, `05_clothing_data.qsps` owns the clothing catalog,
+  `05_clothing_store.qsps` handles store routes, `05_clothing_picker.qsps`
+  handles item picker routes, and `05_clothing_actions.qsps` handles the
+  clothing mutator. `06_consumables_data.qsps` is the single consumable
+  metadata table used by the menu and bulk action. `06_consumables_actions.qsps`
+  and `07_stats_actions.qsps` handle feature mutators,
+  `14_fill_data.qsps` owns the shared single-item clothing grant route,
+  `15_fill_helpers.qsps` handles bulk-grant loops like `'fill_clo'`, and
+  `20_jobs_data.qsps` owns the job ID/title table used by `19_jobs.qsps`.
+  `09_grades_data.qsps` owns the grade rows used by the grades menu and
+  max-all action, while `11_relationships_data.qsps` owns relationship category
   labels.
   Menus link to each other via
   `gt 'mod_GLQS_main', 'other_menu_name'`.
@@ -80,7 +82,7 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   room, or the therapist hotel room - also skipped during character
   creation and the game's own scripted events.
 - File numbering groups related files for readability, but `SHARED_FILES` in
-  `build.py` controls assembly order. Add every new shared fragment to that
+  `build_support.py` controls assembly order. Add every new shared fragment to that
   manifest or the build fails.
 - `build.py` expands the navigation registry in `04_main_menu.qsps` into literal
   action-button entries because QSP evaluates `act` bodies at click time. Keep the
@@ -155,7 +157,7 @@ e.g. `pcs_vball_block/rec/serve/set/spike` are all derived from `vball_lvl` and
 attribute values. Writing such a variable directly compiles and even displays
 fine, but the next `gs 'stat'` (which every GLQS menu itself runs) silently
 overwrites it, so the write does nothing. This shipped as dead code once: five
-direct `pcs_vball_*` writes sat in `08_stats_actions.qsps` across many releases until
+direct `pcs_vball_*` writes sat in `07_stats_actions.qsps` across many releases until
 the v0.34.4 reference audit caught them. Before assigning any `pcs_*` variable
 directly, grep `reference/nightly/locations/stat_sklattrib_lvlset.qsrc` for it —
 if it's assigned there, set the underlying skill/attribute via
@@ -237,7 +239,7 @@ get wrong by hand.
 
 **New standalone QSP location (rare — only for something outside `mod_GLQS_main`):**
 create `src/NN_name.qsps` with its own full `# location_name` / `--- location_name ---`
-wrapper, and add `"NN_name.qsps"` to `STANDALONE_FILES` in `build.py`.
+wrapper, and add `"NN_name.qsps"` to `STANDALONE_FILES` in `build_support.py`.
 
 ## Automation
 
@@ -265,4 +267,4 @@ silently contradicted by a later decision elsewhere in the repo, fix the
 guidance in the same session and say why — tie it to the concrete incident,
 not a vague warning. Don't add speculative rules for problems that haven't
 actually happened, and don't restate what's already obvious from reading
-`build.py` or `src/`.
+`build.py`, `build_support.py` or `src/`.

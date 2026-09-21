@@ -2,10 +2,10 @@
 if $ARGS[0] = 'clothing_cat_build':
 	!! One flat array of every store category the game actually sells,
 	!! shared by store_buy (per-store buyout) and the top-level clothing
-	!! handler in 06_clothing_actions.qsps (buy everything) so the two lists can
+	!! handler in 05_clothing_actions.qsps (buy everything) so the two lists can
 	!! never drift apart. Entry format: store|type|key|label. type is one of
 	!! clo/shoe/bra/panty/body/coat/purse, matching the fill_<type>
-	!! helpers in 16_fill_helpers.qsps.
+	!! helpers in 15_fill_helpers.qsps.
 	glqs_cc_n = 0
 	$glqs_cc[glqs_cc_n] = 'allure|clo|allure_swimsuit|Swimsuits' & glqs_cc_n += 1
 	$glqs_cc[glqs_cc_n] = 'allure|clo|allure_bikinis|Bikinis' & glqs_cc_n += 1
