@@ -2,11 +2,12 @@
 !! The cheatsp entry in cheatVars gates whether the Quick Setup link shows up
 !! at all, and previously had no default - QSP vars start at 0 (falsy) until
 !! explicitly set, so every new save silently hid the link until a player
-!! happened to find the Enabled/Disabled toggle in the permanent block below,
-!! buried inside the games own cheat menu. Default it on the first time it is
-!! ever seen (tracked by a companion flag, since 0 alone cannot distinguish
-!! never-set from explicitly-disabled), so the link just works out of the box
-!! while still leaving the toggle available to hide it later.
+!! happened to find the Enabled/Disabled toggle - which until now lived in a
+!! route nothing ever called, so in practice there was no way to reach it.
+!! Default it on the first time it is ever seen (tracked by a companion flag,
+!! since 0 alone cannot distinguish never-set from explicitly-disabled), so the
+!! link works out of the box, with mod_GLQS_options below as the real way to
+!! hide it later.
 if cheatVars['cheatsp_defaulted'] <> 1:
 	cheatVars['cheatsp'] = 1
 	cheatVars['cheatsp_defaulted'] = 1
@@ -43,9 +44,20 @@ if opPRE = 0 and $location_type <> 'event' and cheatVars['cheatsp'] = 1 and ((fu
 	'<b> MOD <a href="exec: $shopreturn = $loc & $shoparg = $loc_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
 end
 
-if $ARGS[0] = 'permanent':
-	$cheatmenu['table_start']
-	'Quick Setup Mod: <a href="exec: cheatVars[''cheatsp''] = iif(cheatVars[''cheatsp''], 0, 1) & dynamic $cheatmenu[$cheatmenu[''this_menu'']]"><<iif(cheatVars[''cheatsp''], ''Enabled'', ''Disabled'')>></a>'
-	$cheatmenu['table_end']
-end
 --- mod_GLQS ---------------------------------
+
+# mod_GLQS_options
+!! Reached from phone Settings > Mods > Options, which the base game renders
+!! for any mod setting $mod_info[4] ($mod_opt in mod_system.qsrc, linked from
+!! display_mod_table in _menu_settings.qsrc). The old permanent route put this
+!! toggle in the games own cheat menu, but nothing ever dispatched it -
+!! core_loop only ever passes the sleep and outfit argument set.
+*clr & cla
+'<center><b><font color="maroon">Quick Setup Mod</font></b></center>'
+*nl
+'Quick Setup link in your room: <a href="exec: cheatVars[''cheatsp''] = iif(cheatVars[''cheatsp''], 0, 1) & gs ''mod_GLQS_options''"><b><<iif(cheatVars[''cheatsp''], ''Enabled'', ''Disabled'')>></b></a>'
+*nl
+'Turning this off hides the link without uninstalling the mod.'
+*nl
+act 'Return': gt 'mod_setting'
+--- mod_GLQS_options ---------------------------------
