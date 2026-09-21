@@ -15,7 +15,6 @@ if $ARGS[0] = 'grades':
 		glqs_grade_p1 = instr($glqs_grade_row, '|')
 		$glqs_grade_rest = $mid($glqs_grade_row, glqs_grade_p1 + 1)
 		glqs_grade_p2 = instr($glqs_grade_rest, '|')
-		$glqs_grade_label = $mid($glqs_grade_row, 1, glqs_grade_p1 - 1)
 		$glqs_grade_name = $mid($glqs_grade_rest, 1, glqs_grade_p2 - 1)
 		$glqs_grade_key = $mid($glqs_grade_rest, glqs_grade_p2 + 1)
 		$glqs_tbl += '<tr><td>' + $glqs_grade_name + '</td><td>' + class[$glqs_grade_key] + '</td></tr>'

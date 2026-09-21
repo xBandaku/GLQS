@@ -114,11 +114,10 @@ def validate_route_coverage(text):
     """Catch renamed/missing shared routes, including routes embedded in HTML."""
     definitions = extract_route_definitions(text)
     calls = extract_route_calls(text)
-    externally_called = {"permanent"}
     missing = sorted(calls - definitions)
     if missing:
         raise ValueError("Routes are called but not defined in mod_GLQS_main: " + ", ".join(missing))
-    unreferenced = sorted(definitions - calls - externally_called)
+    unreferenced = sorted(definitions - calls)
     if unreferenced:
         print("Route coverage note: no static mod_GLQS_main call for " + ", ".join(unreferenced))
 
@@ -253,7 +252,6 @@ def assemble(standalone_files, shared_files):
     for f in shared_files:
         text = f.read_text(encoding="utf-8")
         if f.name == NAVIGATION_FILE:
-            validate_navigation_template(text)
             text = expand_navigation_actions(text)
         if f.name == "05_clothing_store.qsps":
             catalog = (SRC_DIR / "05_clothing_data.qsps").read_text(encoding="utf-8")

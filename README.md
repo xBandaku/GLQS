@@ -127,9 +127,9 @@ everywhere except the one place you'd naturally check it.
 **I don't see the "Quick Setup" link anywhere.**
 First check you're actually in your own room (home bedroom, dorm room, or the
 therapist's hotel room) - the link only appears there. If it's still missing
-even in one of those rooms, open the game's own built-in cheat menu and look
-for a **"Quick Setup Mod: Enabled/Disabled"** toggle - click it to turn the
-link back on.
+even in one of those rooms, go to phone Settings > **Mods** tab and click
+**Options** on the GLQS row - that page has an Enabled/Disabled toggle for
+the link.
 
 **I keep seeing a message like "WARNING: mod_GLQS is not found!", or the Quick
 Setup link has disappeared after closing and reopening Girl Life.**
