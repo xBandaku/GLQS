@@ -33,8 +33,12 @@ Requires the QSP compiler once: `npm install -g @qsp/cli`
   requiring the QSP compiler. These cover fragment wrappers, route references,
   generated navigation actions, recurrent metadata coverage, and recurrent
   bulk-toggle coverage. Recurrent metadata rows in `08_recurrent.qsps` classify
-  each toggle as `bulk`, `special`, or `individual`; special handlers (addiction,
-  vibrator, and clothing dirt) must remain excluded from Enable/Disable All.
+  each toggle as `bulk`, `special`, or `individual`. The three `special` ones
+  (addiction, vibrator, clothing dirt) are covered by Enable/Disable All like
+  the rest, but none is done by its `cheatVars` flag alone: the vibrator also
+  needs `sleepVars['bedVibrator']` set both directions, while clearing existing
+  addiction progress and washing already-dirty clothes apply only when
+  enabling, so those live in the enable-only branch of `'recurrent_set'`.
 
 ## Architecture: how src/*.qsps assemble into one location
 
@@ -58,19 +62,30 @@ at runtime, so almost everything lives inside **one shared QSP location**,
 - Inside `mod_GLQS_main`, each fragment is an `if $ARGS[0] = 'submenu_name': ... end`
   block acting as a sub-router — e.g. `05_clothing.qsps` handles the clothing
   menu, `05_clothing_data.qsps` owns the clothing catalog,
-  `05_clothing_store.qsps` handles store routes, `05_clothing_picker.qsps`
-  handles item picker routes, and `05_clothing_actions.qsps` handles the
-  clothing mutator. `06_consumables_data.qsps` is the single consumable
+  `05_clothing_store.qsps` handles store routes (its `'store_buy'` takes an
+  empty store to mean every store, which is what the clothing menu's Give
+  Everything action calls), and `05_clothing_picker.qsps` handles item picker
+  routes. `06_consumables_data.qsps` is the single consumable
   metadata table used by the menu and bulk action. `06_consumables_actions.qsps`
-  and `07_stats_actions.qsps` handle feature mutators,
+  and `07_stats_actions.qsps` handle feature mutators, with
+  `07_stats_data.qsps` owning the skill/attribute rows both the stats menu and
+  its max-all action walk,
   `14_fill_data.qsps` owns the shared single-item clothing grant route,
-  `15_fill_helpers.qsps` handles bulk-grant loops like `'fill_clo'`, and
+  `15_fill_helpers.qsps` owns `'fill_by_type'`, the one type-parameterised
+  bulk-grant loop, and
   `20_jobs_data.qsps` owns the job ID/title table used by `19_jobs.qsps`.
   `09_grades_data.qsps` owns the grade rows used by the grades menu and
   max-all action, while `11_relationships_data.qsps` owns relationship category
   labels.
   Menus link to each other via
   `gt 'mod_GLQS_main', 'other_menu_name'`.
+- Two shared routes in `04_main_menu.qsps` are called by nearly every screen:
+  `'navbar'` renders the quick-nav bar, and `'screen_head'` is the five-line
+  opener (`menu_off`/`usehtml`/`$location_type`/`gs 'stat'`/`gs 'themes'`).
+  `'screen_head'` deliberately does not print the title or call `'navbar'` -
+  those vary per screen and nested sub-screens get no navbar at all. Because
+  it is a nested `gs`, a caller that reads its own `$ARGS` must capture them
+  before calling it.
 - `03_hook.qsps` defines its own location, `mod_GLQS` (matching the
   `mod_<$mod_info[0]>` naming the base game's mod loader expects), which the
   base game auto-invokes after every real `gt` transition anywhere in the
@@ -93,8 +108,9 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   `store|type|key|category label`; do not hand-add picker actions.
   The build validates route coverage, fragment wrappers, navigation consistency,
   consumable metadata roles, clothing catalog
-  coverage, and that the recurrent menu's bulk enable/disable handlers cover
-  its primary toggle table and individual toggles have displayed states.
+  coverage, and that `'recurrent_set'` (the single parameterised bulk handler,
+  0 or 1 via `$ARGS[1]`) assigns every toggle the recurrent menu's primary
+  table renders, and that individual toggles have displayed states.
   When `reference/nightly/` is available, the build also compares the job
   manifest against `jobs_list.qsrc`; without it, duplicate and malformed IDs
   are still rejected.
