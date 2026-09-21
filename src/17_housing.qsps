@@ -9,11 +9,7 @@
 !! with no way back. Buying/renting new properties outright is also left to
 !! the normal in-game flow - the Money menu already covers affording anything.
 if $ARGS[0] = 'housing_menu':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Housing & Property</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'housing_menu'
 	*nl

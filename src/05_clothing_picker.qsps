@@ -19,11 +19,7 @@ if $ARGS[0] = 'item_picker':
 	glqs_ptotal = total
 	$glqs_picon = $func('$shop_icon_image', $glqs_pkey)
 
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 
 	'<center><img src="<<$glqs_picon>>" height="80"><br><b><font color="maroon"><<$glqs_plabel>></font></b></center>'
 	'<br><<glqs_ptotal>> items available. Click an image to add it to your wardrobe at full durability.'

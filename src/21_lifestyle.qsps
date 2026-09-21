@@ -3,11 +3,7 @@
 !! own top-level menu entry - same reasoning as Recurrent Cheats bundling
 !! many small unrelated toggles under one roof.
 if $ARGS[0] = 'lifestyle_menu':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Lifestyle</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'lifestyle_menu'
 	*nl

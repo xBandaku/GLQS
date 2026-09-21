@@ -1,0 +1,64 @@
+!! STATS DATA
+!! One flat table of every attribute and skill the Skills and Attributes menu
+!! renders and Max All sets, shared by both so the two can never drift apart.
+!! The 50 stat keys used to be typed out separately in 07_stats_menu.qsps and
+!! 07_stats_actions.qsps in the same order, with no lint holding them together.
+!! Entry format: group|kind|key|label. kind is lvl for a normal skill (shown as
+!! its key_lvl counterpart, maxed via setStat 100) or cap for a raw ceiling
+!! variable (shown and written under its own name).
+if $ARGS[0] = 'stats_data':
+	glqs_st_n = 0
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|stren|Strength' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|agil|Agility' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|vital|Endurance' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|intel|Intelligence' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|react|Reaction' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|sprt|Spirit' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|chrsm|Charisma' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|prcptn|Perception' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|magik|Magic' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|lvl|inhib|Inhibition (100=uninhibited, 0=fully inhibited)' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Attributes|cap|willpowermax|Willpower max' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Mental Skills (visible level)|lvl|splcstng|Spell Casting' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Mental Skills (visible level)|lvl|humint|People Skills' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Mental Skills (visible level)|lvl|persuas|Persuasion' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Mental Skills (visible level)|lvl|observ|Observation' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Combat Skills|lvl|jab|Jabs' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Combat Skills|lvl|punch|Power Strikes' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Combat Skills|lvl|kick|Kicks' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Combat Skills|lvl|def|Defense' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Combat Skills|lvl|shoot|Marksmanship' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Combat Skills|lvl|bushcraft|Bushcraft' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|run|Running' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|vball|Volleyball' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|ftbll|Football' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|bkbll|Basketball' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|wrstlng|Wrestling' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|icesktng|Ice Skating' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|gaming|Gaming' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|chess|Chess' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Sport Skills|lvl|pool|Pool' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Beauty Skills|lvl|makupskl|Makeup' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Beauty Skills|lvl|danc|Modern Dancing' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Beauty Skills|lvl|dancero|Erotic Dancing' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Beauty Skills|lvl|dancpol|Pole Dancing' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Beauty Skills|lvl|cheer|Cheerleading' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Beauty Skills|lvl|heels|Heels' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Artistic Skills|lvl|vokal|Singing' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Artistic Skills|lvl|songwrit|Songwriting' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Artistic Skills|lvl|instrmusic|Instruments' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Artistic Skills|lvl|photoskl|Photography' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Artistic Skills|lvl|artskls|Art Skills' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Artistic Skills|lvl|perform|Performance' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Artistic Skills|lvl|musicprod|Music Prod' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Work Skills|lvl|compskl|Computer Skill' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Work Skills|lvl|comphckng|Hacking' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Work Skills|lvl|hndiwrk|Handiwork' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Work Skills|lvl|sewng|Tailoring' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Work Skills|lvl|servng|Serving' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Work Skills|lvl|medcn|Medicine' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Work Skills|lvl|cleaning|Cleaning' & glqs_st_n += 1
+	$glqs_st[glqs_st_n] = 'Work Skills|lvl|mdlng|Modelling' & glqs_st_n += 1
+	glqs_st_total = glqs_st_n
+	killvar 'glqs_st_n'
+end

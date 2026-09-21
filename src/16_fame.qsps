@@ -32,11 +32,7 @@ end
 
 
 if $ARGS[0] = 'fame_menu':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Fame & Reputation</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'fame_menu'
 	'<br>Maxes fame in acting, dance, painting, music, ballet, modelling, porn, stripping, kickboxing, running, volleyball, chess, teaching, media, sex, prostitution and flashing. Derived stats (performer, sex industry, slut, sport, intellectual, social) recalculate automatically from these.'
@@ -54,11 +50,7 @@ end
 
 
 if $ARGS[0] = 'fame_region_menu':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Fame By Region</font></b></center>'
 	*nl
 	'Pick a region to max individual activities there, or max that whole region at once.'
@@ -89,11 +81,7 @@ if $ARGS[0] = 'fame_detail':
 	!! not scoped per gosub, so calling gs stat / gs themes below would
 	!! clobber ARGS[1] before we get to read it.
 	$glqs_region = $ARGS[1]
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 
 	if $glqs_region = 'pav': $glqs_label = 'Pavlovsk'
 	if $glqs_region = 'city': $glqs_label = 'City'

@@ -1,10 +1,6 @@
 !! CLOTHING MENU + STORE SUBMENU + STORE_BUY DISPATCHER
 if $ARGS[0] = 'clothing_menu':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Clothing & Accessories</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'clothing_menu'
 	*nl
@@ -12,7 +8,7 @@ if $ARGS[0] = 'clothing_menu':
 	*nl
 
 	act 'Give Everything (all stores)':
-		gs 'mod_GLQS_main', 'clothing'
+		gs 'mod_GLQS_main', 'store_buy', ''
 		gt 'mod_GLQS_main', 'clothing_menu'
 	end
 
@@ -23,11 +19,7 @@ end
 
 
 if $ARGS[0] = 'store_menu':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Buy By Store</font></b></center>'
 	*nl
 	'Pick a store to buy out just that store''s stock.'
