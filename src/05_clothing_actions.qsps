@@ -1,7 +1,7 @@
 !! CLOTHING ACTION HANDLER
 if $ARGS[0] = 'clothing':
 	!! Buys out every stores full catalog. Driven by the shared
-	!! clothing_cat_build table in 06_clothing_data.qsps so this can never
+	!! clothing_cat_build table in 05_clothing_data.qsps so this can never
 	!! drift from store_buy or store_detail.
 	gs 'mod_GLQS_main', 'clothing_cat_build'
 	glqs_ca_i = 0
