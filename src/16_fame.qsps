@@ -107,12 +107,12 @@ if $ARGS[0] = 'fame_detail':
 
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="60%" cellpadding=4>'
-	$glqs_tbl += '<tr><td><b>Activity</b></td><td><b>Fame</b></td></tr>'
+	$glqs_tbl += '<tr><td><b>Activity</b></td><td><b>Fame</b></td><td></td></tr>'
 	glqs_i = 0
 	:glqs_fame_tbl_loop
 	if glqs_i < glqs_fame_act_total:
 		glqs_val = fame[$glqs_region + '_' + $glqs_fame_act[glqs_i]]
-		$glqs_tbl += '<tr><td>' + $glqs_fame_label[glqs_i] + '</td><td><<glqs_val>></td></tr>'
+		$glqs_tbl += '<tr><td>' + $glqs_fame_label[glqs_i] + '</td><td><<glqs_val>></td><td><a href="exec: gs ''mod_GLQS_main'', ''fame_maxcat'', ''' + $glqs_region + ''', ''' + $glqs_fame_act[glqs_i] + ''' & gt ''mod_GLQS_main'', ''fame_detail'', ''' + $glqs_region + '''">[Max]</a></td></tr>'
 		glqs_i += 1
 		jump 'glqs_fame_tbl_loop'
 	end
@@ -122,24 +122,6 @@ if $ARGS[0] = 'fame_detail':
 	killvar 'glqs_i'
 	killvar 'glqs_val'
 
-	act 'Acting': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'acting' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Dance': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'dance' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Painting': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'painting' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Music': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'music' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Ballet': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'ballet' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Modelling': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'modelling' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Porn': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'porn' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Stripping': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'stripping' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Kickboxing': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'kickboxing' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Running': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'running' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Volleyball': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'volleyball' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Chess': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'chess' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Teaching': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'teaching' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Media': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'media' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Sex': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'sex' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Prostitution': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'prostitute' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-	act 'Flashing': gs 'mod_GLQS_main', 'fame_maxcat', $glqs_region, 'flash' & gt 'mod_GLQS_main', 'fame_detail', $glqs_region
-
 	*nl
 	act 'Max All (this region)':
 		gs 'mod_GLQS_main', 'fame_maxregion', $glqs_region
@@ -148,8 +130,8 @@ if $ARGS[0] = 'fame_detail':
 
 	act 'Return': gt 'mod_GLQS_main', 'fame_region_menu'
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
-	!! $glqs_region is NOT killed here - every act above (Acting..Flashing,
-	!! Max All (this region)) references it directly, and QSP resolves act
+	!! $glqs_region is NOT killed here - the Max All (this region) act above
+	!! references it directly, and QSP resolves act
 	!! bodies at click time, not at definition time. Killing it here cleared
 	!! it before the player could ever click, so every max button silently
 	!! wrote to a bogus empty-region fame key instead of the real

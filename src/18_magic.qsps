@@ -8,7 +8,7 @@ if $ARGS[0] = 'magic_spell_keys':
 	!! Builds $glqs_mg_all[] - flat list of every spell name across the three
 	!! categories, and glqs_mg_total - its length. Shared by magic_menu (status
 	!! count) and Learn All Spells so the two can never drift apart, same
-	!! pattern as clothing_cat_build in 06_clothing.qsps.
+	!! pattern as clothing_cat_build in 05_clothing_data.qsps.
 	glqs_mg_n = 0
 	glqs_mg_i = 0
 	:glqs_mg_keys_combat
