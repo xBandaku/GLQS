@@ -12,7 +12,7 @@ fragments that get stitched into one `.qsps` file and compiled to a binary `.qsp
 ## Build
 
 ```
-python3 build.py
+python build.py
 ```
 
 Requires the QSP compiler once: `npm install -g @qsp/cli`
@@ -54,10 +54,12 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   base game auto-invokes after every real `gt` transition anywhere in the
   game via `$onnewloc = 'LOCA'` (`start.qsrc`) chaining into `core_loop` in
   `mod_system.qsrc` - not just the bedroom. Whether the "Quick Setup" link
-  actually renders into `mod_GLQS_main` is gated inside the file itself
-  (skipped during character creation, during the game's own scripted events,
-  and on the wardrobe/clothing-store screens); there is no `$locclass` check
-  anywhere in the current file.
+  actually renders into the *current* location (it navigates to
+  `mod_GLQS_main`) is gated by four conditions inside the file itself:
+  `cheatVars['cheatsp']` is the master on/off flag, and the link is skipped
+  during character creation (`opPRE`), during the game's own scripted events
+  (`$location_type = 'event'`), and on the wardrobe/clothing-store screens.
+  There is no `$locclass` check anywhere in the current file.
 - File numbering (`01`, `02`, `03`, `05`...`17`) controls both display order in the
   standalone list and concatenation order in the shared location — it's advisory
   (gaps are fine), just keep related menus grouped.
@@ -77,7 +79,14 @@ These exist because they caused real, hard-to-diagnose failures during developme
    line-based depth counter, not a real parser — it doesn't fully understand
    single-line `if`/`act` or elseif chains, but catches missing/extra `end`s before
    an in-game repro is needed.
-4. **`$mod_info[1]` (`01_setup.qsps`) and the top changelog entry
+4. **No numeric variable may be assigned from `$ARGS[n]`.** QSP keeps each
+   argument's numeric and string value in separate slots, so `x = $ARGS[3]`
+   reads the string slot - empty whenever the caller passed a number - and
+   silently yields `0` instead of erroring. This shipped once as
+   `glqs_ip_idx = $ARGS[3]`, where every clothing grant wrote to array index
+   0 and nothing reported a problem. Use `ARGS[n]`, or `val($ARGS[n])` if the
+   caller really sends a numeric string.
+5. **`$mod_info[1]` (`01_setup.qsps`) and the top changelog entry
    (`02_readme.qsps`) must encode the same version.** They're independent
    strings with different formats — `$mod_info[1] = '03402'` is
    `0`/`34`/`02` zero-padded-to-2-digits-each with no dots, vs. the changelog's
@@ -140,15 +149,15 @@ developer source, https://gitlab.com/kevinsmartstfg/girl-life:
   **This is the primary and default reference for all lookups going forward** —
   grep here first and only, unless a task is specifically and only about the
   stable `Girl Life` build.
-- **`reference/0.9.8.3/`** — checked out at tag `0.9.8.3`, matching the `.qsp`
-  installed in the `Girl Life` (stable) game folder (`Girl Life 0.9.8.3.qsp`). Kept
-  on disk but no longer checked by default — the two builds have diverged in real,
-  substantive ways in places (e.g. an archetype-system rewrite affecting
-  `BimboCloth`/`CalcAppearance`, and character creation being restructured
-  entirely from `intro_sg_select`/`intro_city_select` into
-  `intro_character_creation` on nightly), so do not assume a lookup here still
-  matches nightly. Only consult this if a task is explicitly about stable-only
-  behavior.
+- **`reference/0.9.8.3/`** - **not currently on disk.** This was a second clone
+  checked out at tag `0.9.8.3`, matching the stable `Girl Life` build, kept for
+  stable-only questions. Only `reference/nightly/` exists today, so a lookup
+  that genuinely needs stable behavior has to clone it first:
+  `git clone --depth 1 --branch 0.9.8.3 https://gitlab.com/kevinsmartstfg/girl-life reference/0.9.8.3`.
+  Do not assume a nightly lookup matches stable - the two have diverged in real
+  ways (an archetype-system rewrite affecting `BimboCloth`/`CalcAppearance`, and
+  character creation restructured from `intro_sg_select`/`intro_city_select`
+  into `intro_character_creation` on nightly).
 
 This replaced an earlier approach of decompiling the installed `.qsp` with
 `qsp-cli` into one flat `glife_dev_build.qsps` file — the real source here is much

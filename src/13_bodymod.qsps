@@ -17,13 +17,13 @@ if $ARGS[0] = 'bodymod_menu':
 	$glqs_tbl += '<tr><td>Attractiveness</td><td><<pcs_apprnc>> (<<pcs_hotcat>>/10)</td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	act 'Free Electrolysis (permanent hair removal)':
 		pcs_leghair = 0
 		pcs_pubes = 0
 		lashair = 1
-		gs 'stat'
 		gt 'mod_GLQS_main', 'bodymod_menu'
 	end
 
@@ -63,7 +63,6 @@ if $ARGS[0] = 'max_attractiveness':
 	!! persists across menus until the next in-game day, same as School
 	!! Grades resetting weekly.
 	pcs_apprncbase = 1000
-	gs 'stat'
 end
 
 
@@ -104,9 +103,12 @@ end
 
 
 if $ARGS[0] = 'tattoo_design_menu':
-	!! ARGS[1] = zone name. Captured before any nested gs call - $ARGS is one
-	!! shared array in QSP, not scoped per gosub, so calling gs stat / gs
-	!! themes below would clobber ARGS[1] before we get to read it.
+	!! ARGS[1] = zone name.
+	!! Captured up front because the act and href exec bodies below run at
+	!! CLICK time, after this handler has returned and $ARGS belongs to
+	!! whatever ran last. NOT because a nested gs clobbers $ARGS - it does
+	!! not; QSP saves and restores ARGS around gosub, and the base game
+	!! reads $ARGS after a nested gs in well over a thousand places.
 	$glqs_zone = $ARGS[1]
 	menu_off = 0
 	usehtml = 1
@@ -121,19 +123,19 @@ if $ARGS[0] = 'tattoo_design_menu':
 	glqs_i = 1
 	:glqs_tattoo_img_loop
 	if glqs_i <= total:
-		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''tattoo_management'', ''add'', ''<<$glqs_zone>>'', <<glqs_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''tattoo_design_menu'', ''<<$glqs_zone>>''"><img height="220" src="<<func(''tattoo_management'', $glqs_zone + ''_image'', glqs_i)>>"></a></div>'
+		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''tattoo_management'', ''add'', ''<<$glqs_zone>>'', <<glqs_i>> & gt ''mod_GLQS_main'', ''tattoo_design_menu'', ''<<$glqs_zone>>''"><img height="220" src="<<func(''tattoo_management'', $glqs_zone + ''_image'', glqs_i)>>"></a></div>'
 		glqs_i += 1
 		jump 'glqs_tattoo_img_loop'
 	end
 	killvar 'glqs_i'
 	$glqs_grid += '</div>'
 	$glqs_grid
+	killvar '$glqs_grid'
 	*nl
 
 	if pcs_tattoos[$glqs_zone] > 0:
 		act 'Remove Tattoo From This Zone':
 			gs 'tattoo_management', 'remove', $glqs_zone
-			gs 'stat'
 			gt 'mod_GLQS_main', 'tattoo_design_menu', $glqs_zone
 		end
 	end
@@ -143,6 +145,7 @@ if $ARGS[0] = 'tattoo_design_menu':
 	!! Killing it here would clear it before the player could ever click,
 	!! same stray-killvar bug as fame_detail (see comment there).
 	act 'Back to Zones': gt 'mod_GLQS_main', 'tattoo_zone_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
 
@@ -173,9 +176,12 @@ end
 
 
 if $ARGS[0] = 'piercing_design_menu':
-	!! ARGS[1] = slot name. Captured before any nested gs call - $ARGS is one
-	!! shared array in QSP, not scoped per gosub, so calling gs stat / gs
-	!! themes below would clobber ARGS[1] before we get to read it.
+	!! ARGS[1] = slot name.
+	!! Captured up front because the act and href exec bodies below run at
+	!! CLICK time, after this handler has returned and $ARGS belongs to
+	!! whatever ran last. NOT because a nested gs clobbers $ARGS - it does
+	!! not; QSP saves and restores ARGS around gosub, and the base game
+	!! reads $ARGS after a nested gs in well over a thousand places.
 	$glqs_slot = $ARGS[1]
 	menu_off = 0
 	usehtml = 1
@@ -190,19 +196,19 @@ if $ARGS[0] = 'piercing_design_menu':
 	glqs_i = 1
 	:glqs_pierce_img_loop
 	if glqs_i <= total:
-		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''piercing_management'', ''add'', ''<<$glqs_slot>>'', <<glqs_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''piercing_design_menu'', ''<<$glqs_slot>>''"><img height="220" src="<<func(''piercing_management'', $glqs_slot + ''_image'', glqs_i)>>"></a></div>'
+		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''piercing_management'', ''add'', ''<<$glqs_slot>>'', <<glqs_i>> & gt ''mod_GLQS_main'', ''piercing_design_menu'', ''<<$glqs_slot>>''"><img height="220" src="<<func(''piercing_management'', $glqs_slot + ''_image'', glqs_i)>>"></a></div>'
 		glqs_i += 1
 		jump 'glqs_pierce_img_loop'
 	end
 	killvar 'glqs_i'
 	$glqs_grid += '</div>'
 	$glqs_grid
+	killvar '$glqs_grid'
 	*nl
 
 	if pcs_piercings[$glqs_slot] > 0:
 		act 'Remove Piercing From This Slot':
 			gs 'piercing_management', 'remove', $glqs_slot
-			gs 'stat'
 			gt 'mod_GLQS_main', 'piercing_design_menu', $glqs_slot
 		end
 	end

@@ -51,6 +51,7 @@ if $ARGS[0] = 'rel_menu' or $ARGS[0] = 'max_category':
 	$glqs_npc[glqs_n] = 'nerds|1|A152|Feofan (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'nerds|1|A153|Gerasim (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'nerds|2|A240|Nat (F)' & glqs_n += 1
+	$glqs_npc[glqs_n] = 'nerds|2|A142|Zina (F)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'gopniks|1|A9|Vitek (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'gopniks|1|A10|Dan (M)' & glqs_n += 1
 	$glqs_npc[glqs_n] = 'gopniks|1|A11|Shulga (M)' & glqs_n += 1
@@ -116,6 +117,7 @@ if $ARGS[0] = 'rel_menu':
 
 	$glqs_tbl = '<table width="80%" cellpadding=3>'
 	$glqs_prevcat = ''
+	$glqs_pendhdr = ''
 	glqs_i = 0
 	:glqs_rel_render_loop
 	if glqs_i < glqs_rel_total:
@@ -131,10 +133,17 @@ if $ARGS[0] = 'rel_menu':
 		$glqs_name = $mid($glqs_rest, glqs_p3 + 1)
 
 		if $glqs_cat <> $glqs_prevcat:
-			$glqs_tbl += '<tr><td colspan="2"><b>' + $glqs_cat_label[$glqs_cat] + '</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''' + $glqs_cat + ''' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+			!! Held back rather than emitted here - under a gender filter a category can
+			!! match zero rows, which used to leave a bare header and a [Max] link with
+			!! nothing under it (Outcasts is all male, so Female Only showed exactly that).
+			$glqs_pendhdr = '<tr><td colspan="2"><b>' + $glqs_cat_label[$glqs_cat] + '</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''' + $glqs_cat + ''' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
 			$glqs_prevcat = $glqs_cat
 		end
 		if glqs_rel_filter = 0 or glqs_rel_filter = glqs_gender:
+			if $glqs_pendhdr <> '':
+				$glqs_tbl += $glqs_pendhdr
+				$glqs_pendhdr = ''
+			end
 			$glqs_tbl += '<tr><td>' + $glqs_name + '</td><td>' + npc_rel[$glqs_key] + '</td></tr>'
 		end
 
@@ -143,10 +152,11 @@ if $ARGS[0] = 'rel_menu':
 	end
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	killvar 'glqs_i' & killvar 'glqs_p1' & killvar 'glqs_p2' & killvar 'glqs_p3' & killvar 'glqs_gender'
-	killvar '$glqs_row' & killvar '$glqs_rest' & killvar '$glqs_cat' & killvar '$glqs_key' & killvar '$glqs_name' & killvar '$glqs_prevcat'
+	killvar '$glqs_row' & killvar '$glqs_rest' & killvar '$glqs_cat' & killvar '$glqs_key' & killvar '$glqs_name' & killvar '$glqs_prevcat' & killvar '$glqs_pendhdr'
 	killvar '$glqs_npc' & killvar '$glqs_cat_label' & killvar 'glqs_rel_total'
 
 	act 'Max All (filtered)':
@@ -166,11 +176,11 @@ end
 
 
 if $ARGS[0] = 'max_category':
-	!! Captured immediately - mod_GLQS_main is one shared QSP location, so a
-	!! nested gs call back into it would clobber $ARGS for the rest of this
-	!! call (same bug class as the v0.7 grades / v0.27 fame ARGS-clobbering
-	!! fixes - see changelog). No nested gs happens before this read today,
-	!! but capturing up front keeps that true if this handler grows.
+	!! Captured immediately. NOT because a nested gs clobbers $ARGS - it does not;
+	!! QSP saves and restores ARGS around gosub, and the base game reads $ARGS
+	!! after a nested gs in over a thousand places. The real constraint is that
+	!! act and href exec bodies run at CLICK time, long after this handler has
+	!! returned, so anything they reference must live in a variable, not $ARGS.
 	$glqs_mc_target = $ARGS[1]
 	glqs_j = 0
 	:glqs_rel_maxcat_loop

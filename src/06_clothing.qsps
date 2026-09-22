@@ -164,9 +164,9 @@ if $ARGS[0] = 'store_buy':
 	!! games actual catalog (not every store sells every category).
 	!! Driven by the shared clothing_cat_build table below so this can
 	!! never drift from store_detail or the top-level clothing handler.
-	!! Captured before the nested gs call - $ARGS is one shared array in
-	!! QSP, not scoped per gosub, so calling clothing_cat_build would
-	!! clobber ARGS[1] before we get to read it.
+	!! Captured for readability only. store_buy defines no act and no href, and
+	!! a nested gs does not clobber $ARGS (QSP saves and restores ARGS around
+	!! gosub), so nothing here actually depends on the capture.
 	$glqs_sb_store = $ARGS[1]
 	gs 'mod_GLQS_main', 'clothing_cat_build'
 	glqs_sb_i = 0
@@ -203,9 +203,11 @@ if $ARGS[0] = 'store_detail':
 	!! Per-store category breakdown. Mirrors the store_buy dispatcher above,
 	!! but exposes each category the store carries as its own button instead
 	!! of buying everything in one shot.
-	!! Capture before any nested gs call - $ARGS is one shared array in QSP,
-	!! not scoped per gosub, so calling gs stat / gs themes below would
-	!! clobber ARGS[1] before we get to read it.
+	!! Captured up front because the act and href exec bodies below run at
+	!! CLICK time, after this handler has returned and $ARGS belongs to
+	!! whatever ran last. NOT because a nested gs clobbers $ARGS - it does
+	!! not; QSP saves and restores ARGS around gosub, and the base game
+	!! reads $ARGS after a nested gs in well over a thousand places.
 	$glqs_store = $ARGS[1]
 	menu_off = 0
 	usehtml = 1
@@ -234,6 +236,7 @@ if $ARGS[0] = 'store_detail':
 	$glqs_sicon = $func('$shop_icon_image', $glqs_store)
 
 	'<center><img src="<<$glqs_sicon>>" height="80"><br><b><font color="maroon"><<$glqs_label>></font></b></center>'
+	killvar '$glqs_sicon' & killvar '$glqs_label'
 	*nl
 	'Pick a category to browse it item-by-item, or grab everything this store carries.'
 	*nl
@@ -372,8 +375,13 @@ if $ARGS[0] = 'item_picker':
 	!!           bare store name for every other type (e.g. bomba)
 	!! ARGS[3] = store - bare store name, used only for the Return button
 	!! ARGS[4] = label - display name for the category (e.g. Swimsuits)
-	!! All captured before any nested gs call - $ARGS and total are both
-	!! plain globals in QSP, clobbered by any nested gs call.
+	!! Captured up front because the act and href exec bodies below run at
+	!! CLICK time, after this handler has returned and $ARGS belongs to
+	!! whatever ran last. NOT because a nested gs clobbers $ARGS - it does
+	!! not; QSP saves and restores ARGS around gosub, and the base game
+	!! reads $ARGS after a nested gs in well over a thousand places.
+	!! glqs_ptotal is a real capture: total is a base-game global that the
+	!! next totals call would overwrite.
 	$glqs_ptype = $ARGS[1]
 	$glqs_pkey = $ARGS[2]
 	$glqs_pstore = $ARGS[3]
@@ -396,6 +404,7 @@ if $ARGS[0] = 'item_picker':
 	gs 'themes', 'indoors'
 
 	'<center><img src="<<$glqs_picon>>" height="80"><br><b><font color="maroon"><<$glqs_plabel>></font></b></center>'
+	killvar '$glqs_picon'
 	'<br><<glqs_ptotal>> items available. Click an image to add it to your wardrobe at full durability.'
 	*nl
 
@@ -411,14 +420,15 @@ if $ARGS[0] = 'item_picker':
 		if $glqs_ptype = 'coat': $glqs_pimg = $func('$coat_image', $glqs_pkey, glqs_i)
 		if $glqs_ptype = 'purse': $glqs_pimg = $func('$purse_image', $glqs_pkey, glqs_i)
 
-		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''mod_GLQS_main'', ''item_pick'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', <<glqs_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''item_picker'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', ''<<$glqs_pstore>>'', ''<<$glqs_plabel>>''"><img height="220" src="<<$glqs_pimg>>"></a></div>'
+		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''mod_GLQS_main'', ''item_pick'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', <<glqs_i>> & gt ''mod_GLQS_main'', ''item_picker'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', ''<<$glqs_pstore>>'', ''<<$glqs_plabel>>''"><img height="220" src="<<$glqs_pimg>>"></a></div>'
 
 		glqs_i += 1
 		jump 'glqs_item_picker_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_i' & killvar '$glqs_pimg' & killvar 'glqs_ptotal'
 	$glqs_grid += '</div>'
 	$glqs_grid
+	killvar '$glqs_grid'
 	*nl
 
 	act 'Give All (this category)':

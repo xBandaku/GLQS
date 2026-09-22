@@ -40,7 +40,7 @@ end
 !! clutter these image-heavy screens. Purely cosmetic - nothing else in
 !! the mod depends on the link being present on these two screens.
 if opPRE = 0 and $location_type <> 'event' and cheatVars['cheatsp'] = 1 and $curloc <> 'wardrobe' and $curloc <> 'clothing_view':
-	'<b> MOD <a href="exec: $shopreturn = $loc & $shoparg = $loc_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+	'<b> MOD <a href="exec: $glqs_return_loc = $loc & $glqs_return_arg = $loc_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
 end
 
 if $ARGS[0] = 'permanent':

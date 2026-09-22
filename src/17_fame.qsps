@@ -71,6 +71,7 @@ if $ARGS[0] = 'fame_region_menu':
 	$glqs_tbl += '<tr><td>Gadukino (Village)</td><td><<fame[''village_performer'']>></td><td><<fame[''village_sexind'']>></td><td><<fame[''village_slut'']>></td><td><<fame[''village_sport'']>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	act 'Pavlovsk': gt 'mod_GLQS_main', 'fame_detail', 'pav'
@@ -84,9 +85,11 @@ end
 
 
 if $ARGS[0] = 'fame_detail':
-	!! Capture before any nested gs call - $ARGS is one shared array in QSP,
-	!! not scoped per gosub, so calling gs stat / gs themes below would
-	!! clobber ARGS[1] before we get to read it.
+	!! Captured up front because the act and href exec bodies below run at
+	!! CLICK time, after this handler has returned and $ARGS belongs to
+	!! whatever ran last. NOT because a nested gs clobbers $ARGS - it does
+	!! not; QSP saves and restores ARGS around gosub, and the base game
+	!! reads $ARGS after a nested gs in well over a thousand places.
 	$glqs_region = $ARGS[1]
 	menu_off = 0
 	usehtml = 1
@@ -117,6 +120,7 @@ if $ARGS[0] = 'fame_detail':
 	end
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 	killvar 'glqs_i'
 	killvar 'glqs_val'
@@ -170,10 +174,9 @@ if $ARGS[0] = 'fame_apply':
 	!! in-game night). sex/prostitute/flash skip the core/local system
 	!! entirely per fame.qsrc and are set directly.
 	!! ARGS[1] = region code, ARGS[2] = activity code
-	!! Captured to locals immediately - mod_GLQS_main is one shared QSP
-	!! location, so a nested gs call back into it overwrites $ARGS for the
-	!! rest of this call. Re-reading $ARGS after a nested gs is what broke
-	!! grades back in v0.7 (see changelog) and broke this the same way.
+	!! Captured to locals immediately. Not an ARGS-clobbering guard - QSP saves
+	!! and restores ARGS around gosub - but it keeps the two reads below next to
+	!! each other and independent of anything this handler grows later.
 	$glqs_fa_region = $ARGS[1]
 	$glqs_fa_act = $ARGS[2]
 	if $glqs_fa_act = 'sex' or $glqs_fa_act = 'prostitute' or $glqs_fa_act = 'flash':

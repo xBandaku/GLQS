@@ -60,7 +60,6 @@ if $ARGS[0] = 'consumables':
 	mc_inventory['dish_soap'] = glqs_amt
 	mc_inventory['laundry_soap'] = glqs_amt
 	mc_inventory['dish_plates'] = glqs_amt
-	killvar 'glqs_amt'
 	!! --- Unique items (max 1) ---
 	mc_inventory['comb'] = 1
 	mc_inventory['travel_mirror'] = 1
@@ -88,6 +87,10 @@ if $ARGS[0] = 'consumables':
 	mc_inventory['mag_knitting'] = 1
 	mc_inventory['mag_fitness'] = 1
 	mc_inventory['mag_porn'] = 1
+	!! Killed at the very end, not mid-handler: everything below the stackable
+	!! block uses a literal 1, but a future stackable item appended here would
+	!! silently grant 0 off a killvard variable, with no error.
+	killvar 'glqs_amt'
 end
 
 !! ===== STATS =====
@@ -103,7 +106,10 @@ if $ARGS[0] = 'stats':
 	gs 'shortgs', 'setStat', 'prcptn', 100
 	gs 'shortgs', 'setStat', 'magik', 100
 	gs 'shortgs', 'setStat', 'inhib', 100
-	willpowermax = 150
+	!! Raise-only. 150 is the cheat menus cap, but character creation allows up
+	!! to 200 and gs stat only enforces a floor, so a flat assignment used to
+	!! *lower* max willpower for a character built above 150.
+	if willpowermax < 150: willpowermax = 150
 	!! --- Mental Skills (direct setStat - no cheat menu redirect) ---
 	gs 'shortgs', 'setStat', 'splcstng', 100
 	gs 'shortgs', 'setStat', 'humint', 100
@@ -136,6 +142,7 @@ if $ARGS[0] = 'stats':
 	!! --- Artistic Skills ---
 	gs 'shortgs', 'setStat', 'vokal', 100
 	gs 'shortgs', 'setStat', 'instrmusic', 100
+	gs 'shortgs', 'setStat', 'songwrit', 100
 	gs 'shortgs', 'setStat', 'photoskl', 100
 	gs 'shortgs', 'setStat', 'artskls', 100
 	gs 'shortgs', 'setStat', 'perform', 100
@@ -187,7 +194,3 @@ if $ARGS[0] = 'clothing':
 	killvar '$glqs_cc' & killvar 'glqs_cc_total'
 end
 
-!! ===== FILL HELPERS =====
-!! Each helper sets the item owned flag AND repairs it to full durability by
-!! setting the companion _h[] array to max strength (matches what the games
-!! own cheat_repair functions do, so items never need tailor repair/resize.

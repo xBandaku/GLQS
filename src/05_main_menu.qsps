@@ -3,7 +3,6 @@ if $ARGS[0] = 'start':
 	menu_off = 0
 	usehtml = 1
 	$location_type = 'event'
-	killvar '$locclass'
 	gs 'core_library', 'setloc', 'mod_GLQS_main', 'start'
 	gs 'stat'
 	gs 'themes', 'indoors'
@@ -31,12 +30,14 @@ if $ARGS[0] = 'start':
 	act 'Fame & Reputation': gt 'mod_GLQS_main', 'fame_menu'
 
 	act 'Return':
-		$menu_loc = $shopreturn
-		$menu_arg = $shoparg
-		killvar '$shopreturn'
-		killvar '$shoparg'
+		!! Set by the hook in 03_hook.qsps when the player opened this menu. Guard
+		!! the empty case - gt '' is a hard error with no way back out of it.
+		if $glqs_return_loc = '': $glqs_return_loc = 'bedrPar'
+		$menu_loc = $glqs_return_loc
+		$menu_arg = $glqs_return_arg
+		killvar '$glqs_return_loc'
+		killvar '$glqs_return_arg'
 		gt $menu_loc, $menu_arg
 	end
 end
 
-!! ===== CLOTHING MENU =====
