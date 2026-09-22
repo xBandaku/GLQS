@@ -60,7 +60,7 @@ end
 if $ARGS[0] = 'item_pick':
 	$glqs_ip_type = $ARGS[1]
 	$glqs_ip_key = $ARGS[2]
-	glqs_ip_idx = $ARGS[3]
+	glqs_ip_idx = ARGS[3]
 	gs 'mod_GLQS_main', 'item_grant', $glqs_ip_type, $glqs_ip_key, glqs_ip_idx
 	killvar '$glqs_ip_type' & killvar '$glqs_ip_key' & killvar 'glqs_ip_idx'
 end

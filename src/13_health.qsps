@@ -24,7 +24,10 @@ if $ARGS[0] = 'health_menu':
 		pcs_health = healthmax
 		pcs_stam = stammax
 		pcs_willpwr = willpowermax
-		pcs_mana = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+		!! manamax is recomputed by gs stat from an algebraically identical
+		!! expression, so reading it back cannot drift from the games own
+		!! formula. 18_magic.qsps already does this.
+		pcs_mana = manamax
 		pcs_sleep = 100
 		pcs_mood = 100
 		pcs_energy = 100
