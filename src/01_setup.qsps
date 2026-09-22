@@ -1,6 +1,6 @@
 # mod_GLQS_setup
 $mod_info[0] = 'GLQS'
-$mod_info[1] = '03601'
+$mod_info[1] = '03700'
 $mod_info[2] = 'xPandaku'
 $mod_info[3] = 'GLQS - A quick-setup cheat mod for Girl Life. Grants all clothing and accessories, maxes consumables, skills, attributes, school grades, money, relationships, health and energy, body mods (tattoos/piercings/electrolysis), fame and reputation, jobs, magic, and housing and property, and toggles recurrent quality-of-life and lifestyle cheats. By xPandaku.'
 $mod_info[4] = 'Options'

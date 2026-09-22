@@ -1,6 +1,14 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.36.1 - Current</b>'
+'<b>Version 0.37.0 - Current</b>'
+'- Fixed: Every clothing grant wrote to the same array slot, so picking an item from the store picker added the first item in that category instead of the one you clicked, and Give All added a single item. Affected v0.36.1 only.'
+'- Fixed: Give Everything (all stores) and Buy All (this store) added nothing at all. The clothing catalog gained a label column in v0.36 and the buyout loop was still reading three columns, so every category key it built had the label stuck on the end and matched nothing in the game. Roughly 1,900 grants per click were going nowhere.'
+'- Fixed: Max All Skills & Attributes set maximum Willpower to a flat 150. That is the cheat menu cap, but character creation allows up to 200, so a character built above 150 had it reduced by a button labelled Max All. It now only ever raises.'
+'- Fixed: Enable All in Recurrent Cheats switched on Succubus clothing invulnerability even when clothing archetypes were disabled, where that row is hidden, leaving the cheat set with no way to see or clear it. Disable All can still clear one that was already on.'
+'- Fixed: Filtering Relationships to Male Only or Female Only could leave a category heading and its Max link with no names underneath, because the heading was written before the filter was applied. Gadukino and Outcasts under Female Only were the clearest cases.'
+'- Changed: Health & Energy reads maximum mana from the value the game already maintains instead of recalculating it from a copied formula.'
+'- Changed: The build now refuses two mistakes that used to compile silently - a numeric value read from the string argument slot, which is what caused the clothing grant bug above, and a generated action block that was never filled in.'
+'<b>Version 0.36.1</b>'
 '- Fixed: Normalized the source fragment numbering after the menu/clothing/consumables reorganization so there are no missing numbered files and the build manifest matches the actual file layout.'
 '- Fixed: Cleared stale filename references in the build validation and docs so the assembled mod, clothing catalog, and job data continue to resolve correctly after the renumbering cleanup.'
 '<b>Version 0.36.0</b>'
