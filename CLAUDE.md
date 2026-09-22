@@ -115,6 +115,25 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   manifest against `jobs_list.qsrc`; without it, duplicate and malformed IDs
   are still rejected.
 
+## Branch history: this line was reset once, then restored
+
+`main` was hard-reset from v0.36.1 back to v0.34.4 in September 2026, and the
+24 discarded commits were parked on `backup/main-v0.36.1`. The reason was never
+written down at the time; it was found later by review. **v0.36.1 shipped with
+every clothing grant writing to array index 0** (lint rule 5 below), so the
+mod's headline feature silently did nothing. A second bug from the same
+refactor made `store_buy` read three columns from a catalog that had grown to
+four, so Give Everything and Buy All granted nothing either.
+
+Both are fixed, and this line was restored as v0.37.0 rather than re-porting
+~3,000 lines of features onto the rolled-back `main`. Do not treat the v0.36.1
+tag or its release as a working reference - it is the one build where clothing
+is broken. Version numbering continues past it so releases stay monotonic.
+
+The decision is recorded here so it does not get re-litigated: **harvest from
+`main`, build on this line.** `main`'s v0.36.2 tag holds the fixes that were
+developed there; all of them are now present here.
+
 ## Lint rules (enforced by build.py, not qsp-cli)
 
 These exist because they caused real, hard-to-diagnose failures during development:
@@ -139,6 +158,23 @@ These exist because they caused real, hard-to-diagnose failures during developme
    change: patch `$mod_info[1]` in `01_setup.qsps`, and prepend a new
    `'<b>Version X.Y.Z - Current</b>'` entry (moving `- Current` off the
    previous top entry) in `02_readme.qsps`.
+
+5. **No numeric variable may be assigned from `$ARGS[n]`.** QSP keeps each
+   argument's numeric and string value in separate slots, so `x = $ARGS[3]`
+   reads the string slot - empty whenever the caller passed a number - and
+   silently yields `0` instead of erroring. This has now shipped twice: once
+   in `item_grant` on the old layout, and again in v0.36.1, when the clothing
+   refactor reintroduced it at `item_pick` and `item_grant` while this branch
+   had no such lint. Every clothing grant wrote to array index 0 and nothing
+   reported a problem. Use `ARGS[n]`, or `val($ARGS[n])` if the caller really
+   sends a numeric string.
+6. **A `GLQS_*_BEGIN`/`_END` marker pair must not be empty in the assembled
+   output.** These are placeholders that a build-time expansion fills. When the
+   expansion does not run, the markers survive as inert comments, the generated
+   block is empty, and every other validator still passes while `build.py`
+   prints `SUCCESS` - which once produced an item picker with 0 of its 82
+   actions. `assemble()` now probes for the marker instead of a hardcoded
+   filename, so renaming a fragment cannot silently skip expansion.
 
 When lint fails, fix the referenced `src/` fragment, not `build/GLQS.qsps` (that's
 generated output and gets overwritten every build).
