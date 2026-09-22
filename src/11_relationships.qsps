@@ -22,6 +22,7 @@ if $ARGS[0] = 'rel_menu':
 	$glqs_tbl = '<table width="80%" cellpadding=3>'
 	$glqs_tbl += '<tr><th align="left">Name</th><th align="left">Value</th><th align="left">Status</th><th align="left"></th></tr>'
 	$glqs_prevcat = ''
+	$glqs_pendhdr = ''
 	glqs_i = 0
 	:glqs_rel_render_loop
 	if glqs_i < glqs_rel_total:
@@ -37,10 +38,18 @@ if $ARGS[0] = 'rel_menu':
 		$glqs_name = $mid($glqs_rest, glqs_p3 + 1)
 
 		if $glqs_cat <> $glqs_prevcat:
-			$glqs_tbl += '<tr><td colspan="4"><b>' + $glqs_cat_label[$glqs_cat] + '</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''' + $glqs_cat + ''' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+			!! Held back rather than emitted here - under a gender filter a category
+			!! can match zero rows, which used to leave a bare heading and a [Max]
+			!! link with nothing under it. Outcasts and Gadukino are all male, so
+			!! Female Only showed exactly that.
+			$glqs_pendhdr = '<tr><td colspan="4"><b>' + $glqs_cat_label[$glqs_cat] + '</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''' + $glqs_cat + ''' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
 			$glqs_prevcat = $glqs_cat
 		end
 		if glqs_rel_filter = 0 or glqs_rel_filter = glqs_gender:
+			if $glqs_pendhdr <> '':
+				$glqs_tbl += $glqs_pendhdr
+				$glqs_pendhdr = ''
+			end
 			$glqs_status = $npc_rel_type[$glqs_key]
 			if $glqs_status = '': $glqs_status = '-'
 			!! Marriage is one husband and one wife at a time, tracked by the
@@ -119,6 +128,7 @@ if $ARGS[0] = 'rel_menu':
 
 	killvar 'glqs_i' & killvar 'glqs_p1' & killvar 'glqs_p2' & killvar 'glqs_p3' & killvar 'glqs_gender'
 	killvar '$glqs_row' & killvar '$glqs_rest' & killvar '$glqs_cat' & killvar '$glqs_key' & killvar '$glqs_name' & killvar '$glqs_prevcat'
+	killvar '$glqs_pendhdr'
 	killvar '$glqs_status' & killvar '$glqs_action'
 	killvar '$glqs_npc' & killvar '$glqs_cat_label' & killvar 'glqs_rel_total'
 

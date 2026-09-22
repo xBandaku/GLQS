@@ -4,7 +4,7 @@
 if $ARGS[0] = 'item_grant':
 	$glqs_ip_type = $ARGS[1]
 	$glqs_ip_key = $ARGS[2]
-	glqs_ip_idx = $ARGS[3]
+	glqs_ip_idx = ARGS[3]
 
 	if $glqs_ip_type = 'clo':
 		dyneval('<<$glqs_ip_key>>[glqs_ip_idx] = 1')

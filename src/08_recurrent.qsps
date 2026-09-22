@@ -149,7 +149,14 @@ if $ARGS[0] = 'recurrent_set':
 	sleepVars['bedVibrator'] = glqs_rs_on
 	cheatVars['clothes_dirt'] = glqs_rs_on
 	cheatVars['always_horny'] = glqs_rs_on
-	cheatVars['suc_bimbo'] = glqs_rs_on
+	!! Only meaningful while clothing archetypes are on, and the row that shows
+	!! it is hidden otherwise (the bimbo guard in the table above, mirroring
+	!! cheatmenu_din.qsrc). Enabling it while that row is hidden leaves a cheat
+	!! the player can neither see nor clear from this menu. Clearing is always
+	!! allowed, so Disable All can still reach one that is already set.
+	if cheatVars['bimbo'] = 0 or glqs_rs_on = 0:
+		cheatVars['suc_bimbo'] = glqs_rs_on
+	end
 	if glqs_rs_on = 1:
 		!! Enable-only, each matching the base games own handler in
 		!! cheatmenu_din.qsrc: the addict cheat also clears existing addiction

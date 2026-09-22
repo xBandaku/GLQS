@@ -253,7 +253,13 @@ def assemble(standalone_files, shared_files):
         text = f.read_text(encoding="utf-8")
         if f.name == NAVIGATION_FILE:
             text = expand_navigation_actions(text)
-        if f.name == "05_clothing_store.qsps":
+        # Probe for the marker rather than the filename. Gating this on
+        # f.name == "05_clothing_store.qsps" meant renaming that file (and
+        # dutifully updating SHARED_FILES) silently skipped the expansion:
+        # the markers survived as inert comments, the item picker assembled
+        # with 0 of its 82 actions, and every validator and lint still
+        # passed. lint_unexpanded_markers now catches that too.
+        if CLOTHING_ACTIONS_BEGIN in text:
             catalog = (SRC_DIR / "05_clothing_data.qsps").read_text(encoding="utf-8")
             menu = (SRC_DIR / "05_clothing.qsps").read_text(encoding="utf-8")
             text = expand_clothing_store(text, catalog, menu)
@@ -429,6 +435,47 @@ def lint_empty_template_markers(text):
     return problems
 
 
+def lint_unexpanded_markers(text):
+    """Every GLQS_*_BEGIN/END pair in the assembled output is a placeholder a
+    build-time expansion is meant to fill. If the expansion never runs, the
+    markers survive as inert QSP comments with nothing between them, and
+    nothing else notices -- every other validator and lint passes and the
+    build prints SUCCESS. That is how an item picker with 0 of its 82 actions
+    could be produced by renaming one source file. An empty body is a build
+    failure, not a warning."""
+    problems = []
+    pattern = re.compile(
+        r"^[ \t]*!! (GLQS_\w+)_BEGIN[ \t]*\r?$(.*?)^[ \t]*!! \1_END",
+        re.DOTALL | re.MULTILINE,
+    )
+    for match in pattern.finditer(text):
+        if not match.group(2).strip():
+            lineno = text[: match.start()].count("\n") + 1
+            problems.append((lineno, match.group(1)))
+    return problems
+
+
+def lint_numeric_arg_from_string_slot(text):
+    """QSP keeps each argument's numeric and string value in separate slots, and
+    the base game has to choose between them explicitly -- see the
+    iif(modARGS[0]=0, $modARGS[0], modARGS[0]) dispatch in mod_system.qsrc.
+    Assigning a plain (numeric) variable from $ARGS[n] therefore reads the
+    string slot, which is empty whenever the caller passed a number, so the
+    variable silently becomes 0 instead of erroring. This shipped twice: once as
+    glqs_ip_idx = $ARGS[3] in item_grant, and again in v0.36.1 when the clothing
+    refactor reintroduced it at both item_pick and item_grant while this lint
+    was not yet on this branch. Every clothing grant wrote to array index 0, no
+    item was ever added, and nothing reported a problem.
+    Use ARGS[n] for a number, or val($ARGS[n]) if the caller genuinely sends a
+    numeric string."""
+    problems = []
+    assignment = re.compile(r"^\s*[a-z_][a-z0-9_]*\s*=\s*\$ARGS\[\d+\]")
+    for i, line in enumerate(text.splitlines(), start=1):
+        if assignment.match(line):
+            problems.append((i, line))
+    return problems
+
+
 def lint_version_mismatch(text):
     """$mod_info[1] (01_setup.qsps, shown on the game's mod-selection screen) and
     the top changelog entry (02_readme.qsps, shown on the in-game readme screen)
@@ -523,6 +570,26 @@ def run_lints(text):
         print("       Unclosed blocks (most likely culprits):")
         for lineno, snippet in stack:
             print(f"    line {lineno}: {snippet}")
+
+    marker_hits = lint_unexpanded_markers(text)
+    if marker_hits:
+        ok = False
+        print("\n[LINT] Build-time marker block was never expanded:")
+        print("       (the BEGIN/END pair is still empty, so the generated")
+        print("        actions are missing -- check the expansion gate in")
+        print("        assemble() still matches this file)")
+        for lineno, name in marker_hits:
+            print(f"    line {lineno}: {name}_BEGIN/_END is empty")
+
+    arg_slot_hits = lint_numeric_arg_from_string_slot(text)
+    if arg_slot_hits:
+        ok = False
+        print("\n[LINT] Numeric variable assigned from the string argument slot:")
+        print("       ($ARGS[n] is empty when the caller passed a number, so the")
+        print("        variable silently becomes 0 -- use ARGS[n], or val($ARGS[n])")
+        print("        if the caller really sends a numeric string)")
+        for lineno, line in arg_slot_hits:
+            print(f"    line {lineno}: {line.strip()}")
 
     version_mismatch = lint_version_mismatch(text)
     if version_mismatch:

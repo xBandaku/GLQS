@@ -13,7 +13,10 @@ if $ARGS[0] = 'stats':
 		glqs_sa_p3 = instr($glqs_sa_rest2, '|')
 		$glqs_sa_key = $mid($glqs_sa_rest2, 1, glqs_sa_p3 - 1)
 		if $glqs_sa_kind = 'lvl': gs 'shortgs', 'setStat', $glqs_sa_key, 100
-		if $glqs_sa_kind = 'cap': dyneval('<<$glqs_sa_key>> = 150')
+		!! Raise-only. 150 is the cheat menu cap, but character creation allows
+		!! up to 200 and gs stat only enforces a floor, so a flat assignment
+		!! used to lower max willpower for a character built above 150.
+		if $glqs_sa_kind = 'cap': dyneval('<<$glqs_sa_key>> = max(<<$glqs_sa_key>>, 150)')
 		glqs_sa_i += 1
 		jump 'glqs_stats_all_loop'
 	end
