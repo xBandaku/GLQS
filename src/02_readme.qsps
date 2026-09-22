@@ -1,6 +1,21 @@
 # mod_GLQS_readme
 *clr & cla
-'<b>Version 0.34.4 - Current</b>'
+'<b>Version 0.36.2 - Current</b>'
+'- Fixed: Full Restore Everything set Hunger to 200, but the game caps it at 100 and turns the excess into body fat on the next in-game hour, so the button was quietly handing out a 25 point fat gain. Now sets 100. Hydration really does cap at 200 and was always correct.'
+'- Fixed: Money showed raw cash and bank figures, which under-report once a balance passes the roughly 1 billion RUB point where the game starts packing the excess into a second variable. Now uses the same formatter the games own money display uses, so Give 1,000,000 can be clicked as often as you like without the total going wrong.'
+'- Fixed: Skills & Attributes labelled Inhibition backwards. The raw value shown there is the inverse of the figure the games own character screen shows, so 100 means fully uninhibited, not fully inhibited. The mods own changelog has said so since v0.6 while the menu said the opposite.'
+'- Fixed: Relationships was missing Zina, a real tracked Nerds character who could never be viewed or maxed from this menu.'
+'- Fixed: Max All Skills & Attributes skipped Songwriting, which the game tracks alongside Singing and Instruments. Now set, and shown in the list.'
+'- Fixed: Max All Skills & Attributes set maximum Willpower to a flat 150. That is the cheat menu cap, but character creation allows up to 200, so a character built above 150 had it reduced by a button labelled Max All. It now only ever raises.'
+'- Fixed: Enable All in Recurrent Cheats switched on Succubus clothing invulnerability even when clothing archetypes were disabled, where that row is hidden. The cheat was left on with no way to see or clear it from this menu.'
+'- Fixed: Filtering Relationships to Male Only or Female Only could leave a category heading and its [Max] link with no names underneath, because the heading was written before the filter was applied. Outcasts under Female Only was the clearest case.'
+'- Fixed: The tattoo design screen had no Return to Top Menu action, unlike every other screen including its piercing counterpart.'
+'- Fixed: GLQS did not claim its own mod options field, so with another mod installed it could pick up that mods Options label and show an Options link in the Mods list that led nowhere.'
+'- Changed: Set All Grades to 100 is now called Max All Grades. The game clamps each award to that subjects own grade cap, so a subject whose cap has been lowered lands on the cap rather than on 100, and the old label promised something it could not always deliver.'
+'- Changed: Health & Energy now shows Mana as a value out of its maximum, matching the Health, Stamina and Willpower rows.'
+'- Changed: Menus that immediately hand off to another screen no longer recalculate the whole character sheet twice on the way, which makes the clothing, tattoo and piercing pickers noticeably quicker to click through.'
+*nl
+'<b>Version 0.34.4</b>'
 '- Fixed: Max All Skills & Attributes wrote the five volleyball sub-skills (block, receive, serve, set, spike) directly, but the game recomputes all five from the main Volleyball skill and the attributes on every stat refresh, so those writes were discarded immediately and never did anything. Removed - maxing Volleyball and the attributes already maxes all five.'
 '- Fixed: Granting an item the character already owned (Give Everything, Buy All, Give All, or a single item pick) kept its old dirt and tailor-alteration state instead of arriving factory-fresh. The base games own add_item purchase code resets those arrays on every purchase; the grant code now does the same.'
 '- Fixed: Body Mods listed the tattoo counter as out of 17 zones, but the game (and the mods own zone picker) has 18 tattoo zones.'

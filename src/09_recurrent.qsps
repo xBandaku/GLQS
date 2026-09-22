@@ -35,6 +35,7 @@ if $ARGS[0] = 'recurrent':
 	end
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	act 'Enable All':
@@ -69,6 +70,7 @@ if $ARGS[0] = 'recurrent':
 	$glqs_tbl2 += '<tr><td>STDs</td><td><a href="exec: cheatVars[''std''] = iif(cheatVars[''std''], 0, 1) & gt ''mod_GLQS_main'', ''recurrent''"><<iif(cheatVars[''std''], ''Disabled'', ''Enabled'')>></a></td></tr>'
 	$glqs_tbl2 += '</table>'
 	$glqs_tbl2
+	killvar '$glqs_tbl2'
 	*nl
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
@@ -111,7 +113,13 @@ if $ARGS[0] = 'recurrent_on':
 	cheatVars['clothes_dirt'] = 1
 	gs 'washer', 'wash_all'
 	cheatVars['always_horny'] = 1
-	cheatVars['suc_bimbo'] = 1
+	!! Only meaningful while clothing archetypes are on, and the row that shows
+	!! it is hidden otherwise (see the bimbo guard in the table above, mirroring
+	!! cheatmenu_din.qsrc) - so setting it unconditionally used to switch on a
+	!! cheat the player could then neither see nor clear from this menu.
+	if cheatVars['bimbo'] = 0:
+		cheatVars['suc_bimbo'] = 1
+	end
 end
 
 

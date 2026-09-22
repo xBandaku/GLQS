@@ -7,7 +7,7 @@ GLQS.qsps file, runs lint checks for QSP pitfalls we've hit before, then
 compiles it to GLQS.qsp using qsp-cli.
 
 Usage:
-    python3 build.py
+    python build.py
 
 Requirements:
     npm install -g @qsp/cli      (only needed once)
@@ -140,6 +140,25 @@ def lint_empty_template_markers(text):
     return problems
 
 
+def lint_numeric_arg_from_string_slot(text):
+    """QSP keeps each argument's numeric and string value in separate slots, and
+    the base game has to choose between them explicitly -- see the
+    iif(modARGS[0]=0, $modARGS[0], modARGS[0]) dispatch in mod_system.qsrc.
+    Assigning a plain (numeric) variable from $ARGS[n] therefore reads the
+    string slot, which is empty whenever the caller passed a number, so the
+    variable silently becomes 0 instead of erroring. This shipped once as
+    glqs_ip_idx = $ARGS[3] in item_grant: every clothing grant wrote to array
+    index 0, no item was ever added, and nothing reported a problem.
+    Use ARGS[n] for a number, or val($ARGS[n]) if the caller genuinely sends a
+    numeric string."""
+    problems = []
+    assignment = re.compile(r"^\s*[a-z_][a-z0-9_]*\s*=\s*\$ARGS\[\d+\]")
+    for i, line in enumerate(text.splitlines(), start=1):
+        if assignment.match(line):
+            problems.append((i, line))
+    return problems
+
+
 def lint_version_mismatch(text):
     """$mod_info[1] (01_setup.qsps, shown on the game's mod-selection screen) and
     the top changelog entry (02_readme.qsps, shown on the in-game readme screen)
@@ -234,6 +253,16 @@ def run_lints(text):
         print("       Unclosed blocks (most likely culprits):")
         for lineno, snippet in stack:
             print(f"    line {lineno}: {snippet}")
+
+    arg_slot_hits = lint_numeric_arg_from_string_slot(text)
+    if arg_slot_hits:
+        ok = False
+        print("\n[LINT] Numeric variable assigned from the string argument slot:")
+        print("       ($ARGS[n] is empty when the caller passed a number, so the")
+        print("        variable silently becomes 0 -- use ARGS[n], or val($ARGS[n])")
+        print("        if the caller really sends a numeric string)")
+        for lineno, line in arg_slot_hits:
+            print(f"    line {lineno}: {line.strip()}")
 
     version_mismatch = lint_version_mismatch(text)
     if version_mismatch:

@@ -1,8 +1,13 @@
 # mod_GLQS_setup
 $mod_info[0] = 'GLQS'
-$mod_info[1] = '03404'
+$mod_info[1] = '03602'
 $mod_info[2] = 'xPandaku'
 $mod_info[3] = 'GLQS Rolling - A quick-setup cheat mod for Girl Life. Grants all clothing and accessories, maxes consumables, skills, attributes, school grades, money, relationships, health and energy, body mods (tattoos/piercings/electrolysis), fame and reputation, and toggles recurrent quality-of-life cheats. By xPandaku.'
+!! Claimed explicitly. mod_info is a shared global and mod_system.qsrcs
+!! saveupdater loop does not clear it between mods, so leaving [4] unset let
+!! GLQS inherit another mods Options label and render a link to
+!! mod_GLQS_options, which does not exist.
+$mod_info[4] = ''
 
 if $curloc = 'mod_GLQS_setup':
 	usehtml = 1

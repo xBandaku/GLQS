@@ -12,28 +12,35 @@ if $ARGS[0] = 'health_menu':
 	$glqs_tbl += '<tr><td>Health</td><td><<pcs_health>> / <<healthmax>></td></tr>'
 	$glqs_tbl += '<tr><td>Stamina</td><td><<pcs_stam>> / <<stammax>></td></tr>'
 	$glqs_tbl += '<tr><td>Willpower</td><td><<pcs_willpwr>> / <<willpowermax>></td></tr>'
-	$glqs_tbl += '<tr><td>Mana</td><td><<pcs_mana>></td></tr>'
+	$glqs_tbl += '<tr><td>Mana</td><td><<pcs_mana>> / <<manamax>></td></tr>'
 	$glqs_tbl += '<tr><td>Sleep</td><td><<pcs_sleep>></td></tr>'
 	$glqs_tbl += '<tr><td>Mood</td><td><<pcs_mood>></td></tr>'
 	$glqs_tbl += '<tr><td>Hunger</td><td><<pcs_energy>></td></tr>'
 	$glqs_tbl += '<tr><td>Hydration</td><td><<pcs_hydra>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	act 'Full Restore Everything':
 		pcs_health = healthmax
 		pcs_stam = stammax
 		pcs_willpwr = willpowermax
-		pcs_mana = (pcs_intel * pcs_magik) + pcs_magik * 100 + pcs_vital * 10 + rikudo
+		!! manamax is recomputed by gs stat from an algebraically identical
+		!! expression - (pcs_intel + 100) * pcs_magik + pcs_vital * 10 + rikudo -
+		!! so reading it back cannot drift from the games own formula.
+		pcs_mana = manamax
 		pcs_sleep = 100
 		pcs_mood = 100
-		pcs_energy = 200
+		!! Hunger caps at 100. hourly_events.qsrc turns anything above that into
+		!! fat on the next in-game hour (fat += (pcs_energy - 100) / 4), so the
+		!! old value of 200 quietly handed out a 25 point fat penalty. Hydration
+		!! genuinely does cap at 200, so the line below is correct as written.
+		pcs_energy = 100
 		pcs_hydra = 200
 		vgape = 0
 		agape = 0
 		nippain = 0
-		gs 'stat'
 		gt 'mod_GLQS_main', 'health_menu'
 	end
 
