@@ -1,0 +1,151 @@
+!! FAME & REPUTATION SUBMENU
+if $ARGS[0] = 'fame_menu':
+	gs 'mod_GLQS_main', 'screen_head'
+	'<center><b><font color="maroon">Fame & Reputation</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'fame_menu'
+	'<br>Maxes fame in acting, dance, painting, music, ballet, modelling, porn, stripping, kickboxing, running, volleyball, chess, teaching, media, sex, prostitution and flashing. Derived stats (performer, sex industry, slut, sport, intellectual, social) recalculate automatically from these.'
+	*nl
+
+	act 'Max All Fame (all regions, all activities)':
+		gs 'mod_GLQS_main', 'fame_max', '', ''
+		gt 'mod_GLQS_main', 'fame_menu'
+	end
+
+	act 'By Region': gt 'mod_GLQS_main', 'fame_region_menu'
+
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'fame_region_menu':
+	gs 'mod_GLQS_main', 'screen_head'
+	'<center><b><font color="maroon">Fame By Region</font></b></center>'
+	*nl
+	'Pick a region to max individual activities there, or max that whole region at once.'
+	*nl
+	gs 'mod_GLQS_main', 'fame_data'
+	$glqs_tbl = '<table width="90%" cellpadding=4>'
+	$glqs_tbl += '<tr><td><b>Region</b></td><td><b>Performer</b></td><td><b>Sex Industry</b></td><td><b>Slut/Sex Rep</b></td><td><b>Sport</b></td></tr>'
+	glqs_fr_i = 0
+	:glqs_fame_region_loop
+	if glqs_fr_i < arrsize('$glqs_fame_region'):
+		$glqs_fr_code = $glqs_fame_region[glqs_fr_i]
+		$glqs_tbl += '<tr><td>' + $glqs_fame_region_label[$glqs_fr_code] + '</td><td>' + fame[$glqs_fr_code + '_performer'] + '</td><td>' + fame[$glqs_fr_code + '_sexind'] + '</td><td>' + fame[$glqs_fr_code + '_slut'] + '</td><td>' + fame[$glqs_fr_code + '_sport'] + '</td></tr>'
+		glqs_fr_i += 1
+		jump 'glqs_fame_region_loop'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	killvar '$glqs_tbl'
+	*nl
+	killvar 'glqs_fr_i'
+	killvar '$glqs_fr_code'
+	gs 'mod_GLQS_main', 'fame_data_clear'
+
+	!! Written out rather than built in the loop above: an act body runs at
+	!! click time, when a loop variable would hold the last region.
+	act 'Pavlovsk': gt 'mod_GLQS_main', 'fame_detail', 'pav'
+	act 'City': gt 'mod_GLQS_main', 'fame_detail', 'city'
+	act 'Old Town (Pushkin)': gt 'mod_GLQS_main', 'fame_detail', 'pushkin'
+	act 'Gadukino (Village)': gt 'mod_GLQS_main', 'fame_detail', 'village'
+
+	act 'Return': gt 'mod_GLQS_main', 'fame_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'fame_detail':
+	!! Copied into a global because the Max All act below reads it at click
+	!! time, after this call and its $ARGS are gone. For the same reason it is
+	!! NOT killed at the end of this route - killing it once made every max
+	!! button write to an empty-region fame key (fixed in v0.28, and again
+	!! after the v0.29.4 refactor reintroduced it).
+	$glqs_region = $ARGS[1]
+	gs 'mod_GLQS_main', 'screen_head'
+	gs 'mod_GLQS_main', 'fame_data'
+
+	'<center><b><font color="maroon">' + $glqs_fame_region_label[$glqs_region] + '</font></b></center>'
+	*nl
+	'Max a single activity, or max every activity in this region at once.'
+	*nl
+
+	$glqs_tbl = '<table width="60%" cellpadding=4>'
+	$glqs_tbl += '<tr><td><b>Activity</b></td><td><b>Fame</b></td><td></td></tr>'
+	glqs_fd_i = 0
+	:glqs_fame_tbl_loop
+	if glqs_fd_i < arrsize('$glqs_fame'):
+		!! Row format is code|label.
+		gs 'mod_GLQS_main', 'split_row', $glqs_fame[glqs_fd_i]
+		$glqs_tbl += '<tr><td>' + $glqs_field[1] + '</td><td>' + fame[$glqs_region + '_' + $glqs_field[0]] + '</td><td><a href="exec: gs ''mod_GLQS_main'', ''fame_max'', ''' + $glqs_region + ''', ''' + $glqs_field[0] + ''' & gt ''mod_GLQS_main'', ''fame_detail'', ''' + $glqs_region + '''">[Max]</a></td></tr>'
+		glqs_fd_i += 1
+		jump 'glqs_fame_tbl_loop'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	killvar '$glqs_tbl'
+	*nl
+	killvar 'glqs_fd_i'
+	killvar '$glqs_field'
+	gs 'mod_GLQS_main', 'fame_data_clear'
+
+	*nl
+	act 'Max All (this region)':
+		gs 'mod_GLQS_main', 'fame_max', $glqs_region, ''
+		gt 'mod_GLQS_main', 'fame_detail', $glqs_region
+	end
+
+	act 'Return': gt 'mod_GLQS_main', 'fame_region_menu'
+	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'fame_max':
+	!! ARGS[1] = region code, ARGS[2] = activity code; an empty string means
+	!! every region / every activity (the same convention store_buy uses).
+	!! Fame is not stored flat - the visible region_act value is rebuilt by
+	!! fame calculate from the region_act_core and region_act_local
+	!! components, so those are set instead (the visible value alone would be
+	!! overwritten at the next in-game night). sex/prostitute/flash are
+	!! local-only in fame.qsrc and are set directly.
+	!! calculate recomputes every region for one activity and already skips
+	!! the local-only ones, so it runs once per activity after all regions are
+	!! set, and calculateGroups runs once at the end.
+	$glqs_fm_region = $ARGS[1]
+	$glqs_fm_act = $ARGS[2]
+	gs 'mod_GLQS_main', 'fame_data'
+	glqs_fm_a = 0
+	:glqs_fame_max_act_loop
+	if glqs_fm_a < arrsize('$glqs_fame'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_fame[glqs_fm_a]
+		$glqs_fm_code = $glqs_field[0]
+		if $glqs_fm_act = '' or $glqs_fm_act = $glqs_fm_code:
+			glqs_fm_r = 0
+			:glqs_fame_max_region_loop
+			if glqs_fm_r < arrsize('$glqs_fame_region'):
+				$glqs_fm_rc = $glqs_fame_region[glqs_fm_r]
+				if $glqs_fm_region = '' or $glqs_fm_region = $glqs_fm_rc:
+					if func('fame', 'check_if_only_local', $glqs_fm_code):
+						fame[$glqs_fm_rc + '_' + $glqs_fm_code] = 1000
+					else
+						fame[$glqs_fm_rc + '_' + $glqs_fm_code + '_core'] = 1000
+						fame[$glqs_fm_rc + '_' + $glqs_fm_code + '_local'] = 1000
+					end
+				end
+				glqs_fm_r += 1
+				jump 'glqs_fame_max_region_loop'
+			end
+			gs 'fame', 'calculate', $glqs_fm_code
+		end
+		glqs_fm_a += 1
+		jump 'glqs_fame_max_act_loop'
+	end
+	gs 'fame', 'calculateGroups'
+	killvar 'glqs_fm_a'
+	killvar 'glqs_fm_r'
+	killvar '$glqs_fm_code'
+	killvar '$glqs_fm_rc'
+	killvar '$glqs_fm_region'
+	killvar '$glqs_fm_act'
+	killvar '$glqs_field'
+	gs 'mod_GLQS_main', 'fame_data_clear'
+end

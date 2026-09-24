@@ -1,82 +1,50 @@
-!! RELATIONSHIPS SUBMENU + MAX_CATEGORY DISPATCHER
-if $ARGS[0] = 'rel_menu' or $ARGS[0] = 'max_category':
+!! RELATIONSHIPS SUBMENU
+if $ARGS[0] = 'rel_menu':
 	gs 'mod_GLQS_main', 'rel_category_labels'
 	gs 'mod_GLQS_main', 'rel_roster'
-end
-
-
-if $ARGS[0] = 'rel_menu':
 	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Relationships</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'rel_menu'
-	'Values 0-100. Only affects characters you have met. Each category has its own [Max] link.'
+	'Values 0-100. Max sets every listed character to 100, whether or not you have met them yet. Each category has its own [Max] link.'
 	*nl
 	'Filter: '
-	*p iif(glqs_rel_filter = 0, '<b>All</b>', '<a href="exec: glqs_rel_filter = 0 & gt ''mod_GLQS_main'', ''rel_menu''">All</a>')
+	*p $iif(glqs_rel_filter = 0, '<b>All</b>', '<a href="exec: glqs_rel_filter = 0 & gt ''mod_GLQS_main'', ''rel_menu''">All</a>')
 	*p ' | '
-	*p iif(glqs_rel_filter = 1, '<b>Male Only</b>', '<a href="exec: glqs_rel_filter = 1 & gt ''mod_GLQS_main'', ''rel_menu''">Male Only</a>')
+	*p $iif(glqs_rel_filter = 1, '<b>Male Only</b>', '<a href="exec: glqs_rel_filter = 1 & gt ''mod_GLQS_main'', ''rel_menu''">Male Only</a>')
 	*p ' | '
-	*pl iif(glqs_rel_filter = 2, '<b>Female Only</b>', '<a href="exec: glqs_rel_filter = 2 & gt ''mod_GLQS_main'', ''rel_menu''">Female Only</a>')
+	*pl $iif(glqs_rel_filter = 2, '<b>Female Only</b>', '<a href="exec: glqs_rel_filter = 2 & gt ''mod_GLQS_main'', ''rel_menu''">Female Only</a>')
 	*nl
 
 	$glqs_tbl = '<table width="80%" cellpadding=3>'
 	$glqs_tbl += '<tr><th align="left">Name</th><th align="left">Value</th><th align="left">Status</th><th align="left"></th></tr>'
-	$glqs_prevcat = ''
-	$glqs_pendhdr = ''
-	glqs_i = 0
+	$glqs_rl_prevcat = ''
+	$glqs_rl_pendhdr = ''
+	glqs_rl_i = 0
 	:glqs_rel_render_loop
-	if glqs_i < glqs_rel_total:
-		$glqs_row = $glqs_npc[glqs_i]
-		glqs_p1 = instr($glqs_row, '|')
-		$glqs_cat = $mid($glqs_row, 1, glqs_p1 - 1)
-		$glqs_rest = $mid($glqs_row, glqs_p1 + 1)
-		glqs_p2 = instr($glqs_rest, '|')
-		glqs_gender = val($mid($glqs_rest, 1, glqs_p2 - 1))
-		$glqs_rest = $mid($glqs_rest, glqs_p2 + 1)
-		glqs_p3 = instr($glqs_rest, '|')
-		$glqs_key = $mid($glqs_rest, 1, glqs_p3 - 1)
-		$glqs_name = $mid($glqs_rest, glqs_p3 + 1)
-
-		if $glqs_cat <> $glqs_prevcat:
+	if glqs_rl_i < arrsize('$glqs_npc'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_npc[glqs_rl_i]
+		$glqs_rp_cat = $glqs_field[0]
+		glqs_rp_gender = val($glqs_field[1])
+		$glqs_rp_key = $glqs_field[2]
+		$glqs_rp_name = $glqs_field[3]
+		if $glqs_rp_cat <> $glqs_rl_prevcat:
 			!! Held back rather than emitted here - under a gender filter a category
 			!! can match zero rows, which used to leave a bare heading and a [Max]
 			!! link with nothing under it. Outcasts and Gadukino are all male, so
 			!! Female Only showed exactly that.
-			$glqs_pendhdr = '<tr><td colspan="4"><b>' + $glqs_cat_label[$glqs_cat] + '</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''' + $glqs_cat + ''' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
-			$glqs_prevcat = $glqs_cat
+			$glqs_rl_pendhdr = '<tr><td colspan="4"><b>' + $glqs_cat_label[$glqs_rp_cat] + '</b> <a href="exec: gs ''mod_GLQS_main'', ''max_category'', ''' + $glqs_rp_cat + ''' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
+			$glqs_rl_prevcat = $glqs_rp_cat
 		end
-		if glqs_rel_filter = 0 or glqs_rel_filter = glqs_gender:
-			if $glqs_pendhdr <> '':
-				$glqs_tbl += $glqs_pendhdr
-				$glqs_pendhdr = ''
+		if glqs_rel_filter = 0 or glqs_rel_filter = glqs_rp_gender:
+			if $glqs_rl_pendhdr <> '':
+				$glqs_tbl += $glqs_rl_pendhdr
+				$glqs_rl_pendhdr = ''
 			end
-			$glqs_status = $npc_rel_type[$glqs_key]
-			if $glqs_status = '': $glqs_status = '-'
-			!! Marriage is one husband and one wife at a time, tracked by the
-			!! games own $husID/$wifID globals (lover.qsrc) - only offer Marry
-			!! while that slot is empty, and only offer Divorce to whoever
-			!! currently holds it, so this can never desync those globals from
-			!! $npc_rel_type by pointing two NPCs at the same slot.
-			$glqs_action = ''
-			if glqs_gender = 1:
-				if $npc_rel_type[$glqs_key] = 'husband':
-					$glqs_action = '<a href="exec: gs ''lover'', ''remove_husband'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a>'
-				elseif $husID = '':
-					$glqs_action = '<a href="exec: gs ''lover'', ''add_husband'', ''' + $glqs_key + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a>'
-				end
-			elseif glqs_gender = 2:
-				if $npc_rel_type[$glqs_key] = 'wife':
-					$glqs_action = '<a href="exec: gs ''lover'', ''remove_wife'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a>'
-				elseif $wifID = '':
-					$glqs_action = '<a href="exec: gs ''lover'', ''add_wife'', ''' + $glqs_key + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a>'
-				end
-			end
-			if $glqs_action <> '': $glqs_action += ' | '
-			$glqs_action += '<a href="exec: gt ''mod_GLQS_main'', ''rel_status'', ''' + $glqs_key + '''">Status</a>'
-			$glqs_tbl += '<tr><td>' + $glqs_name + '</td><td>' + npc_rel[$glqs_key] + '</td><td>' + $glqs_status + '</td><td>' + $glqs_action + '</td></tr>'
+			$glqs_rl_status = $npc_rel_type[$glqs_rp_key]
+			if $glqs_rl_status = '': $glqs_rl_status = '-'
+			$glqs_tbl += '<tr><td>' + $glqs_rp_name + '</td><td>' + npc_rel[$glqs_rp_key] + '</td><td>' + $glqs_rl_status + '</td><td>' + $func('mod_GLQS_main', 'rel_actions', $glqs_rp_key, glqs_rp_gender) + '</td></tr>'
 		end
-
-		glqs_i += 1
+		glqs_rl_i += 1
 		jump 'glqs_rel_render_loop'
 	end
 
@@ -85,64 +53,49 @@ if $ARGS[0] = 'rel_menu':
 	!! of them (npcgeneratec.qsrc/npcpreservec.qsrc), so scan it here. Only
 	!! entries with an active relationship status are shown, not every
 	!! throwaway background character the game has ever spawned.
-	$glqs_gen_rows = ''
-	glqs_gi = 0
-	glqs_gtotal = arrsize('$npc_index')
+	$glqs_rl_gen_rows = ''
+	glqs_rl_i = 0
+	glqs_rl_total = arrsize('$npc_index')
 	:glqs_gen_scan_loop
-	if glqs_gi < glqs_gtotal:
-		$glqs_gid = $npc_index[glqs_gi]
-		if mid($glqs_gid, 1, 1) = 'B' and $npc_rel_type[$glqs_gid] <> '':
-			glqs_ggender = npc_gender[$glqs_gid] + 1
-			if glqs_rel_filter = 0 or glqs_rel_filter = glqs_ggender:
-				$glqs_gaction = ''
-				if glqs_ggender = 1:
-					if $npc_rel_type[$glqs_gid] = 'husband':
-						$glqs_gaction = '<a href="exec: gs ''lover'', ''remove_husband'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a>'
-					elseif $husID = '':
-						$glqs_gaction = '<a href="exec: gs ''lover'', ''add_husband'', ''' + $glqs_gid + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a>'
-					end
-				elseif glqs_ggender = 2:
-					if $npc_rel_type[$glqs_gid] = 'wife':
-						$glqs_gaction = '<a href="exec: gs ''lover'', ''remove_wife'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a>'
-					elseif $wifID = '':
-						$glqs_gaction = '<a href="exec: gs ''lover'', ''add_wife'', ''' + $glqs_gid + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a>'
-					end
-				end
-				if $glqs_gaction <> '': $glqs_gaction += ' | '
-				$glqs_gaction += '<a href="exec: gt ''mod_GLQS_main'', ''rel_status'', ''' + $glqs_gid + '''">Status</a>'
-				$glqs_gen_rows += '<tr><td>' + $npc_usedname[$glqs_gid] + '</td><td>' + npc_rel[$glqs_gid] + '</td><td>' + $npc_rel_type[$glqs_gid] + '</td><td>' + $glqs_gaction + '</td></tr>'
+	if glqs_rl_i < glqs_rl_total:
+		$glqs_rl_gid = $npc_index[glqs_rl_i]
+		if $mid($glqs_rl_gid, 1, 1) = 'B' and $npc_rel_type[$glqs_rl_gid] <> '':
+			glqs_rl_ggender = npc_gender[$glqs_rl_gid] + 1
+			if glqs_rel_filter = 0 or glqs_rel_filter = glqs_rl_ggender:
+				$glqs_rl_gen_rows += '<tr><td>' + $npc_usedname[$glqs_rl_gid] + '</td><td>' + npc_rel[$glqs_rl_gid] + '</td><td>' + $npc_rel_type[$glqs_rl_gid] + '</td><td>' + $func('mod_GLQS_main', 'rel_actions', $glqs_rl_gid, glqs_rl_ggender) + '</td></tr>'
 			end
 		end
-		glqs_gi += 1
+		glqs_rl_i += 1
 		jump 'glqs_gen_scan_loop'
 	end
-	if $glqs_gen_rows <> '':
+	if $glqs_rl_gen_rows <> '':
 		$glqs_tbl += '<tr><td colspan="4"><b>Generated NPCs (this save)</b> <a href="exec: gs ''mod_GLQS_main'', ''max_generated'' & gt ''mod_GLQS_main'', ''rel_menu''">[Max]</a></td></tr>'
-		$glqs_tbl += $glqs_gen_rows
+		$glqs_tbl += $glqs_rl_gen_rows
 	end
-	killvar 'glqs_gi' & killvar 'glqs_gtotal' & killvar 'glqs_ggender' & killvar '$glqs_gid' & killvar '$glqs_gaction' & killvar '$glqs_gen_rows'
 
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
-	killvar 'glqs_i' & killvar 'glqs_p1' & killvar 'glqs_p2' & killvar 'glqs_p3' & killvar 'glqs_gender'
-	killvar '$glqs_row' & killvar '$glqs_rest' & killvar '$glqs_cat' & killvar '$glqs_key' & killvar '$glqs_name' & killvar '$glqs_prevcat'
-	killvar '$glqs_pendhdr'
-	killvar '$glqs_status' & killvar '$glqs_action'
-	killvar '$glqs_npc' & killvar '$glqs_cat_label' & killvar 'glqs_rel_total'
+	killvar 'glqs_rl_i'
+	killvar 'glqs_rl_total'
+	killvar 'glqs_rl_ggender'
+	killvar '$glqs_rl_gid'
+	killvar '$glqs_rl_gen_rows'
+	killvar '$glqs_rl_prevcat'
+	killvar '$glqs_rl_pendhdr'
+	killvar '$glqs_rl_status'
+	killvar '$glqs_rp_cat'
+	killvar 'glqs_rp_gender'
+	killvar '$glqs_rp_key'
+	killvar '$glqs_rp_name'
+	killvar '$glqs_field'
+	killvar '$glqs_npc'
+	killvar '$glqs_cat_label'
 
 	act 'Max All (filtered)':
-		gs 'mod_GLQS_main', 'max_category', 'family'
-		gs 'mod_GLQS_main', 'max_category', 'gadukino'
-		gs 'mod_GLQS_main', 'max_category', 'popular'
-		gs 'mod_GLQS_main', 'max_category', 'athletes'
-		gs 'mod_GLQS_main', 'max_category', 'nerds'
-		gs 'mod_GLQS_main', 'max_category', 'gopniks'
-		gs 'mod_GLQS_main', 'max_category', 'outcasts'
-		gs 'mod_GLQS_main', 'max_category', 'teachers'
-		gs 'mod_GLQS_main', 'max_category', 'university'
-		gs 'mod_GLQS_main', 'max_category', 'others'
+		gs 'mod_GLQS_main', 'max_category', ''
 		gs 'mod_GLQS_main', 'max_generated'
 		gt 'mod_GLQS_main', 'rel_menu'
 	end
@@ -154,37 +107,54 @@ if $ARGS[0] = 'rel_menu':
 end
 
 
+if $ARGS[0] = 'rel_actions':
+	!! ARGS[1] = npc id, ARGS[2] = gender (1 male, 2 female). Returns the
+	!! Marry/Divorce/Status links for one table row.
+	!! Marriage is one husband and one wife at a time, tracked by the games
+	!! own $husID/$wifID globals (lover.qsrc) - only offer Marry while that
+	!! slot is empty, and only offer Divorce to whoever currently holds it, so
+	!! this can never desync those globals from $npc_rel_type by pointing two
+	!! NPCs at the same slot.
+	$result = ''
+	if ARGS[2] = 1:
+		if $npc_rel_type[$ARGS[1]] = 'husband':
+			$result = '<a href="exec: gs ''lover'', ''remove_husband'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a> | '
+		elseif $husID = '':
+			$result = '<a href="exec: gs ''lover'', ''add_husband'', ''' + $ARGS[1] + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a> | '
+		end
+	elseif ARGS[2] = 2:
+		if $npc_rel_type[$ARGS[1]] = 'wife':
+			$result = '<a href="exec: gs ''lover'', ''remove_wife'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a> | '
+		elseif $wifID = '':
+			$result = '<a href="exec: gs ''lover'', ''add_wife'', ''' + $ARGS[1] + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a> | '
+		end
+	end
+	$result += '<a href="exec: gt ''mod_GLQS_main'', ''rel_status'', ''' + $ARGS[1] + '''">Status</a>'
+end
+
+
 if $ARGS[0] = 'max_category':
-	!! Captured immediately - mod_GLQS_main is one shared QSP location, so a
-	!! nested gs call back into it would clobber $ARGS for the rest of this
-	!! call (same bug class as the v0.7 grades / v0.27 fame ARGS-clobbering
-	!! fixes - see changelog). No nested gs happens before this read today,
-	!! but capturing up front keeps that true if this handler grows.
+	!! ARGS[1] = category key, or an empty string for every category (the
+	!! same convention store_buy uses). Respects the gender filter.
 	$glqs_mc_target = $ARGS[1]
-	glqs_j = 0
+	gs 'mod_GLQS_main', 'rel_roster'
+	glqs_mc_i = 0
 	:glqs_rel_maxcat_loop
-	if glqs_j < glqs_rel_total:
-		$glqs_row = $glqs_npc[glqs_j]
-		glqs_p1 = instr($glqs_row, '|')
-		$glqs_cat = $mid($glqs_row, 1, glqs_p1 - 1)
-		if $glqs_cat = $glqs_mc_target:
-			$glqs_rest = $mid($glqs_row, glqs_p1 + 1)
-			glqs_p2 = instr($glqs_rest, '|')
-			glqs_gender = val($mid($glqs_rest, 1, glqs_p2 - 1))
-			$glqs_rest = $mid($glqs_rest, glqs_p2 + 1)
-			glqs_p3 = instr($glqs_rest, '|')
-			$glqs_key = $mid($glqs_rest, 1, glqs_p3 - 1)
-			if glqs_rel_filter = 0 or glqs_rel_filter = glqs_gender:
-				npc_rel[$glqs_key] = 100
+	if glqs_mc_i < arrsize('$glqs_npc'):
+		!! Row format is category|gender|npc_rel_key|display_name.
+		gs 'mod_GLQS_main', 'split_row', $glqs_npc[glqs_mc_i]
+		if $glqs_mc_target = '' or $glqs_field[0] = $glqs_mc_target:
+			if glqs_rel_filter = 0 or glqs_rel_filter = val($glqs_field[1]):
+				npc_rel[$glqs_field[2]] = 100
 			end
 		end
-		glqs_j += 1
+		glqs_mc_i += 1
 		jump 'glqs_rel_maxcat_loop'
 	end
-
-	killvar 'glqs_j' & killvar 'glqs_p1' & killvar 'glqs_p2' & killvar 'glqs_p3' & killvar 'glqs_gender'
-	killvar '$glqs_row' & killvar '$glqs_rest' & killvar '$glqs_cat' & killvar '$glqs_key' & killvar '$glqs_mc_target'
-	killvar '$glqs_npc' & killvar '$glqs_cat_label' & killvar 'glqs_rel_total'
+	killvar 'glqs_mc_i'
+	killvar '$glqs_mc_target'
+	killvar '$glqs_field'
+	killvar '$glqs_npc'
 end
 
 
@@ -194,7 +164,7 @@ if $ARGS[0] = 'max_generated':
 	:glqs_maxgen_loop
 	if glqs_mg_i < glqs_mg_total:
 		$glqs_mg_id = $npc_index[glqs_mg_i]
-		if mid($glqs_mg_id, 1, 1) = 'B' and $npc_rel_type[$glqs_mg_id] <> '':
+		if $mid($glqs_mg_id, 1, 1) = 'B' and $npc_rel_type[$glqs_mg_id] <> '':
 			glqs_mg_gender = npc_gender[$glqs_mg_id] + 1
 			if glqs_rel_filter = 0 or glqs_rel_filter = glqs_mg_gender:
 				npc_rel[$glqs_mg_id] = 100
@@ -203,7 +173,10 @@ if $ARGS[0] = 'max_generated':
 		glqs_mg_i += 1
 		jump 'glqs_maxgen_loop'
 	end
-	killvar 'glqs_mg_i' & killvar 'glqs_mg_total' & killvar 'glqs_mg_gender' & killvar '$glqs_mg_id'
+	killvar 'glqs_mg_i'
+	killvar 'glqs_mg_total'
+	killvar 'glqs_mg_gender'
+	killvar '$glqs_mg_id'
 end
 
 
@@ -219,6 +192,7 @@ if $ARGS[0] = 'rel_status':
 	$glqs_rs_current = $npc_rel_type[$glqs_rs_key]
 	if $glqs_rs_current = '': $glqs_rs_current = '-'
 	'Current status: <b>' + $glqs_rs_current + '</b>'
+	killvar '$glqs_rs_current'
 	*nl
 
 	if $npc_rel_type[$glqs_rs_key] <> 'dating': act 'Set to Dating': gs 'lover', 'add_dating', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
@@ -227,19 +201,22 @@ if $ARGS[0] = 'rel_status':
 	if $npc_rel_type[$glqs_rs_key] <> 'fuckbuddy': act 'Set to Fuckbuddy': gs 'lover', 'add_fuckbuddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
 	if $npc_rel_type[$glqs_rs_key] <> 'sugar_daddy': act 'Set to Sugar Daddy': gs 'lover', 'add_sugar_daddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
 
-	if $npc_rel_type[$glqs_rs_key] = 'boyfriend':
-		act 'Clear / End Relationship': gs 'lover', 'remove_boyfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
-	elseif $npc_rel_type[$glqs_rs_key] = 'girlfriend':
-		act 'Clear / End Relationship': gs 'lover', 'remove_girlfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
-	elseif $npc_rel_type[$glqs_rs_key] = 'fuckbuddy':
-		act 'Clear / End Relationship': gs 'lover', 'remove_fuckbuddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
-	elseif $npc_rel_type[$glqs_rs_key] = 'sugar_daddy':
-		act 'Clear / End Relationship': gs 'lover', 'remove_sugar_daddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
-	elseif $npc_rel_type[$glqs_rs_key] = 'dating':
-		!! No remove_dating handler exists in the base game (lover.qsrc) -
-		!! the generic remove still correctly ex-prefixes $npc_rel_type, it
-		!! just leaves stat[dating_current] uncorrected, same as vanilla.
-		act 'Clear / End Relationship': gs 'lover', 'remove', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	!! The base game has remove_boyfriend/girlfriend/fuckbuddy/sugar_daddy but no
+	!! remove_dating (lover.qsrc) - the generic remove still correctly
+	!! ex-prefixes $npc_rel_type, it just leaves stat[dating_current]
+	!! uncorrected, same as vanilla.
+	$glqs_rs_type = $npc_rel_type[$glqs_rs_key]
+	if $glqs_rs_type = 'boyfriend' or $glqs_rs_type = 'girlfriend' or $glqs_rs_type = 'fuckbuddy' or $glqs_rs_type = 'sugar_daddy':
+		$glqs_rs_remove = 'remove_' + $glqs_rs_type
+	elseif $glqs_rs_type = 'dating':
+		$glqs_rs_remove = 'remove'
+	else
+		$glqs_rs_remove = ''
+	end
+	killvar '$glqs_rs_type'
+	!! $glqs_rs_remove is read by the act at click time, like $glqs_rs_key.
+	if $glqs_rs_remove <> '':
+		act 'Clear / End Relationship': gs 'lover', $glqs_rs_remove, $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
 	end
 
 	act 'Return to Relationships': gt 'mod_GLQS_main', 'rel_menu'

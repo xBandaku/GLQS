@@ -1,94 +1,94 @@
 !! CLOTHING DATA
 if $ARGS[0] = 'clothing_cat_build':
 	!! One flat array of every store category the game actually sells,
-	!! shared by store_buy (per-store buyout) and the top-level clothing
-	!! handler in 05_clothing_actions.qsps (buy everything) so the two lists can
-	!! never drift apart. Entry format: store|type|key|label. type is one of
-	!! clo/shoe/bra/panty/body/coat/purse, matching the fill_<type>
-	!! helpers in 15_fill_helpers.qsps.
-	glqs_cc_n = 0
-	$glqs_cc[glqs_cc_n] = 'allure|clo|allure_swimsuit|Swimsuits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'allure|clo|allure_bikinis|Bikinis' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'bomba|clo|bomba_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'bomba|clo|bomba_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'bomba|shoe|bomba|Shoes' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'bomba|coat|bomba|Coats' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'bomba|purse|bomba|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'cats|clo|cats_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'cats|clo|cats_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'cats|shoe|cats|Shoes' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'cats|bra|cats|Bras' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'cats|panty|cats|Panties' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'cats|coat|cats|Coats' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'cats|purse|cats|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'coco|clo|coco_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'coco|clo|coco_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'coco|purse|coco|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'danilovich|clo|danilovich_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'danilovich|clo|danilovich_swimsuit|Swimsuits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'danilovich|shoe|danilovich|Shoes' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'danilovich|bra|danilovich|Bras' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'danilovich|panty|danilovich|Panties' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'danilovich|coat|danilovich|Coats' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'danilovich|purse|danilovich|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'dolls|clo|dolls_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'dolls|clo|dolls_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'dolls|shoe|dolls|Shoes' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'dolls|coat|dolls|Coats' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'dolls|purse|dolls|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'fancy|clo|fancy_burlesque|Burlesque Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'fashionista|clo|fashionista_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'fashionista|clo|fashionista_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'fashionista|bra|fashionista|Bras' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'fashionista|panty|fashionista|Panties' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'fashionista|purse|fashionista|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'flamingos|clo|flamingos_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'flamingos|clo|flamingos_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'flamingos|purse|flamingos|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'salacious|clo|salacious_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'salacious|clo|salacious_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'salacious|bra|salacious|Bras' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'salacious|panty|salacious|Panties' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'salacious|body|salacious|Bodysuits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|clo|gm_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|clo|gm_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|clo|gm_office|Office Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|clo|gm_maid|Maid Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|clo|gm_server|Server Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|clo|gm_school|School Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|shoe|gm|Shoes' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|bra|gm|Bras' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|panty|gm|Panties' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|coat|gm|Coats' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'gm|purse|gm|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'market|clo|market_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'materinstvo|clo|materinstvo_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'moncheri|clo|moncheri_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'moncheri|clo|moncheri_gown|Gowns' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'moncheri|shoe|moncheri|Shoes' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'moncheri|body|moncheri|Bodysuits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'moncheri|coat|moncheri|Coats' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'moncheri|purse|moncheri|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'nerdvana|clo|nerdvana_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'nerdvana|clo|nerdvana_cosplay|Cosplay Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'nerdvana|clo|nerdvana_swimsuit|Swimsuits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'nerdvana|clo|nerdvana_bikinis|Bikinis' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'nerdvana|purse|nerdvana|Purses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'scandalicious|clo|scandalicious_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'scandalicious|clo|scandalicious_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'scandalicious|clo|scandalicious_swimsuit|Swimsuits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'scandalicious|clo|scandalicious_bikinis|Bikinis' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'scandalicious|shoe|scandalicious|Shoes' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'scandalicious|body|scandalicious|Bodysuits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'eroto|clo|eroto_outfits|Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'eroto|clo|eroto_dress|Dresses' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'eroto|clo|eroto_strip|Strip Outfits' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'eroto|shoe|eroto|Shoes' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'eroto|bra|eroto|Bras' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'eroto|panty|eroto|Panties' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'lusso|bra|lusso|Bras' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'lusso|panty|lusso|Panties' & glqs_cc_n += 1
-	$glqs_cc[glqs_cc_n] = 'lusso|body|lusso|Bodysuits' & glqs_cc_n += 1
+	!! shared by store_buy (per-store buyout, or every store when the clothing
+	!! menu Give Everything passes an empty store) and the build-time picker
+	!! expansion, so the lists can never drift apart. Entry format:
+	!! store|type|key|label. type is one of clo/shoe/bra/panty/body/coat/purse,
+	!! the types clothing_totals and item_grant in 05_clothing_grant.qsps accept.
+	killvar '$glqs_cc'
+	$glqs_cc[] = 'allure|clo|allure_swimsuit|Swimsuits'
+	$glqs_cc[] = 'allure|clo|allure_bikinis|Bikinis'
+	$glqs_cc[] = 'bomba|clo|bomba_outfits|Outfits'
+	$glqs_cc[] = 'bomba|clo|bomba_dress|Dresses'
+	$glqs_cc[] = 'bomba|shoe|bomba|Shoes'
+	$glqs_cc[] = 'bomba|coat|bomba|Coats'
+	$glqs_cc[] = 'bomba|purse|bomba|Purses'
+	$glqs_cc[] = 'cats|clo|cats_outfits|Outfits'
+	$glqs_cc[] = 'cats|clo|cats_dress|Dresses'
+	$glqs_cc[] = 'cats|shoe|cats|Shoes'
+	$glqs_cc[] = 'cats|bra|cats|Bras'
+	$glqs_cc[] = 'cats|panty|cats|Panties'
+	$glqs_cc[] = 'cats|coat|cats|Coats'
+	$glqs_cc[] = 'cats|purse|cats|Purses'
+	$glqs_cc[] = 'coco|clo|coco_outfits|Outfits'
+	$glqs_cc[] = 'coco|clo|coco_dress|Dresses'
+	$glqs_cc[] = 'coco|purse|coco|Purses'
+	$glqs_cc[] = 'danilovich|clo|danilovich_outfits|Outfits'
+	$glqs_cc[] = 'danilovich|clo|danilovich_swimsuit|Swimsuits'
+	$glqs_cc[] = 'danilovich|shoe|danilovich|Shoes'
+	$glqs_cc[] = 'danilovich|bra|danilovich|Bras'
+	$glqs_cc[] = 'danilovich|panty|danilovich|Panties'
+	$glqs_cc[] = 'danilovich|coat|danilovich|Coats'
+	$glqs_cc[] = 'danilovich|purse|danilovich|Purses'
+	$glqs_cc[] = 'dolls|clo|dolls_outfits|Outfits'
+	$glqs_cc[] = 'dolls|clo|dolls_dress|Dresses'
+	$glqs_cc[] = 'dolls|shoe|dolls|Shoes'
+	$glqs_cc[] = 'dolls|coat|dolls|Coats'
+	$glqs_cc[] = 'dolls|purse|dolls|Purses'
+	$glqs_cc[] = 'fancy|clo|fancy_burlesque|Burlesque Outfits'
+	$glqs_cc[] = 'fashionista|clo|fashionista_outfits|Outfits'
+	$glqs_cc[] = 'fashionista|clo|fashionista_dress|Dresses'
+	$glqs_cc[] = 'fashionista|bra|fashionista|Bras'
+	$glqs_cc[] = 'fashionista|panty|fashionista|Panties'
+	$glqs_cc[] = 'fashionista|purse|fashionista|Purses'
+	$glqs_cc[] = 'flamingos|clo|flamingos_outfits|Outfits'
+	$glqs_cc[] = 'flamingos|clo|flamingos_dress|Dresses'
+	$glqs_cc[] = 'flamingos|purse|flamingos|Purses'
+	$glqs_cc[] = 'salacious|clo|salacious_outfits|Outfits'
+	$glqs_cc[] = 'salacious|clo|salacious_dress|Dresses'
+	$glqs_cc[] = 'salacious|bra|salacious|Bras'
+	$glqs_cc[] = 'salacious|panty|salacious|Panties'
+	$glqs_cc[] = 'salacious|body|salacious|Bodysuits'
+	$glqs_cc[] = 'gm|clo|gm_outfits|Outfits'
+	$glqs_cc[] = 'gm|clo|gm_dress|Dresses'
+	$glqs_cc[] = 'gm|clo|gm_office|Office Outfits'
+	$glqs_cc[] = 'gm|clo|gm_maid|Maid Outfits'
+	$glqs_cc[] = 'gm|clo|gm_server|Server Outfits'
+	$glqs_cc[] = 'gm|clo|gm_school|School Outfits'
+	$glqs_cc[] = 'gm|shoe|gm|Shoes'
+	$glqs_cc[] = 'gm|bra|gm|Bras'
+	$glqs_cc[] = 'gm|panty|gm|Panties'
+	$glqs_cc[] = 'gm|coat|gm|Coats'
+	$glqs_cc[] = 'gm|purse|gm|Purses'
+	$glqs_cc[] = 'market|clo|market_outfits|Outfits'
+	$glqs_cc[] = 'materinstvo|clo|materinstvo_dress|Dresses'
+	$glqs_cc[] = 'moncheri|clo|moncheri_dress|Dresses'
+	$glqs_cc[] = 'moncheri|clo|moncheri_gown|Gowns'
+	$glqs_cc[] = 'moncheri|shoe|moncheri|Shoes'
+	$glqs_cc[] = 'moncheri|body|moncheri|Bodysuits'
+	$glqs_cc[] = 'moncheri|coat|moncheri|Coats'
+	$glqs_cc[] = 'moncheri|purse|moncheri|Purses'
+	$glqs_cc[] = 'nerdvana|clo|nerdvana_outfits|Outfits'
+	$glqs_cc[] = 'nerdvana|clo|nerdvana_cosplay|Cosplay Outfits'
+	$glqs_cc[] = 'nerdvana|clo|nerdvana_swimsuit|Swimsuits'
+	$glqs_cc[] = 'nerdvana|clo|nerdvana_bikinis|Bikinis'
+	$glqs_cc[] = 'nerdvana|purse|nerdvana|Purses'
+	$glqs_cc[] = 'scandalicious|clo|scandalicious_outfits|Outfits'
+	$glqs_cc[] = 'scandalicious|clo|scandalicious_dress|Dresses'
+	$glqs_cc[] = 'scandalicious|clo|scandalicious_swimsuit|Swimsuits'
+	$glqs_cc[] = 'scandalicious|clo|scandalicious_bikinis|Bikinis'
+	$glqs_cc[] = 'scandalicious|shoe|scandalicious|Shoes'
+	$glqs_cc[] = 'scandalicious|body|scandalicious|Bodysuits'
+	$glqs_cc[] = 'eroto|clo|eroto_outfits|Outfits'
+	$glqs_cc[] = 'eroto|clo|eroto_dress|Dresses'
+	$glqs_cc[] = 'eroto|clo|eroto_strip|Strip Outfits'
+	$glqs_cc[] = 'eroto|shoe|eroto|Shoes'
+	$glqs_cc[] = 'eroto|bra|eroto|Bras'
+	$glqs_cc[] = 'eroto|panty|eroto|Panties'
+	$glqs_cc[] = 'lusso|bra|lusso|Bras'
+	$glqs_cc[] = 'lusso|panty|lusso|Panties'
+	$glqs_cc[] = 'lusso|body|lusso|Bodysuits'
 	!! Deliberately no misc entry here. The base games clothing totals
 	!! gosub has no branch for a misc category at all - the real array is
 	!! misc_outfits, holding exactly one scripted item, not a shop stock
@@ -97,7 +97,5 @@ if $ARGS[0] = 'clothing_cat_build':
 	!! the prior category in this list left it at, granting that many
 	!! phantom items into a misc array with no image or description
 	!! support anywhere in the game - shown in the wardrobe as blank rows.
-	glqs_cc_total = glqs_cc_n
-	killvar 'glqs_cc_n'
 end
 

@@ -6,40 +6,29 @@ if $ARGS[0] = 'grades':
 	'<br>Only applies on school start. Grades reset weekly based on class attendance.'
 	*nl
 	gs 'mod_GLQS_main', 'grades_data'
-	$glqs_tbl = ''
-	$glqs_tbl += '<table width="80%" cellpadding=4>'
+	$glqs_tbl = '<table width="80%" cellpadding=4>'
 	glqs_grade_i = 0
-:glqs_grade_table_loop
-	if glqs_grade_i < glqs_grade_total:
-		$glqs_grade_row = $glqs_grade[glqs_grade_i]
-		glqs_grade_p1 = instr($glqs_grade_row, '|')
-		$glqs_grade_rest = $mid($glqs_grade_row, glqs_grade_p1 + 1)
-		glqs_grade_p2 = instr($glqs_grade_rest, '|')
-		$glqs_grade_name = $mid($glqs_grade_rest, 1, glqs_grade_p2 - 1)
-		$glqs_grade_key = $mid($glqs_grade_rest, glqs_grade_p2 + 1)
-		$glqs_tbl += '<tr><td>' + $glqs_grade_name + '</td><td>' + class[$glqs_grade_key] + '</td></tr>'
+	:glqs_grade_table_loop
+	if glqs_grade_i < arrsize('$glqs_grade'):
+		!! Row format is code|label.
+		gs 'mod_GLQS_main', 'split_row', $glqs_grade[glqs_grade_i]
+		$glqs_tbl += '<tr><td>' + $glqs_field[1] + '</td><td>' + class['school_' + $glqs_field[0] + '_grade'] + '</td></tr>'
 		glqs_grade_i += 1
 		jump 'glqs_grade_table_loop'
 	end
 	$glqs_tbl += '<tr><td>Absences</td><td><<gschoolVars[''absence_count'']>></td></tr>'
-	$glqs_tbl += '<tr><td>University</td><td><<iif(university[''student''] = 1, ''Enrolled ('' + $university[''enrolled_in''] + '')'', ''Not enrolled'')>></td></tr>'
-	$glqs_tbl += '<tr><td>University diploma</td><td><<iif(university[''diploma''] > 0, ''Yes'', ''No'')>></td></tr>'
+	$glqs_tbl += '<tr><td>University</td><td><<$iif(university[''student''] = 1, ''Enrolled ('' + $university[''enrolled_in''] + '')'', ''Not enrolled'')>></td></tr>'
+	$glqs_tbl += '<tr><td>University diploma</td><td><<$iif(university[''diploma''] > 0, ''Yes'', ''No'')>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
+	killvar 'glqs_grade_i'
+	killvar '$glqs_field'
+	killvar '$glqs_grade'
 
 	act 'Set All Grades to 100':
-		glqs_grade_i = 0
-:glqs_grade_set_loop
-		if glqs_grade_i < glqs_grade_total:
-			$glqs_grade_row = $glqs_grade[glqs_grade_i]
-			glqs_grade_p1 = instr($glqs_grade_row, '|')
-			$glqs_grade_code = $mid($glqs_grade_row, 1, glqs_grade_p1 - 1)
-			gs 'grades', 'grade_award', 'school', $glqs_grade_code, 100
-			glqs_grade_i += 1
-			jump 'glqs_grade_set_loop'
-		end
-		gschoolVars['absence_count'] = 0
+		gs 'mod_GLQS_main', 'grades_max'
 		gt 'mod_GLQS_main', 'grades'
 	end
 
@@ -77,3 +66,25 @@ if $ARGS[0] = 'grades':
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
+
+
+if $ARGS[0] = 'grades_max':
+	!! Loads the grade table itself instead of relying on whatever the grades
+	!! screen left behind, so the table does not have to survive in the save.
+	!! Absences are cleared too, because the game recomputes grades weekly
+	!! from attendance.
+	gs 'mod_GLQS_main', 'grades_data'
+	glqs_gm_i = 0
+	:glqs_grade_set_loop
+	if glqs_gm_i < arrsize('$glqs_grade'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_grade[glqs_gm_i]
+		gs 'grades', 'grade_award', 'school', $glqs_field[0], 100
+		glqs_gm_i += 1
+		jump 'glqs_grade_set_loop'
+	end
+	gschoolVars['absence_count'] = 0
+	killvar 'glqs_gm_i'
+	killvar '$glqs_field'
+	killvar '$glqs_grade'
+end
+

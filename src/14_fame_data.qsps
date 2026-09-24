@@ -1,0 +1,41 @@
+!! FAME DATA
+if $ARGS[0] = 'fame_data':
+	!! The 17 activities (code|label, matching the games own activity set in
+	!! fame.qsrc) and the 4 regions, loaded by every fame route that needs
+	!! them and cleared by fame_data_clear.
+	killvar '$glqs_fame'
+	killvar '$glqs_fame_region'
+	$glqs_fame[] = 'acting|Acting'
+	$glqs_fame[] = 'dance|Dance'
+	$glqs_fame[] = 'painting|Painting'
+	$glqs_fame[] = 'music|Music'
+	$glqs_fame[] = 'ballet|Ballet'
+	$glqs_fame[] = 'modelling|Modelling'
+	$glqs_fame[] = 'porn|Porn'
+	$glqs_fame[] = 'stripping|Stripping'
+	$glqs_fame[] = 'kickboxing|Kickboxing'
+	$glqs_fame[] = 'running|Running'
+	$glqs_fame[] = 'volleyball|Volleyball'
+	$glqs_fame[] = 'chess|Chess'
+	$glqs_fame[] = 'teaching|Teaching'
+	$glqs_fame[] = 'media|Media'
+	$glqs_fame[] = 'sex|Sex'
+	$glqs_fame[] = 'prostitute|Prostitution'
+	$glqs_fame[] = 'flash|Flashing'
+
+	$glqs_fame_region[] = 'pav'
+	$glqs_fame_region[] = 'city'
+	$glqs_fame_region[] = 'pushkin'
+	$glqs_fame_region[] = 'village'
+	$glqs_fame_region_label['pav'] = 'Pavlovsk'
+	$glqs_fame_region_label['city'] = 'City'
+	$glqs_fame_region_label['pushkin'] = 'Old Town (Pushkin)'
+	$glqs_fame_region_label['village'] = 'Gadukino (Village)'
+end
+
+
+if $ARGS[0] = 'fame_data_clear':
+	killvar '$glqs_fame'
+	killvar '$glqs_fame_region'
+	killvar '$glqs_fame_region_label'
+end

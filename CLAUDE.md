@@ -19,26 +19,38 @@ python build.py
 
 (`python3` resolves to a broken Windows Store shim on this machine — use `python`, which is the real 3.13 interpreter, confirmed 2026-09-18.)
 
-Requires the QSP compiler once: `npm install -g @qsp/cli`
+Requires the QSP compiler once: `npm install -g @qsp/cli@1.0.5` (the version CI pins)
 
-- Reads the explicit `SHARED_FILES` manifest in `build_support.py`, assembles `build/GLQS.qsps`, runs lint checks,
-  then compiles with `qsp-cli` to `build/GLQS.qsp`.
+- Reads the explicit `SHARED_FILES` manifest in `build_support.py`, assembles
+  `build/GLQS.qsps`, runs `validate_assembled()` and the lint checks, then
+  compiles with `qsp-cli` to `build/GLQS.qsp`.
 - On `SUCCESS`, copy `build/GLQS.qsp` into the Girl Life `mod/` folder to test in-game.
-- On `Lint checks FAILED`, the output names the exact file/line — fix the `src/`
-  fragment and rerun. The assembled `.qsps` is still written even on failure, useful
-  for inspection.
+- On `Checks FAILED`, the output names the failing validator or the exact lint
+  line — fix the `src/` fragment and rerun. The assembled `.qsps` is written
+  before any check runs (as UTF-8, so a non-ASCII character is reported by lint
+  rather than crashing the write), so it is there for inspection. Only a
+  manifest or assembly error (`Build FAILED:`) stops before it is written.
+- `build.py`, the tests and the `.claude/hooks/lint_check.py` edit hook all
+  call the same `build_support.validate_assembled()` and `run_lints()`. Add a
+  new whole-build check there, not in one caller - the three copies had
+  drifted apart before (2026-09-23), so CI's test job skipped most lints.
 - The build-contract tests cover static assembly assumptions; manual in-game
   testing is still required for QSP runtime behavior.
 - `python -m unittest discover -s tests -v` runs build-contract tests without
   requiring the QSP compiler. These cover fragment wrappers, route references,
-  generated navigation actions, recurrent metadata coverage, and recurrent
-  bulk-toggle coverage. Recurrent metadata rows in `08_recurrent.qsps` classify
-  each toggle as `bulk`, `special`, or `individual`. The three `special` ones
-  (addiction, vibrator, clothing dirt) are covered by Enable/Disable All like
-  the rest, but none is done by its `cheatVars` flag alone: the vibrator also
-  needs `sleepVars['bedVibrator']` set both directions, while clearing existing
-  addiction progress and washing already-dirty clothes apply only when
-  enabling, so those live in the enable-only branch of `'recurrent_set'`.
+  generated navigation actions, the recurrent data table, every lint rule, and
+  a full run of the real source tree through `validate_assembled()` and
+  `run_lints()`.
+- Recurrent Cheats: `'recurrent_data'` in `08_recurrent_data.qsps` holds one
+  `role|key|arg|label` row per toggle, and both the on-screen table and
+  Enable/Disable All (`'recurrent_set'`) loop over it, so the two cannot
+  drift. `bulk` rows set `cheatVars[key]` to `arg` (the on-value). The three
+  `special` rows (addiction, vibrator, clothing dirt) are not done by the flag
+  alone, so `arg` names the base game's own `cheatmenu_din` handler, which also
+  clears addiction progress, sets `sleepVars['bedVibrator']`, or washes dirty
+  clothes. Those handlers toggle, so `'recurrent_set'` calls one only when the
+  flag differs from the target. The individual toggles below the table (periods,
+  archetypes, etc.) stay hand-written, because each has its own semantics.
 
 ## Architecture: how src/*.qsps assemble into one location
 
@@ -64,28 +76,43 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   menu, `05_clothing_data.qsps` owns the clothing catalog,
   `05_clothing_store.qsps` handles store routes (its `'store_buy'` takes an
   empty store to mean every store, which is what the clothing menu's Give
-  Everything action calls), and `05_clothing_picker.qsps` handles item picker
-  routes. `06_consumables_data.qsps` is the single consumable
-  metadata table used by the menu and bulk action. `06_consumables_actions.qsps`
-  and `07_stats_actions.qsps` handle feature mutators, with
-  `07_stats_data.qsps` owning the skill/attribute rows both the stats menu and
-  its max-all action walk,
-  `14_fill_data.qsps` owns the shared single-item clothing grant route,
-  `15_fill_helpers.qsps` owns `'fill_by_type'`, the one type-parameterised
-  bulk-grant loop, and
-  `20_jobs_data.qsps` owns the job ID/title table used by `19_jobs.qsps`.
-  `09_grades_data.qsps` owns the grade rows used by the grades menu and
-  max-all action, while `11_relationships_data.qsps` owns relationship category
-  labels.
-  Menus link to each other via
+  Everything action calls), `05_clothing_picker.qsps` handles item picker
+  routes, and `05_clothing_grant.qsps` owns `'item_grant'` (one item),
+  `'fill_by_type'` (every item in a category) and `'clothing_totals'`, the
+  routes every clothing grant goes through. `06_consumables_data.qsps` is the
+  single consumable metadata table used by the menu and Set All, one row per
+  item, each `stack` (any quantity) or `single` (owned or not).
+- **Layout convention:** a feature with a data table has an `NN_x_data.qsps`
+  fragment listed right before its menu fragment in `SHARED_FILES` (clothing,
+  consumables, stats, recurrent, grades, relationships, fame, jobs). The
+  menu fragment also holds that feature's action routes unless another
+  feature shares them (the clothing grant routes are shared, so they have
+  their own file). Menus link to each other via
   `gt 'mod_GLQS_main', 'other_menu_name'`.
+- **Data tables:** every table is a list of pipe-delimited rows appended with
+  `$name[] = 'a|b|c'` (cleared with `killvar` at the top of its data route,
+  counted with `arrsize()`), one row per line. Readers split a row with
+  `gs 'mod_GLQS_main', 'split_row', $row`, which fills `$glqs_field[0..n]`;
+  copy the fields you need before calling `split_row` again, and never
+  hand-write another `instr`/`$mid` chain - reading three fields from a
+  four-field row that way is what broke `store_buy` in v0.36.1. The build
+  parses the nav, clothing, consumables, jobs and recurrent tables with the
+  row patterns at the top of `build_support.py`, so a change to a table's
+  row syntax needs the matching pattern changed too (the build fails loudly
+  with "... table is empty" if they disagree).
 - Two shared routes in `04_main_menu.qsps` are called by nearly every screen:
   `'navbar'` renders the quick-nav bar, and `'screen_head'` is the five-line
   opener (`menu_off`/`usehtml`/`$location_type`/`gs 'stat'`/`gs 'themes'`).
   `'screen_head'` deliberately does not print the title or call `'navbar'` -
-  those vary per screen and nested sub-screens get no navbar at all. Because
-  it is a nested `gs`, a caller that reads its own `$ARGS` must capture them
-  before calling it.
+  those vary per screen and nested sub-screens get no navbar at all.
+- **`$ARGS` is local to each `gs`/`gt` call** - a nested `gs` does not
+  overwrite the caller's `$ARGS` (`rel_menu` makes two nested calls and then
+  still matches `$ARGS[0] = 'rel_menu'`). What does lose them is an `act`
+  body or `exec:` link: it runs at click time, after the route has returned,
+  so anything it reads must be copied into a `glqs_` global first and not
+  killed at the end of the route. That, not `gs` clobbering, was the real
+  cause of the v0.27/v0.28 "ARGS clobbering" fixes in the changelog; older
+  comments blaming nested `gs` were corrected on 2026-09-23.
 - `03_hook.qsps` defines its own location, `mod_GLQS` (matching the
   `mod_<$mod_info[0]>` naming the base game's mod loader expects), which the
   base game auto-invokes after every real `gt` transition anywhere in the
@@ -96,6 +123,19 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   'is_current_home', $curloc)` plus `$locclass = 'bedr'`), the uni dorm
   room, or the therapist hotel room - also skipped during character
   creation and the game's own scripted events.
+- GLQS has three entry points: that room link, an "Open GLQS" link the same
+  hook prints under every tab of the base game's cheat menu
+  (`$curloc = 'cheatmenu_din'`; the hook's `$ARGS[0]` is the open tab), and
+  Settings > Mods, whose `$mod_info[4]` link runs `mod_GLQS_options`. Every
+  entry calls `'enter'` (`04_main_menu.qsps`) with the screen to return to
+  before `gt 'mod_GLQS_main', 'start'`. `'enter'` snapshots
+  `$loc`/`$loc_arg`/`$menu_loc`/`$menu_arg`, and Return's `'leave'`
+  restores them: `start` calls `setloc`, which overwrites them, and the
+  settings screen and cheat menu both exit with `gt $menu_loc, $menu_arg`.
+  A new entry point must go through `'enter'` too. Checked with the
+  reference-lookup agent (2026-09-23): the base game offers mods no
+  icon-row, phone-app, cheat-tab or object-panel hook, and the purse and
+  phone are `gs` overlays the hook cannot see.
 - File numbering groups related files for readability, but `SHARED_FILES` in
   `build_support.py` controls assembly order. Add every new shared fragment to that
   manifest or the build fails.
@@ -107,13 +147,13 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   catalog rows in `05_clothing_data.qsps` labeled as
   `store|type|key|category label`; do not hand-add picker actions.
   The build validates route coverage, fragment wrappers, navigation consistency,
-  consumable metadata roles, clothing catalog
-  coverage, and that `'recurrent_set'` (the single parameterised bulk handler,
-  0 or 1 via `$ARGS[1]`) assigns every toggle the recurrent menu's primary
-  table renders, and that individual toggles have displayed states.
+  consumable metadata roles, clothing catalog coverage, the recurrent data
+  rows, and that individual recurrent toggles have displayed states.
   When `reference/nightly/` is available, the build also compares the job
-  manifest against `jobs_list.qsrc`; without it, duplicate and malformed IDs
-  are still rejected.
+  manifest against `jobs_list.qsrc` and checks each recurrent `special`
+  handler exists in `cheatmenu_din.qsrc`; without it, duplicate and malformed
+  IDs and rows are still rejected. Route coverage recognises `gt`, `gs`,
+  `func` and `$func` calls into `mod_GLQS_main`.
 
 ## Branch history: this line was reset once, then restored
 
@@ -209,7 +249,7 @@ e.g. `pcs_vball_block/rec/serve/set/spike` are all derived from `vball_lvl` and
 attribute values. Writing such a variable directly compiles and even displays
 fine, but the next `gs 'stat'` (which every GLQS menu itself runs) silently
 overwrites it, so the write does nothing. This shipped as dead code once: five
-direct `pcs_vball_*` writes sat in `07_stats_actions.qsps` across many releases until
+direct `pcs_vball_*` writes sat in `07_stats_actions.qsps` (now part of `07_stats_menu.qsps`) across many releases until
 the v0.34.4 reference audit caught them. Before assigning any `pcs_*` variable
 directly, grep `reference/nightly/locations/stat_sklattrib_lvlset.qsrc` for it —
 if it's assigned there, set the underlying skill/attribute via

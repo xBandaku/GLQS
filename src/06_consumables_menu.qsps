@@ -5,24 +5,59 @@ if $ARGS[0] = 'consumables_menu':
 	gs 'mod_GLQS_main', 'navbar', 'consumables_menu'
 	*nl
 	gs 'mod_GLQS_main', 'consumables_data'
+	!! One pass fills both tables. Each keeps its own last-category tracker so
+	!! a category header is printed once per table.
 	$glqs_tbl = '<table width="80%" cellpadding=4>'
+	$glqs_tbl2 = '<table width="80%" cellpadding=4>'
+	$glqs_con_last_stack = ''
+	$glqs_con_last_single = ''
 	glqs_con_i = 0
-	$glqs_con_last_category = ''
-:glqs_consumables_quantity_loop
-	if glqs_con_i >= glqs_con_n: jump 'glqs_consumables_quantity_done'
-	if $glqs_con_kind[glqs_con_i] = 'quantity':
-		if $glqs_con_category[glqs_con_i] <> $glqs_con_last_category:
-			$glqs_tbl += '<tr><td><b>' + $glqs_con_category[glqs_con_i] + '</b></td><td></td></tr>'
-			$glqs_con_last_category = $glqs_con_category[glqs_con_i]
+	:glqs_consumables_menu_loop
+	if glqs_con_i < arrsize('$glqs_con'):
+		!! Row format is kind|category|label|key.
+		gs 'mod_GLQS_main', 'split_row', $glqs_con[glqs_con_i]
+		$glqs_con_cat = $glqs_field[1]
+		$glqs_con_label = $glqs_field[2]
+		$glqs_con_k = $glqs_field[3]
+		if $glqs_field[0] = 'stack':
+			if $glqs_con_cat <> $glqs_con_last_stack:
+				$glqs_tbl += '<tr><td><b>' + $glqs_con_cat + '</b></td><td></td></tr>'
+				$glqs_con_last_stack = $glqs_con_cat
+			end
+			$glqs_tbl += '<tr><td>' + $glqs_con_label + '</td><td>' + mc_inventory[$glqs_con_k] + '</td></tr>'
+		else
+			if $glqs_con_cat <> $glqs_con_last_single:
+				$glqs_tbl2 += '<tr><td><b>' + $glqs_con_cat + '</b></td><td></td></tr>'
+				$glqs_con_last_single = $glqs_con_cat
+			end
+			!! The key is concatenated in here, so the link carries it literally. It
+			!! used to be written with four quotes, which left the text of the
+			!! lookup in the link to be evaluated at click time, after the loop had
+			!! moved past the end of the table - every toggle hit mc_inventory[''].
+			$glqs_tbl2 += '<tr><td>' + $glqs_con_label + '</td><td><a href="exec: mc_inventory[''' + $glqs_con_k + '''] = iif(mc_inventory[''' + $glqs_con_k + '''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''">' + $iif(mc_inventory[$glqs_con_k] > 0, 'Owned', 'Not owned') + '</a></td></tr>'
 		end
-		$glqs_tbl += '<tr><td>' + $glqs_con_label[glqs_con_i] + '</td><td>' + mc_inventory[$glqs_con_key[glqs_con_i]] + '</td></tr>'
+		glqs_con_i += 1
+		jump 'glqs_consumables_menu_loop'
 	end
-	glqs_con_i += 1
-	jump 'glqs_consumables_quantity_loop'
-:glqs_consumables_quantity_done
 	$glqs_tbl += '</table>'
+	$glqs_tbl2 += '</table>'
+
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
+	'<b>Single items</b> (the game only tracks whether you own these, so Set All gives one of each - click to toggle):'
+	*nl
+	$glqs_tbl2
+	killvar '$glqs_tbl2'
+	*nl
+	killvar 'glqs_con_i'
+	killvar '$glqs_con_cat'
+	killvar '$glqs_con_label'
+	killvar '$glqs_con_k'
+	killvar '$glqs_con_last_stack'
+	killvar '$glqs_con_last_single'
+	killvar '$glqs_field'
+	killvar '$glqs_con'
 
 	act 'Set All to 10,000':
 		gs 'mod_GLQS_main', 'consumables', 10000
@@ -39,26 +74,28 @@ if $ARGS[0] = 'consumables_menu':
 		gt 'mod_GLQS_main', 'consumables_menu'
 	end
 
-	'<b>Individual toggles</b> (the base game caps these at 1 regardless of quantity, so Set All above does not apply to them - each toggles independently):'
-	*nl
-	$glqs_tbl2 = '<table width="80%" cellpadding=4>'
-	glqs_con_i = 0
-	$glqs_con_last_category = ''
-:glqs_consumables_toggle_loop
-	if glqs_con_i >= glqs_con_n: jump 'glqs_consumables_toggle_done'
-	if $glqs_con_kind[glqs_con_i] = 'toggle':
-		if $glqs_con_category[glqs_con_i] <> $glqs_con_last_category:
-			$glqs_tbl2 += '<tr><td><b>' + $glqs_con_category[glqs_con_i] + '</b></td><td></td></tr>'
-			$glqs_con_last_category = $glqs_con_category[glqs_con_i]
-		end
-		$glqs_tbl2 += '<tr><td>' + $glqs_con_label[glqs_con_i] + '</td><td><a href="exec: mc_inventory['''' + $glqs_con_key[glqs_con_i] + ''''] = iif(mc_inventory['''' + $glqs_con_key[glqs_con_i] + ''''] > 0, 0, 1) & gt ''mod_GLQS_main'', ''consumables_menu''">' + iif(mc_inventory[$glqs_con_key[glqs_con_i]] > 0, 'Owned', 'Not owned') + '</a></td></tr>'
-	end
-	glqs_con_i += 1
-	jump 'glqs_consumables_toggle_loop'
-:glqs_consumables_toggle_done
-	$glqs_tbl2 += '</table>'
-	$glqs_tbl2
-	*nl
-
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'consumables':
+	!! Set All: stack items to ARGS[1] (default 10000), single items to 1.
+	gs 'mod_GLQS_main', 'consumables_data'
+	glqs_amt = iif(ARGS[1] > 0, ARGS[1], 10000)
+	glqs_con_i = 0
+	:glqs_consumables_loop
+	if glqs_con_i < arrsize('$glqs_con'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_con[glqs_con_i]
+		if $glqs_field[0] = 'stack':
+			mc_inventory[$glqs_field[3]] = glqs_amt
+		else
+			mc_inventory[$glqs_field[3]] = 1
+		end
+		glqs_con_i += 1
+		jump 'glqs_consumables_loop'
+	end
+	killvar 'glqs_amt'
+	killvar 'glqs_con_i'
+	killvar '$glqs_field'
+	killvar '$glqs_con'
 end

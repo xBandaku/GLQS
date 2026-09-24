@@ -7,23 +7,42 @@ if $ARGS[0] = 'nav_build':
 	!! Grouped by function - appearance, then character systems, then
 	!! social, then economy/resources, with the toggle-heavy Recurrent
 	!! Cheats last since its a meta menu rather than a character system.
-	glqs_nb_n = 0
-	$glqs_nb[glqs_nb_n] = 'clothing_menu|Clothing & Accessories' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'bodymod_menu|Body Mods' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'stats_menu|Skills & Attributes' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'health_menu|Health & Energy' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'grades|Grades & Academics' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'magic_menu|Magic' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'rel_menu|Relationships' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'fame_menu|Fame & Reputation' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'money_menu|Money' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'jobs_menu|Jobs & Career' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'housing_menu|Housing & Property' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'consumables_menu|Consumables' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'lifestyle_menu|Lifestyle' & glqs_nb_n += 1
-	$glqs_nb[glqs_nb_n] = 'recurrent|Recurrent Cheats' & glqs_nb_n += 1
-	glqs_nb_total = glqs_nb_n
-	killvar 'glqs_nb_n'
+	killvar '$glqs_nb'
+	$glqs_nb[] = 'clothing_menu|Clothing & Accessories'
+	$glqs_nb[] = 'bodymod_menu|Body Mods'
+	$glqs_nb[] = 'stats_menu|Skills & Attributes'
+	$glqs_nb[] = 'health_menu|Health & Energy'
+	$glqs_nb[] = 'grades|Grades & Academics'
+	$glqs_nb[] = 'magic_menu|Magic'
+	$glqs_nb[] = 'rel_menu|Relationships'
+	$glqs_nb[] = 'fame_menu|Fame & Reputation'
+	$glqs_nb[] = 'money_menu|Money'
+	$glqs_nb[] = 'jobs_menu|Jobs & Career'
+	$glqs_nb[] = 'housing_menu|Housing & Property'
+	$glqs_nb[] = 'consumables_menu|Consumables'
+	$glqs_nb[] = 'lifestyle_menu|Lifestyle'
+	$glqs_nb[] = 'recurrent|Recurrent Cheats'
+end
+
+
+if $ARGS[0] = 'split_row':
+	!! Splits ARGS[1] on | into $glqs_field[0], [1], ... in order. Every data
+	!! table in this mod is a list of pipe-delimited rows, and each reader used
+	!! to hand-write its own instr/mid chain - reading three fields from a
+	!! four-field row that way is what broke store_buy in v0.36.1.
+	!! Callers copy the fields they need before calling split_row again.
+	killvar '$glqs_field'
+	$glqs_sr_rest = $ARGS[1]
+	:glqs_split_row_loop
+	glqs_sr_p = instr($glqs_sr_rest, '|')
+	if glqs_sr_p > 0:
+		$glqs_field[] = $mid($glqs_sr_rest, 1, glqs_sr_p - 1)
+		$glqs_sr_rest = $mid($glqs_sr_rest, glqs_sr_p + 1)
+		jump 'glqs_split_row_loop'
+	end
+	$glqs_field[] = $glqs_sr_rest
+	killvar '$glqs_sr_rest'
+	killvar 'glqs_sr_p'
 end
 
 
@@ -32,9 +51,6 @@ if $ARGS[0] = 'screen_head':
 	!! title or call navbar - those differ per screen (nested sub-screens get
 	!! no navbar at all, and two screens compute their title only after this
 	!! point), so they stay at the call site.
-	!! Callers that read their own $ARGS must capture before calling this -
-	!! $ARGS is one shared array in QSP, not scoped per gosub, so this call
-	!! clobbers it. All current callers already do.
 	menu_off = 0
 	usehtml = 1
 	$location_type = 'event'
@@ -44,25 +60,66 @@ end
 
 
 if $ARGS[0] = 'start':
-	menu_off = 0
-	usehtml = 1
-	$location_type = 'event'
-	killvar '$locclass'
+	!! setloc also clears $locclass (core_library.qsrc), so the Index does
+	!! not inherit the bedroom selfie context.
 	gs 'core_library', 'setloc', 'mod_GLQS_main', 'start'
-	gs 'stat'
-	gs 'themes', 'indoors'
+	gs 'mod_GLQS_main', 'screen_head'
 	'<center><b><font color="maroon">Quick Setup Mod</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'start'
 	'<br>Instantly give your character everything she needs.'
 	*nl
+	'Quick Setup link in your room: <a href="exec: cheatVars[''cheatsp''] = iif(cheatVars[''cheatsp''], 0, 1) & gt ''mod_GLQS_main'', ''start''"><b><<$iif(cheatVars[''cheatsp''], ''Enabled'', ''Disabled'')>></b></a> (GLQS stays reachable from Settings > Mods and the cheat menu either way.)'
+	*nl
 
-	act 'Return':
-		$menu_loc = $shopreturn
-		$menu_arg = $shoparg
-		killvar '$shopreturn'
-		killvar '$shoparg'
-		gt $menu_loc, $menu_arg
+	act 'Return': gs 'mod_GLQS_main', 'leave'
+end
+
+
+if $ARGS[0] = 'enter':
+	!! Called by every link that opens GLQS, before gt start. ARGS[1] and
+	!! ARGS[2] are the screen Return should go back to.
+	!! start calls setloc, which overwrites the games own $loc/$loc_arg and
+	!! $menu_loc/$menu_arg. The settings screen and the cheat menu both exit
+	!! with gt $menu_loc, $menu_arg, so without this snapshot, opening GLQS
+	!! from one of them and coming back would make its Exit lead into GLQS
+	!! instead of to wherever the player really was.
+	killvar '$glqs_lv_loc'
+	killvar '$glqs_lv_arg'
+	$glqs_ret_loc = $ARGS[1]
+	$glqs_ret_arg = $ARGS[2]
+	$glqs_saved_loc = $loc
+	$glqs_saved_loc_arg = $loc_arg
+	$glqs_saved_menu_loc = $menu_loc
+	$glqs_saved_menu_arg = $menu_arg
+end
+
+
+if $ARGS[0] = 'leave':
+	!! Restores what enter saved, then goes back. A save made inside GLQS by an
+	!! older version has only $shopreturn/$shoparg, so those are the fallback.
+	if $glqs_ret_loc = '':
+		$glqs_ret_loc = $shopreturn
+		$glqs_ret_arg = $shoparg
 	end
+	if $glqs_saved_loc <> '':
+		$loc = $glqs_saved_loc
+		$loc_arg = $glqs_saved_loc_arg
+		$menu_loc = $glqs_saved_menu_loc
+		$menu_arg = $glqs_saved_menu_arg
+	end
+	killvar '$glqs_saved_loc'
+	killvar '$glqs_saved_loc_arg'
+	killvar '$glqs_saved_menu_loc'
+	killvar '$glqs_saved_menu_arg'
+	killvar '$shopreturn'
+	killvar '$shoparg'
+	!! Copied out so the globals can be cleared before the gt, which ends
+	!! this route.
+	$glqs_lv_loc = $glqs_ret_loc
+	$glqs_lv_arg = $glqs_ret_arg
+	killvar '$glqs_ret_loc'
+	killvar '$glqs_ret_arg'
+	gt $glqs_lv_loc, $glqs_lv_arg
 end
 
 
@@ -84,38 +141,37 @@ if $ARGS[0] = 'navbar':
 	!! explicitly by every caller - $loc_arg turned out NOT to reflect this
 	!! mods own internal gt calls (it only tracks real cross-location moves,
 	!! and every GLQS screen shares the one mod_GLQS_main location, so it
-	!! stayed stuck on whatever the very first entry set it to). Captured
-	!! into $glqs_current before the nested gs nav_build call below, since
-	!! $ARGS is one shared array in QSP and that call would otherwise
-	!! clobber it first - same class of bug as every other nested-gs capture
-	!! elsewhere in this mod.
+	!! stayed stuck on whatever the very first entry set it to). Copied into
+	!! the global $glqs_current because nav_build reads it, and the Switch
+	!! Menu Display act below reads it at click time, after $ARGS is gone.
 	$glqs_current = $ARGS[1]
 	if glqs_nav_style = 1:
 		gs 'mod_GLQS_main', 'nav_build'
 		$glqs_nav = '<center><font size="2">'
 		$glqs_nav += '<font color="gray"><b>Text Links</b></font> | <a href="exec: glqs_nav_style = 0 & gt ''mod_GLQS_main'', ''' + $glqs_current + '''">Action Buttons</a><br>'
-		$glqs_nav += iif($glqs_current = 'start', '<font color="gray"><b>Index</b></font>', '<a href="exec: gt ''mod_GLQS_main'', ''start''">Index</a>') + ' | '
-		glqs_i = 0
+		$glqs_nav += $iif($glqs_current = 'start', '<font color="gray"><b>Index</b></font>', '<a href="exec: gt ''mod_GLQS_main'', ''start''">Index</a>') + ' | '
+		glqs_nv_i = 0
+		glqs_nv_total = arrsize('$glqs_nb')
 		:glqs_navbar_link_loop
-		if glqs_i < glqs_nb_total:
-			$glqs_row = $glqs_nb[glqs_i]
-			glqs_p1 = instr($glqs_row, '|')
-			$glqs_key = $mid($glqs_row, 1, glqs_p1 - 1)
-			$glqs_label = $mid($glqs_row, glqs_p1 + 1)
-			if $glqs_key = $glqs_current:
-				$glqs_nav += '<font color="gray"><b>' + $glqs_label + '</b></font>'
+		if glqs_nv_i < glqs_nv_total:
+			gs 'mod_GLQS_main', 'split_row', $glqs_nb[glqs_nv_i]
+			if $glqs_field[0] = $glqs_current:
+				$glqs_nav += '<font color="gray"><b>' + $glqs_field[1] + '</b></font>'
 			else
-				$glqs_nav += '<a href="exec: gt ''mod_GLQS_main'', ''' + $glqs_key + '''">' + $glqs_label + '</a>'
+				$glqs_nav += '<a href="exec: gt ''mod_GLQS_main'', ''' + $glqs_field[0] + '''">' + $glqs_field[1] + '</a>'
 			end
-			if glqs_i < glqs_nb_total - 1: $glqs_nav += ' | '
-			glqs_i += 1
+			if glqs_nv_i < glqs_nv_total - 1: $glqs_nav += ' | '
+			glqs_nv_i += 1
 			jump 'glqs_navbar_link_loop'
 		end
 		$glqs_nav += '</font></center>'
 		$glqs_nav
+		killvar '$glqs_nav'
 		*nl
-		killvar 'glqs_i' & killvar 'glqs_p1' & killvar '$glqs_row' & killvar '$glqs_key' & killvar '$glqs_label'
-		killvar '$glqs_nb' & killvar 'glqs_nb_total'
+		killvar 'glqs_nv_i'
+		killvar 'glqs_nv_total'
+		killvar '$glqs_field'
+		killvar '$glqs_nb'
 	else
 		!! QSP resolves act bodies at click time, so build.py expands the
 		!! single nav_build registry into literal actions here. Each entry

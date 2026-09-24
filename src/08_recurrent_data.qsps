@@ -1,0 +1,43 @@
+!! RECURRENT CHEAT DATA
+if $ARGS[0] = 'recurrent_data':
+	!! One row per toggle in the primary table: role|cheatVars key|arg|label.
+	!! bulk: arg is the value that means on (no_dream_chance uses 100).
+	!! special: arg is the base games own cheatmenu_din handler, which also
+	!! does the extra work tied to the flag - addict clears addiction
+	!! progress, Vibrator sets sleepVars[bedVibrator] (the flag bed/pre_sleep
+	!! actually check), clothes_dirt washes whatever is already dirty. Those
+	!! handlers toggle, so they are only called when the state has to change.
+	!! The table on screen and Enable/Disable All both walk this list, so a
+	!! toggle cannot be shown without being covered by the bulk buttons.
+	killvar '$glqs_rc'
+	$glqs_rc[] = 'bulk|willpower|1|Willpower cost always zero'
+	$glqs_rc[] = 'bulk|inf_willpower|1|Infinite willpower'
+	$glqs_rc[] = 'bulk|always_brushed|1|Always combed'
+	$glqs_rc[] = 'bulk|makeup_smear|1|Cosmetics never smeared'
+	$glqs_rc[] = 'bulk|no_sweat|1|Never sweat'
+	$glqs_rc[] = 'bulk|hunger|1|Never eat'
+	$glqs_rc[] = 'bulk|thirst|1|Never drink'
+	$glqs_rc[] = 'bulk|sleep|1|Never sleep'
+	$glqs_rc[] = 'bulk|no_dream_chance|100|No dream chance (skip bad dreams)'
+	$glqs_rc[] = 'bulk|mood|1|Never unhappy'
+	$glqs_rc[] = 'bulk|no_leghair|1|Never shave legs'
+	$glqs_rc[] = 'bulk|fat|1|Never lose or gain weight'
+	$glqs_rc[] = 'bulk|body_staticAssets|1|Bust and butt unaffected by weight'
+	$glqs_rc[] = 'bulk|school_clothing|1|Allow any clothing for school'
+	$glqs_rc[] = 'bulk|edit_porn|1|Porn schedule editor'
+	$glqs_rc[] = 'special|drugs_immune|addict|Never get addicted'
+	$glqs_rc[] = 'special|sleep_vib|Vibrator|Enable sleeping with vibrator inserted'
+	$glqs_rc[] = 'special|clothes_dirt|clothes_dirt|Clothes never dirty'
+	$glqs_rc[] = 'bulk|always_horny|1|Set arousal to always be at 50 or more'
+	$glqs_rc[] = 'bulk|suc_bimbo|1|Succubus clothing invulnerability'
+end
+
+
+if $ARGS[0] = 'recurrent_clear':
+	killvar '$glqs_rc'
+	killvar '$glqs_rcp_role'
+	killvar '$glqs_rcp_key'
+	killvar '$glqs_rcp_arg'
+	killvar '$glqs_rcp_label'
+	killvar '$glqs_field'
+end

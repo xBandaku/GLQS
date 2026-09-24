@@ -7,7 +7,7 @@ if $ARGS[0] = 'money_menu':
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
 	$glqs_tbl += '<tr><td>Cash on hand</td><td>' + $func('money', 'format_balance', 'cash') + '</td></tr>'
-	$glqs_tbl += '<tr><td>Bank account</td><td><<iif(bankAccount = 1, ''Open'', ''Not opened'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Bank account</td><td><<$iif(bankAccount = 1, ''Open'', ''Not opened'')>></td></tr>'
 	if bankAccount = 1:
 		!! format_balance accounts for the overflow companion vars (money_overflow/
 		!! karta_overflow) that money.qsrc packs excess into past ~1B - a raw
@@ -17,6 +17,7 @@ if $ARGS[0] = 'money_menu':
 	$glqs_tbl += '<tr><td>Outstanding legal fine</td><td><<policeQW[''legal_fine'']>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	if bankAccount = 0:

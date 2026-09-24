@@ -14,6 +14,7 @@ if $ARGS[0] = 'lifestyle_menu':
 	$glqs_tbl += '<tr><td>Pain level</td><td><<pain[''total'']>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	act 'Max Casino Chips':
@@ -47,40 +48,29 @@ if $ARGS[0] = 'lifestyle_menu':
 	end
 	$glqs_tbl2 += '</table>'
 	$glqs_tbl2
+	killvar '$glqs_tbl2'
 	*nl
 
-	killvar 'glqs_lf_i' & killvar '$glqs_lf_key'
+	killvar 'glqs_lf_i'
+	killvar '$glqs_lf_key'
 
 	act 'Max All Fetish Experience':
-		glqs_lf_i = 0
-		:glqs_fetish_exp_loop
-		if glqs_lf_i < arrsize('$fetish_name'):
-			gs 'fetish', 'set_exp', $fetish_name[glqs_lf_i], 100
-			glqs_lf_i += 1
-			jump 'glqs_fetish_exp_loop'
-		end
-		killvar 'glqs_lf_i'
+		gs 'mod_GLQS_main', 'fetish_max_all', 'set_exp'
 		gt 'mod_GLQS_main', 'lifestyle_menu'
 	end
 
 	act 'Max All Fetish Preferences':
-		glqs_lf_i = 0
-		:glqs_fetish_pref_loop
-		if glqs_lf_i < arrsize('$fetish_name'):
-			gs 'fetish', 'set_pref', $fetish_name[glqs_lf_i], 100
-			glqs_lf_i += 1
-			jump 'glqs_fetish_pref_loop'
-		end
-		killvar 'glqs_lf_i'
+		gs 'mod_GLQS_main', 'fetish_max_all', 'set_pref'
 		gt 'mod_GLQS_main', 'lifestyle_menu'
 	end
 
 	'<b>Phone Plans</b>'
 	$glqs_tbl3 = '<table width="80%" cellpadding=3>'
-	$glqs_tbl3 += '<tr><td>Mobile Internet</td><td>' + iif(subscription['mobile'] = 1, 'Active', 'Inactive') + '</td></tr>'
-	$glqs_tbl3 += '<tr><td>Calls &amp; Texts</td><td>' + iif(subscription['monthly_calls'] = 1, 'Active', 'Inactive') + '</td></tr>'
+	$glqs_tbl3 += '<tr><td>Mobile Internet</td><td>' + $iif(subscription['mobile'] = 1, 'Active', 'Inactive') + '</td></tr>'
+	$glqs_tbl3 += '<tr><td>Calls &amp; Texts</td><td>' + $iif(subscription['monthly_calls'] = 1, 'Active', 'Inactive') + '</td></tr>'
 	$glqs_tbl3 += '</table>'
 	$glqs_tbl3
+	killvar '$glqs_tbl3'
 	*nl
 
 	act 'Grant Unlimited Phone Plans':
@@ -97,4 +87,17 @@ if $ARGS[0] = 'lifestyle_menu':
 	end
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'fetish_max_all':
+	!! ARGS[1] = the fetish handler to call for every fetish: set_exp or set_pref.
+	glqs_lf_i = 0
+	:glqs_fetish_max_loop
+	if glqs_lf_i < arrsize('$fetish_name'):
+		gs 'fetish', $ARGS[1], $fetish_name[glqs_lf_i], 100
+		glqs_lf_i += 1
+		jump 'glqs_fetish_max_loop'
+	end
+	killvar 'glqs_lf_i'
 end

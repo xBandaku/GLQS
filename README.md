@@ -12,9 +12,10 @@
 
 *Girl Life is an 18+ game; this mod and repository are intended for adult audiences.*
 
-GLQS is a quick-setup cheat mod for **Girl Life**. Once installed, it adds a
-single in-game link, reachable from your own room, that opens a menu covering
-15 top-level screens - no save editing or outside tools required.
+GLQS is a quick-setup cheat mod for **Girl Life**. Once installed, you can
+open it from your own room, from the game's cheat menu, or from Settings >
+Mods. It covers 14 top-level screens - no save editing or outside tools
+required.
 
 This guide covers everything a player needs: getting the mod, installing it,
 and turning it on in-game. (Developers who want to build GLQS from
@@ -30,9 +31,10 @@ needed for normal play.)
 - Fame & Reputation, Jobs & Career, Housing & Property - your homes and your car
 - Magic, Lifestyle - casino chips, pain, and fetish preferences
 
-The Consumables screen shows the available inventory in its main list.
-The Set All actions also fill the additional consumable entries used by the
-base game without adding a separate duplicate section to the menu.
+The Consumables screen lists every item Set All touches: stackable items
+with their counts, and single items (things you either own or don't) with a
+click-to-toggle link. Set All fills stacks to the chosen amount and gives one
+of each single item.
 
 ## Contents
 
@@ -122,14 +124,23 @@ bedroom).
 That's expected behavior, not a bug - it just keeps the link out of the way
 everywhere except the one place you'd naturally check it.
 
+You can also open GLQS from anywhere, two ways:
+
+- **Settings > Mods tab:** click **Open GLQS** on the GLQS row.
+- **The game's own cheat menu:** every tab has an **Open GLQS** link at the
+  bottom.
+
+**Return** in GLQS takes you back to whichever of these you came from. The
+switch to hide the room link is on the GLQS Index; the other two ways stay
+available either way.
+
 ## Troubleshooting / FAQ
 
 **I don't see the "Quick Setup" link anywhere.**
 First check you're actually in your own room (home bedroom, dorm room, or the
 therapist's hotel room) - the link only appears there. If it's still missing
-even in one of those rooms, go to phone Settings > **Mods** tab and click
-**Options** on the GLQS row - that page has an Enabled/Disabled toggle for
-the link.
+even in one of those rooms, open GLQS from phone Settings > **Mods** tab >
+**Open GLQS** and check the room-link switch on its Index.
 
 **I keep seeing a message like "WARNING: mod_GLQS is not found!", or the Quick
 Setup link has disappeared after closing and reopening Girl Life.**

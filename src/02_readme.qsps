@@ -1,6 +1,20 @@
 # mod_GLQS_readme
-*clr & cla
-'<b>Version 0.37.0 - Current</b>'
+*clr
+cla
+'<b>Version 0.38.0 - Current</b>'
+'- Added: Two more ways to open GLQS. Settings > Mods now has an Open GLQS link on the GLQS row, and every tab of the built-in cheat menu has one at the bottom. Return takes you back to where you came from, and that screen still exits to wherever you were before. The switch that hides the room link is now on the GLQS Index.'
+'- Fixed: Clothing store screens had lost the store icon, name and instructions.'
+'- Fixed: The Owned / Not owned links on Consumables never changed anything. Every click wrote to an empty inventory slot instead of the item.'
+'- Changed: Consumables now lists every item Set All touches, with readable names. 39 items were being filled without being shown. Set All also gives one of each single item, such as the pregnancy ball or skipping rope.'
+'- Changed: Enable All and Disable All in Recurrent Cheats run the addiction, vibrator and dirty-clothes rows through the same handlers the game uses when you click them. Clear Addiction Levels now also clears cocaine and painkiller withdrawal.'
+'- Fixed: Max Succubus Skills now raises the stored energy cap straight away, so Feed fills to the new cap.'
+'- Fixed: Clear Penalties on a job now also resets the missed-shift warning count, so the next missed shift is reported again.'
+'- Changed: Relationships now says what Max does. It sets every listed character to 100, including ones you have not met.'
+'- Changed: Tattoo zones and piercing slots are listed as links with the current design number next to each.'
+'- Changed: Maxing fame recalculates each activity once instead of once per region, so Max All Fame does 17 recalculations instead of 68.'
+'- Changed: Jobs Max Rank goes through the game rank setter, and the readme Return button goes straight to the Mods tab instead of through a retired redirect.'
+'- Changed: Internal cleanup. Every data table now uses one row format read by one shared splitter, temporary tables are no longer left in save files, and the build reports a bad character as a lint error with its line number instead of crashing.'
+'<b>Version 0.37.0</b>'
 '- Fixed: Every clothing grant wrote to the same array slot, so picking an item from the store picker added the first item in that category instead of the one you clicked, and Give All added a single item. Affected v0.36.1 only.'
 '- Fixed: Give Everything (all stores) and Buy All (this store) added nothing at all. The clothing catalog gained a label column in v0.36 and the buyout loop was still reading three columns, so every category key it built had the label stuck on the end and matched nothing in the game. Roughly 1,900 grants per click were going nowhere.'
 '- Fixed: Max All Skills & Attributes set maximum Willpower to a flat 150. That is the cheat menu cap, but character creation allows up to 200, so a character built above 150 had it reduced by a button labelled Max All. It now only ever raises.'
@@ -237,5 +251,5 @@
 '- All clothing and accessories from every store.'
 '- 10,000 of all consumables (variable names were wrong, fixed in 0.9).'
 *nl
-act 'Return': gt 'mod_setting'
+act 'Return': gt '$menu_settings', 'mods'
 --- mod_GLQS_readme ---------------------------------

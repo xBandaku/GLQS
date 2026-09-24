@@ -5,16 +5,32 @@ if $ARGS[0] = 'bodymod_menu':
 	gs 'mod_GLQS_main', 'navbar', 'bodymod_menu'
 	'<br>Electrolysis is free through this menu (normally 80,000 RUB at the clinic).'
 	*nl
+	gs 'mod_GLQS_main', 'bodymod_zones'
+	glqs_bz_tattoos = 0
+	glqs_bz_piercings = 0
+	glqs_bz_i = 0
+	:glqs_bodymod_count_loop
+	if glqs_bz_i < arrsize('$glqs_bz'):
+		if instr($glqs_bz[glqs_bz_i], 'tattoo|') = 1: glqs_bz_tattoos += 1
+		if instr($glqs_bz[glqs_bz_i], 'piercing|') = 1: glqs_bz_piercings += 1
+		glqs_bz_i += 1
+		jump 'glqs_bodymod_count_loop'
+	end
+	killvar 'glqs_bz_i'
+	killvar '$glqs_bz'
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
-	$glqs_tbl += '<tr><td>Leg hair</td><td><<iif(pcs_leghair = 0, ''Removed'', ''Present'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Pubic hair</td><td><<iif(pcs_pubes = 0, ''Removed'', ''Present'')>></td></tr>'
-	$glqs_tbl += '<tr><td>Tattoos</td><td><<pcs_tattoos[''total'']>> / 18 zones</td></tr>'
-	$glqs_tbl += '<tr><td>Piercings</td><td><<pcs_piercings[''total'']>> / 8 slots</td></tr>'
+	$glqs_tbl += '<tr><td>Leg hair</td><td><<$iif(pcs_leghair = 0, ''Removed'', ''Present'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Pubic hair</td><td><<$iif(pcs_pubes = 0, ''Removed'', ''Present'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Tattoos</td><td><<pcs_tattoos[''total'']>> / <<glqs_bz_tattoos>> zones</td></tr>'
+	$glqs_tbl += '<tr><td>Piercings</td><td><<pcs_piercings[''total'']>> / <<glqs_bz_piercings>> slots</td></tr>'
 	$glqs_tbl += '<tr><td>Attractiveness</td><td><<pcs_apprnc>> (<<pcs_hotcat>>/10)</td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
+	killvar 'glqs_bz_tattoos'
+	killvar 'glqs_bz_piercings'
 
 	act 'Free Electrolysis (permanent hair removal)':
 		pcs_leghair = 0
@@ -29,9 +45,9 @@ if $ARGS[0] = 'bodymod_menu':
 		gt 'mod_GLQS_main', 'bodymod_menu'
 	end
 
-	act 'Choose a Tattoo': gt 'mod_GLQS_main', 'tattoo_zone_menu'
+	act 'Choose a Tattoo': gt 'mod_GLQS_main', 'bodymod_zone_menu', 'tattoo'
 
-	act 'Choose a Piercing': gt 'mod_GLQS_main', 'piercing_slot_menu'
+	act 'Choose a Piercing': gt 'mod_GLQS_main', 'bodymod_zone_menu', 'piercing'
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
@@ -64,32 +80,82 @@ if $ARGS[0] = 'max_attractiveness':
 end
 
 
-!! ===== TATTOO PICKER =====
+!! ===== TATTOO AND PIERCING ZONES =====
 
-if $ARGS[0] = 'tattoo_zone_menu':
+if $ARGS[0] = 'bodymod_zones':
+	!! kind|zone|label for every tattoo zone and piercing slot the games
+	!! tattoo_management / piercing_management locations accept.
+	killvar '$glqs_bz'
+	$glqs_bz[] = 'tattoo|ankle|Ankle'
+	$glqs_bz[] = 'tattoo|arm|Arm'
+	$glqs_bz[] = 'tattoo|ass|Ass'
+	$glqs_bz[] = 'tattoo|back|Back'
+	$glqs_bz[] = 'tattoo|belly|Belly'
+	$glqs_bz[] = 'tattoo|breast|Breast'
+	$glqs_bz[] = 'tattoo|chest|Chest'
+	$glqs_bz[] = 'tattoo|face|Face'
+	$glqs_bz[] = 'tattoo|hand|Hand'
+	$glqs_bz[] = 'tattoo|leg|Leg'
+	$glqs_bz[] = 'tattoo|lip|Lip'
+	$glqs_bz[] = 'tattoo|neck|Neck'
+	$glqs_bz[] = 'tattoo|pussy|Pussy'
+	$glqs_bz[] = 'tattoo|shoulder|Shoulder'
+	$glqs_bz[] = 'tattoo|side|Side'
+	$glqs_bz[] = 'tattoo|tramp|Tramp Stamp'
+	$glqs_bz[] = 'tattoo|under|Underboob'
+	$glqs_bz[] = 'tattoo|wrist|Wrist'
+	$glqs_bz[] = 'piercing|ears|Ears'
+	$glqs_bz[] = 'piercing|nose|Nose'
+	$glqs_bz[] = 'piercing|brow|Eyebrow'
+	$glqs_bz[] = 'piercing|lip|Lip'
+	$glqs_bz[] = 'piercing|tongue|Tongue'
+	$glqs_bz[] = 'piercing|navel|Navel'
+	$glqs_bz[] = 'piercing|nipples|Nipples'
+	$glqs_bz[] = 'piercing|pussy|Pussy'
+end
+
+
+if $ARGS[0] = 'bodymod_zone_menu':
+	!! ARGS[1] = tattoo or piercing. Zones are links rather than acts: a link
+	!! built in a loop carries its zone literally, while an act body would
+	!! read the loop variable at click time.
+	$glqs_bz_kind = $ARGS[1]
 	gs 'mod_GLQS_main', 'screen_head'
-	'<center><b><font color="maroon">Choose a Tattoo Zone</font></b></center>'
-	'<br>Pick a body zone, then pick a design. Current tattoo shown in brackets.'
+	if $glqs_bz_kind = 'tattoo':
+		'<center><b><font color="maroon">Choose a Tattoo Zone</font></b></center>'
+		'<br>Pick a body zone, then pick a design. The current design number is shown in brackets.'
+	else
+		'<center><b><font color="maroon">Choose a Piercing Slot</font></b></center>'
+		'<br>Pick a slot, then pick jewelry. The current design number is shown in brackets.'
+	end
 	*nl
-
-	act 'Ankle <<iif(pcs_tattoos[''ankle''] > 0, ''['' + pcs_tattoos[''ankle''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'ankle'
-	act 'Arm <<iif(pcs_tattoos[''arm''] > 0, ''['' + pcs_tattoos[''arm''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'arm'
-	act 'Ass <<iif(pcs_tattoos[''ass''] > 0, ''['' + pcs_tattoos[''ass''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'ass'
-	act 'Back <<iif(pcs_tattoos[''back''] > 0, ''['' + pcs_tattoos[''back''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'back'
-	act 'Belly <<iif(pcs_tattoos[''belly''] > 0, ''['' + pcs_tattoos[''belly''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'belly'
-	act 'Breast <<iif(pcs_tattoos[''breast''] > 0, ''['' + pcs_tattoos[''breast''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'breast'
-	act 'Chest <<iif(pcs_tattoos[''chest''] > 0, ''['' + pcs_tattoos[''chest''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'chest'
-	act 'Face <<iif(pcs_tattoos[''face''] > 0, ''['' + pcs_tattoos[''face''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'face'
-	act 'Hand <<iif(pcs_tattoos[''hand''] > 0, ''['' + pcs_tattoos[''hand''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'hand'
-	act 'Leg <<iif(pcs_tattoos[''leg''] > 0, ''['' + pcs_tattoos[''leg''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'leg'
-	act 'Lip <<iif(pcs_tattoos[''lip''] > 0, ''['' + pcs_tattoos[''lip''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'lip'
-	act 'Neck <<iif(pcs_tattoos[''neck''] > 0, ''['' + pcs_tattoos[''neck''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'neck'
-	act 'Pussy <<iif(pcs_tattoos[''pussy''] > 0, ''['' + pcs_tattoos[''pussy''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'pussy'
-	act 'Shoulder <<iif(pcs_tattoos[''shoulder''] > 0, ''['' + pcs_tattoos[''shoulder''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'shoulder'
-	act 'Side <<iif(pcs_tattoos[''side''] > 0, ''['' + pcs_tattoos[''side''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'side'
-	act 'Tramp Stamp <<iif(pcs_tattoos[''tramp''] > 0, ''['' + pcs_tattoos[''tramp''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'tramp'
-	act 'Underboob <<iif(pcs_tattoos[''under''] > 0, ''['' + pcs_tattoos[''under''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'under'
-	act 'Wrist <<iif(pcs_tattoos[''wrist''] > 0, ''['' + pcs_tattoos[''wrist''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'tattoo', 'wrist'
+	gs 'mod_GLQS_main', 'bodymod_zones'
+	$glqs_tbl = '<table cellpadding=3>'
+	glqs_bz_i = 0
+	:glqs_bodymod_zone_loop
+	if glqs_bz_i < arrsize('$glqs_bz'):
+		!! Row format is kind|zone|label.
+		gs 'mod_GLQS_main', 'split_row', $glqs_bz[glqs_bz_i]
+		if $glqs_field[0] = $glqs_bz_kind:
+			if $glqs_bz_kind = 'tattoo':
+				glqs_bz_cur = pcs_tattoos[$glqs_field[1]]
+			else
+				glqs_bz_cur = pcs_piercings[$glqs_field[1]]
+			end
+			$glqs_tbl += '<tr><td><a href="exec: gt ''mod_GLQS_main'', ''bodymod_design_menu'', ''' + $glqs_bz_kind + ''', ''' + $glqs_field[1] + '''">' + $glqs_field[2] + '</a></td><td>' + $iif(glqs_bz_cur > 0, '[' + $str(glqs_bz_cur) + ']', '') + '</td></tr>'
+		end
+		glqs_bz_i += 1
+		jump 'glqs_bodymod_zone_loop'
+	end
+	$glqs_tbl += '</table>'
+	$glqs_tbl
+	killvar '$glqs_tbl'
+	*nl
+	killvar 'glqs_bz_i'
+	killvar 'glqs_bz_cur'
+	killvar '$glqs_bz_kind'
+	killvar '$glqs_field'
+	killvar '$glqs_bz'
 
 	act 'Return': gt 'mod_GLQS_main', 'bodymod_menu'
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
@@ -97,9 +163,9 @@ end
 
 
 if $ARGS[0] = 'bodymod_design_menu':
-	!! ARGS[1] = tattoo or piercing, ARGS[2] = the zone/slot name. Captured
-	!! before any nested gs call - $ARGS is one shared array in QSP, not scoped
-	!! per gosub, so screen_head below would clobber them first.
+	!! ARGS[1] = tattoo or piercing, ARGS[2] = the zone/slot name. Copied into
+	!! globals because the acts below read them at click time, after this call
+	!! and its $ARGS are gone.
 	!! Tattoos and piercings differ only in which manager location and which
 	!! pcs_* array they use; everything else about the two screens was identical.
 	$glqs_bm_kind = $ARGS[1]
@@ -107,32 +173,35 @@ if $ARGS[0] = 'bodymod_design_menu':
 	if $glqs_bm_kind = 'tattoo':
 		$glqs_bm_mgr = 'tattoo_management'
 		$glqs_bm_title = 'Tattoo Designs'
-		$glqs_bm_back = 'tattoo_zone_menu'
 		$glqs_bm_backlabel = 'Back to Zones'
 		$glqs_bm_remove = 'Remove Tattoo From This Zone'
 	else
 		$glqs_bm_mgr = 'piercing_management'
 		$glqs_bm_title = 'Piercing Jewelry'
-		$glqs_bm_back = 'piercing_slot_menu'
 		$glqs_bm_backlabel = 'Back to Slots'
 		$glqs_bm_remove = 'Remove Piercing From This Slot'
 	end
 	gs 'mod_GLQS_main', 'screen_head'
-	total = func($glqs_bm_mgr, 'get_total', $glqs_bm_zone)
+	!! Own variable rather than the games scratch global total.
+	glqs_bm_total = func($glqs_bm_mgr, 'get_total', $glqs_bm_zone)
 	'<center><b><font color="maroon"><<$glqs_bm_title>>: <<$glqs_bm_zone>></font></b></center>'
-	'<br><<total>> designs available. Click an image to apply it.'
+	'<br><<glqs_bm_total>> designs available. Click an image to apply it.'
 	*nl
 	$glqs_grid = '<div style="display:flex; flex-wrap:wrap; gap:8px;">'
-	glqs_i = 1
+	glqs_bm_i = 1
 	:glqs_bm_img_loop
-	if glqs_i <= total:
-		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''<<$glqs_bm_mgr>>'', ''add'', ''<<$glqs_bm_zone>>'', <<glqs_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''bodymod_design_menu'', ''<<$glqs_bm_kind>>'', ''<<$glqs_bm_zone>>''"><img height="220" src="<<func($glqs_bm_mgr, $glqs_bm_zone + ''_image'', glqs_i)>>"></a></div>'
-		glqs_i += 1
+	if glqs_bm_i <= glqs_bm_total:
+		!! The managers generic image route returns a string, so it is called
+		!! through $func (the per-zone _image routes set $result too).
+		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''<<$glqs_bm_mgr>>'', ''add'', ''<<$glqs_bm_zone>>'', <<glqs_bm_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''bodymod_design_menu'', ''<<$glqs_bm_kind>>'', ''<<$glqs_bm_zone>>''"><img height="220" src="<<$func($glqs_bm_mgr, ''image'', $glqs_bm_zone, glqs_bm_i)>>"></a></div>'
+		glqs_bm_i += 1
 		jump 'glqs_bm_img_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_bm_i'
+	killvar 'glqs_bm_total'
 	$glqs_grid += '</div>'
 	$glqs_grid
+	killvar '$glqs_grid'
 	*nl
 
 	!! Read after screen_head, since the gs stat inside it can update these.
@@ -156,27 +225,7 @@ if $ARGS[0] = 'bodymod_design_menu':
 	!! could ever click, same stray-killvar bug as fame_detail (see comment
 	!! there). No Return to Top Menu, matching the v0.28.1 decision that Back
 	!! already covers it at this depth.
-	act '<<$glqs_bm_backlabel>>': gt 'mod_GLQS_main', $glqs_bm_back
+	act '<<$glqs_bm_backlabel>>': gt 'mod_GLQS_main', 'bodymod_zone_menu', $glqs_bm_kind
 end
 
 
-!! ===== PIERCING PICKER =====
-
-if $ARGS[0] = 'piercing_slot_menu':
-	gs 'mod_GLQS_main', 'screen_head'
-	'<center><b><font color="maroon">Choose a Piercing Slot</font></b></center>'
-	'<br>Pick a slot, then pick jewelry. Currently worn design shown in brackets.'
-	*nl
-
-	act 'Ears <<iif(pcs_piercings[''ears''] > 0, ''['' + pcs_piercings[''ears''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'piercing', 'ears'
-	act 'Nose <<iif(pcs_piercings[''nose''] > 0, ''['' + pcs_piercings[''nose''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'piercing', 'nose'
-	act 'Eyebrow <<iif(pcs_piercings[''brow''] > 0, ''['' + pcs_piercings[''brow''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'piercing', 'brow'
-	act 'Lip <<iif(pcs_piercings[''lip''] > 0, ''['' + pcs_piercings[''lip''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'piercing', 'lip'
-	act 'Tongue <<iif(pcs_piercings[''tongue''] > 0, ''['' + pcs_piercings[''tongue''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'piercing', 'tongue'
-	act 'Navel <<iif(pcs_piercings[''navel''] > 0, ''['' + pcs_piercings[''navel''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'piercing', 'navel'
-	act 'Nipples <<iif(pcs_piercings[''nipples''] > 0, ''['' + pcs_piercings[''nipples''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'piercing', 'nipples'
-	act 'Pussy <<iif(pcs_piercings[''pussy''] > 0, ''['' + pcs_piercings[''pussy''] + '']'', '''')>>': gt 'mod_GLQS_main', 'bodymod_design_menu', 'piercing', 'pussy'
-
-	act 'Return': gt 'mod_GLQS_main', 'bodymod_menu'
-	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
-end
