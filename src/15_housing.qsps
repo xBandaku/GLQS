@@ -15,10 +15,10 @@ if $ARGS[0] = 'housing_menu':
 	*nl
 	$glqs_tbl = ''
 	$glqs_tbl += '<table width="80%" cellpadding=4>'
-	$glqs_tbl += '<tr><td>Homeless</td><td><<iif(func(''homes_properties'', ''is_homeless''), ''Yes'', ''No'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Homeless</td><td><<$iif(func(''homes_properties'', ''is_homeless''), ''Yes'', ''No'')>></td></tr>'
 	if func('homes_properties', 'is_homeless') = 0:
 		$glqs_tbl += '<tr><td>Current home</td><td>' + $func('homes_properties', 'get_home_desc') + '</td></tr>'
-		$glqs_tbl += '<tr><td>Renovated</td><td><<iif(func(''homes_properties'', ''is_property_renovated'', $home[''current'']), ''Yes'', ''No'')>></td></tr>'
+		$glqs_tbl += '<tr><td>Renovated</td><td><<$iif(func(''homes_properties'', ''is_property_renovated'', $home[''current'']), ''Yes'', ''No'')>></td></tr>'
 		$glqs_tbl += '<tr><td>Construction status</td><td><<func(''homes_properties'', ''get_property_construction_status'', $home[''current''])>> / 2</td></tr>'
 		glqs_hs_rentdays = func('homes_properties', 'get_rent_days', $home['current'])
 		if glqs_hs_rentdays <> 0:
@@ -27,14 +27,15 @@ if $ARGS[0] = 'housing_menu':
 		end
 		killvar 'glqs_hs_rentdays'
 	end
-	$glqs_tbl += '<tr><td>Car owned</td><td><<iif(car[''ID''] > 0, $car[''name''], ''None'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Car owned</td><td><<$iif(car[''ID''] > 0, $car[''name''], ''None'')>></td></tr>'
 	if car['ID'] > 0:
 		$glqs_tbl += '<tr><td>Car condition</td><td><<car[''current_condition'']>> / <<car[''new_condition'']>></td></tr>'
 		$glqs_tbl += '<tr><td>Car fuel</td><td><<car[''fuel'']>> / <<car[''tank'']>></td></tr>'
-		$glqs_tbl += '<tr><td>Car wrecked</td><td><<iif(car[''wreck''] > 0, ''Yes'', ''No'')>></td></tr>'
+		$glqs_tbl += '<tr><td>Car wrecked</td><td><<$iif(car[''wreck''] > 0, ''Yes'', ''No'')>></td></tr>'
 	end
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	if car['ID'] = 0:
@@ -65,7 +66,8 @@ if $ARGS[0] = 'housing_menu':
 		!! missed payments. Does not touch properties that are owned
 		!! outright or merely accessible (family homes etc.) - those have
 		!! no rent clock to extend.
-		gs 'homes_properties', 'get_rented_properties'
+		!! ARGS[2] = 1 fills only $property_code, as the games own rent tick does.
+		gs 'homes_properties', 'get_rented_properties', '', 1
 		glqs_hs_count = arrsize('$property_code')
 		glqs_hs_i = 0
 		:glqs_housing_rent_loop
@@ -74,8 +76,9 @@ if $ARGS[0] = 'housing_menu':
 			glqs_hs_i += 1
 			jump 'glqs_housing_rent_loop'
 		end
-		killvar 'glqs_hs_count' & killvar 'glqs_hs_i'
-		killvar '$property_code' & killvar 'property_days' & killvar 'property_rent' & killvar '$property_display'
+		killvar 'glqs_hs_count'
+		killvar 'glqs_hs_i'
+		gs 'homes_properties', 'clean_up_property_data'
 		gt 'mod_GLQS_main', 'housing_menu'
 	end
 

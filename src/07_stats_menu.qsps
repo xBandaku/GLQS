@@ -4,44 +4,36 @@ if $ARGS[0] = 'stats_menu':
 	'<center><b><font color="maroon">Skills & Attributes</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'stats_menu'
 	*nl
-	$glqs_tbl = ''
-	$glqs_tbl += '<table width="80%" cellpadding=4>'
 	gs 'mod_GLQS_main', 'stats_data'
+	$glqs_tbl = '<table width="80%" cellpadding=4>'
 	$glqs_sm_prevgrp = ''
 	glqs_sm_i = 0
 	:glqs_stats_tbl_loop
-	if glqs_sm_i < glqs_st_total:
-		$glqs_sm_row = $glqs_st[glqs_sm_i]
-		glqs_sm_p1 = instr($glqs_sm_row, '|')
-		$glqs_sm_grp = $mid($glqs_sm_row, 1, glqs_sm_p1 - 1)
-		$glqs_sm_rest = $mid($glqs_sm_row, glqs_sm_p1 + 1)
-		glqs_sm_p2 = instr($glqs_sm_rest, '|')
-		$glqs_sm_kind = $mid($glqs_sm_rest, 1, glqs_sm_p2 - 1)
-		$glqs_sm_rest2 = $mid($glqs_sm_rest, glqs_sm_p2 + 1)
-		glqs_sm_p3 = instr($glqs_sm_rest2, '|')
-		$glqs_sm_key = $mid($glqs_sm_rest2, 1, glqs_sm_p3 - 1)
-		$glqs_sm_label = $mid($glqs_sm_rest2, glqs_sm_p3 + 1)
-		if $glqs_sm_grp <> $glqs_sm_prevgrp:
-			$glqs_tbl += '<tr><td><b>' + $glqs_sm_grp + '</b></td><td></td></tr>'
-			$glqs_sm_prevgrp = $glqs_sm_grp
+	if glqs_sm_i < arrsize('$glqs_st'):
+		!! Row format is group|kind|key|label.
+		gs 'mod_GLQS_main', 'split_row', $glqs_st[glqs_sm_i]
+		if $glqs_field[0] <> $glqs_sm_prevgrp:
+			$glqs_tbl += '<tr><td><b>' + $glqs_field[0] + '</b></td><td></td></tr>'
+			$glqs_sm_prevgrp = $glqs_field[0]
 		end
-		if $glqs_sm_kind = 'lvl':
-			glqs_sm_val = dyneval('result = <<$glqs_sm_key>>_lvl')
+		if $glqs_field[1] = 'lvl':
+			glqs_sm_val = dyneval('result = <<$glqs_field[2]>>_lvl')
 		else
-			glqs_sm_val = dyneval('result = <<$glqs_sm_key>>')
+			glqs_sm_val = dyneval('result = <<$glqs_field[2]>>')
 		end
-		$glqs_tbl += '<tr><td>' + $glqs_sm_label + '</td><td><<glqs_sm_val>></td></tr>'
+		$glqs_tbl += '<tr><td>' + $glqs_field[3] + '</td><td><<glqs_sm_val>></td></tr>'
 		glqs_sm_i += 1
 		jump 'glqs_stats_tbl_loop'
 	end
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
-	killvar 'glqs_sm_i' & killvar 'glqs_sm_p1' & killvar 'glqs_sm_p2' & killvar 'glqs_sm_p3'
-	killvar '$glqs_sm_row' & killvar '$glqs_sm_rest' & killvar '$glqs_sm_rest2'
-	killvar '$glqs_sm_grp' & killvar '$glqs_sm_prevgrp' & killvar '$glqs_sm_kind'
-	killvar '$glqs_sm_key' & killvar '$glqs_sm_label' & killvar 'glqs_sm_val'
-	killvar '$glqs_st' & killvar 'glqs_st_total'
+	killvar 'glqs_sm_i'
+	killvar 'glqs_sm_val'
+	killvar '$glqs_sm_prevgrp'
+	killvar '$glqs_field'
+	killvar '$glqs_st'
 
 	act 'Max All Skills & Attributes':
 		gs 'mod_GLQS_main', 'stats'
@@ -49,4 +41,31 @@ if $ARGS[0] = 'stats_menu':
 	end
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+
+if $ARGS[0] = 'stats':
+	!! Max All. No direct pcs_vball_block/rec/serve/set/spike writes here -
+	!! those five are derived stats, recomputed from vball_lvl plus attributes
+	!! by stat_sklattrib_lvlset on every single gs stat call, so writing them
+	!! directly is overwritten immediately. Maxing vball and the attributes
+	!! already maxes all five.
+	gs 'mod_GLQS_main', 'stats_data'
+	glqs_sa_i = 0
+	:glqs_stats_all_loop
+	if glqs_sa_i < arrsize('$glqs_st'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_st[glqs_sa_i]
+		$glqs_sa_key = $glqs_field[2]
+		if $glqs_field[1] = 'lvl': gs 'shortgs', 'setStat', $glqs_sa_key, 100
+		!! Raise-only. 150 is the cheat menu cap, but character creation allows
+		!! up to 200 and gs stat only enforces a floor, so a flat assignment
+		!! used to lower max willpower for a character built above 150.
+		if $glqs_field[1] = 'cap': dyneval('<<$glqs_sa_key>> = max(<<$glqs_sa_key>>, 150)')
+		glqs_sa_i += 1
+		jump 'glqs_stats_all_loop'
+	end
+	killvar 'glqs_sa_i'
+	killvar '$glqs_sa_key'
+	killvar '$glqs_field'
+	killvar '$glqs_st'
 end

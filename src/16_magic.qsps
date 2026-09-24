@@ -9,30 +9,29 @@ if $ARGS[0] = 'magic_spell_keys':
 	!! categories, and glqs_mg_total - its length. Shared by magic_menu (status
 	!! count) and Learn All Spells so the two can never drift apart, same
 	!! pattern as clothing_cat_build in 05_clothing_data.qsps.
-	glqs_mg_n = 0
-	glqs_mg_i = 0
-	:glqs_mg_keys_combat
-	if glqs_mg_i < arrsize('$combatSpells'):
-		$glqs_mg_all[glqs_mg_n] = $combatSpells[glqs_mg_i]
-		glqs_mg_n += 1 & glqs_mg_i += 1
-		jump 'glqs_mg_keys_combat'
+	killvar '$glqs_mg_all'
+	$glqs_mg_lists[] = '$combatSpells'
+	$glqs_mg_lists[] = '$nonComSpells'
+	$glqs_mg_lists[] = '$storySpells'
+	glqs_mg_l = 0
+	:glqs_mg_keys_list_loop
+	if glqs_mg_l < arrsize('$glqs_mg_lists'):
+		$glqs_mg_list = $glqs_mg_lists[glqs_mg_l]
+		glqs_mg_i = 0
+		:glqs_mg_keys_item_loop
+		if glqs_mg_i < arrsize($glqs_mg_list):
+			dynamic '$glqs_mg_all[] = ' + $glqs_mg_list + '[glqs_mg_i]'
+			glqs_mg_i += 1
+			jump 'glqs_mg_keys_item_loop'
+		end
+		glqs_mg_l += 1
+		jump 'glqs_mg_keys_list_loop'
 	end
-	glqs_mg_i = 0
-	:glqs_mg_keys_noncom
-	if glqs_mg_i < arrsize('$nonComSpells'):
-		$glqs_mg_all[glqs_mg_n] = $nonComSpells[glqs_mg_i]
-		glqs_mg_n += 1 & glqs_mg_i += 1
-		jump 'glqs_mg_keys_noncom'
-	end
-	glqs_mg_i = 0
-	:glqs_mg_keys_story
-	if glqs_mg_i < arrsize('$storySpells'):
-		$glqs_mg_all[glqs_mg_n] = $storySpells[glqs_mg_i]
-		glqs_mg_n += 1 & glqs_mg_i += 1
-		jump 'glqs_mg_keys_story'
-	end
-	glqs_mg_total = glqs_mg_n
-	killvar 'glqs_mg_n' & killvar 'glqs_mg_i'
+	glqs_mg_total = arrsize('$glqs_mg_all')
+	killvar '$glqs_mg_lists'
+	killvar '$glqs_mg_list'
+	killvar 'glqs_mg_l'
+	killvar 'glqs_mg_i'
 end
 
 
@@ -70,9 +69,12 @@ if $ARGS[0] = 'magic_menu':
 		$glqs_tbl += '<tr><td>Spells Known</td><td><<glqs_mg_known>> / <<glqs_mg_total>></td></tr>'
 		$glqs_tbl += '</table>'
 		$glqs_tbl
+		killvar '$glqs_tbl'
 		*nl
 
-		killvar 'glqs_mg_known' & killvar 'glqs_mg_total' & killvar '$glqs_mg_all'
+		killvar 'glqs_mg_known'
+		killvar 'glqs_mg_total'
+		killvar '$glqs_mg_all'
 
 		act 'Learn All Spells':
 			gs 'spellList'
@@ -84,7 +86,9 @@ if $ARGS[0] = 'magic_menu':
 				glqs_mg_i += 1
 				jump 'glqs_mg_learn_loop'
 			end
-			killvar 'glqs_mg_i' & killvar 'glqs_mg_total' & killvar '$glqs_mg_all'
+			killvar 'glqs_mg_i'
+			killvar 'glqs_mg_total'
+			killvar '$glqs_mg_all'
 			gt 'mod_GLQS_main', 'magic_menu'
 		end
 
@@ -106,6 +110,7 @@ if $ARGS[0] = 'magic_menu':
 			$glqs_suc_tbl += '<tr><td>Skill Tier</td><td><<sucskill>> / 4</td></tr>'
 			$glqs_suc_tbl += '</table>'
 			$glqs_suc_tbl
+			killvar '$glqs_suc_tbl'
 			*nl
 
 			act 'Instant Max Succubus Level':
@@ -124,6 +129,16 @@ if $ARGS[0] = 'magic_menu':
 			act 'Max Succubus Skills':
 				sucskill = 4
 				sucpcinfo = 7
+				!! sucstorecap depends on sucskill but is only recomputed by
+				!! succubus cikl, which also adds a point of hunger whenever no
+				!! XP was gained since the last run - keep hunger unchanged.
+				glqs_mg_hunger = succhungry
+				glqs_mg_snapshot = sucxpsnapshot
+				gs 'succubus', 'cikl'
+				succhungry = glqs_mg_hunger
+				sucxpsnapshot = glqs_mg_snapshot
+				killvar 'glqs_mg_hunger'
+				killvar 'glqs_mg_snapshot'
 				gt 'mod_GLQS_main', 'magic_menu'
 			end
 

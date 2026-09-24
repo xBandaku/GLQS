@@ -6,6 +6,16 @@ if $ARGS[0] = 'jobs_menu':
 	*nl
 
 	gs 'mod_GLQS_main', 'job_list_build'
+	!! Row format is id|title. One pass builds an id -> title lookup for the
+	!! held-jobs table; $job_title is only filled lazily by the game.
+	glqs_jm_i = 0
+	:glqs_jobs_title_loop
+	if glqs_jm_i < arrsize('$glqs_jb'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_jb[glqs_jm_i]
+		$glqs_jm_titles[$glqs_field[0]] = $glqs_field[1]
+		glqs_jm_i += 1
+		jump 'glqs_jobs_title_loop'
+	end
 
 	glqs_jm_held = arrsize('$job_list')
 	if glqs_jm_held > 0:
@@ -16,28 +26,19 @@ if $ARGS[0] = 'jobs_menu':
 		:glqs_jobs_held_loop
 		if glqs_jm_i < glqs_jm_held:
 			$glqs_jm_id = $job_list[glqs_jm_i]
-			$glqs_jm_title = $glqs_jm_id
-			glqs_jm_j = 0
-			:glqs_jobs_held_title_loop
-			if glqs_jm_j < glqs_jb_total:
-				$glqs_jm_row = $glqs_jb[glqs_jm_j]
-				glqs_jm_p1 = instr($glqs_jm_row, '|')
-				if $mid($glqs_jm_row, 1, glqs_jm_p1 - 1) = $glqs_jm_id:
-					$glqs_jm_title = $mid($glqs_jm_row, glqs_jm_p1 + 1)
-				end
-				glqs_jm_j += 1
-				jump 'glqs_jobs_held_title_loop'
-			end
+			$glqs_jm_title = $glqs_jm_titles[$glqs_jm_id]
+			if $glqs_jm_title = '': $glqs_jm_title = $glqs_jm_id
 			$glqs_tbl += '<tr><td>' + $glqs_jm_title + '</td><td>' + job_rank[$glqs_jm_id] + '</td><td>' + job_pay_rate[$glqs_jm_id] + '</td><td>'
-			$glqs_tbl += '<a href="exec: job_rank[''' + $glqs_jm_id + '''] = 5 & gt ''mod_GLQS_main'', ''jobs_menu''">Max Rank</a> '
+			$glqs_tbl += '<a href="exec: gs ''jobs'', ''set_rank'', ''' + $glqs_jm_id + ''', 5 & gt ''mod_GLQS_main'', ''jobs_menu''">Max Rank</a> '
 			$glqs_tbl += '<a href="exec: job_pay_rate[''' + $glqs_jm_id + '''] = job_pay_rate[''' + $glqs_jm_id + '''] * 10 & gt ''mod_GLQS_main'', ''jobs_menu''">Boost Pay</a> '
-			$glqs_tbl += '<a href="exec: job_missed_total[''' + $glqs_jm_id + '''] = 0 & job_booking_debt[''' + $glqs_jm_id + '''] = 0 & job_docked_pay[''' + $glqs_jm_id + '''] = 0 & gt ''mod_GLQS_main'', ''jobs_menu''">Clear Penalties</a>'
+			$glqs_tbl += '<a href="exec: job_missed_total[''' + $glqs_jm_id + '''] = 0 & job_miss_acknowledged[''' + $glqs_jm_id + '''] = 0 & job_booking_debt[''' + $glqs_jm_id + '''] = 0 & job_docked_pay[''' + $glqs_jm_id + '''] = 0 & gt ''mod_GLQS_main'', ''jobs_menu''">Clear Penalties</a>'
 			$glqs_tbl += '</td></tr>'
 			glqs_jm_i += 1
 			jump 'glqs_jobs_held_loop'
 		end
 		$glqs_tbl += '</table>'
 		$glqs_tbl
+		killvar '$glqs_tbl'
 		*nl
 	end
 
@@ -45,11 +46,10 @@ if $ARGS[0] = 'jobs_menu':
 	$glqs_tbl2 = '<table width="80%" cellpadding=3>'
 	glqs_jm_i = 0
 	:glqs_jobs_all_loop
-	if glqs_jm_i < glqs_jb_total:
-		$glqs_jm_row = $glqs_jb[glqs_jm_i]
-		glqs_jm_p1 = instr($glqs_jm_row, '|')
-		$glqs_jm_id = $mid($glqs_jm_row, 1, glqs_jm_p1 - 1)
-		$glqs_jm_title = $mid($glqs_jm_row, glqs_jm_p1 + 1)
+	if glqs_jm_i < arrsize('$glqs_jb'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_jb[glqs_jm_i]
+		$glqs_jm_id = $glqs_field[0]
+		$glqs_jm_title = $glqs_field[1]
 		if $job_status[$glqs_jm_id] <> 'employed':
 			$glqs_tbl2 += '<tr><td>' + $glqs_jm_title + '</td><td><a href="exec: gs ''jobs'', ''set_employed'', ''' + $glqs_jm_id + ''' & gt ''mod_GLQS_main'', ''jobs_menu''">Instant-Hire</a></td></tr>'
 		end
@@ -58,11 +58,16 @@ if $ARGS[0] = 'jobs_menu':
 	end
 	$glqs_tbl2 += '</table>'
 	$glqs_tbl2
+	killvar '$glqs_tbl2'
 	*nl
 
-	killvar 'glqs_jm_held' & killvar 'glqs_jm_i' & killvar 'glqs_jm_j' & killvar 'glqs_jm_p1'
-	killvar '$glqs_jm_id' & killvar '$glqs_jm_title' & killvar '$glqs_jm_row'
-	killvar '$glqs_jb' & killvar 'glqs_jb_total'
+	killvar 'glqs_jm_held'
+	killvar 'glqs_jm_i'
+	killvar '$glqs_jm_id'
+	killvar '$glqs_jm_title'
+	killvar '$glqs_jm_titles'
+	killvar '$glqs_field'
+	killvar '$glqs_jb'
 
 	act 'Ignore Job Schedule Conflicts':
 		!! Reuses the games own existing debug hook (jobs.qsrc

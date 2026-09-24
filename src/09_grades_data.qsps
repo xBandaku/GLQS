@@ -1,19 +1,18 @@
 !! SCHOOL GRADE METADATA
+!! code|label. The game stores each grade in class[school_<code>_grade].
 if $ARGS[0] = 'grades_data':
-	glqs_grade_n = 0
-	$glqs_grade[glqs_grade_n] = 'math|Math|school_math_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'rus|Russian|school_rus_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'lit|Literature|school_lit_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'art|Art|school_art_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'bio|Biology|school_bio_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'eng|English|school_eng_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'geo|Geography|school_geo_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'sci|Science|school_sci_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'his|History|school_his_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'shop|Shop|school_shop_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'comp|Computer|school_comp_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'mus|Music|school_mus_grade' & glqs_grade_n += 1
-	$glqs_grade[glqs_grade_n] = 'pe|P.E.|school_pe_grade' & glqs_grade_n += 1
-	glqs_grade_total = glqs_grade_n
-	killvar 'glqs_grade_n'
+	killvar '$glqs_grade'
+	$glqs_grade[] = 'math|Math'
+	$glqs_grade[] = 'rus|Russian'
+	$glqs_grade[] = 'lit|Literature'
+	$glqs_grade[] = 'art|Art'
+	$glqs_grade[] = 'bio|Biology'
+	$glqs_grade[] = 'eng|English'
+	$glqs_grade[] = 'geo|Geography'
+	$glqs_grade[] = 'sci|Science'
+	$glqs_grade[] = 'his|History'
+	$glqs_grade[] = 'shop|Shop'
+	$glqs_grade[] = 'comp|Computer'
+	$glqs_grade[] = 'mus|Music'
+	$glqs_grade[] = 'pe|P.E.'
 end

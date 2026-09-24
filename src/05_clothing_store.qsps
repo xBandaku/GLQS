@@ -6,41 +6,25 @@ if $ARGS[0] = 'store_buy':
 	!! action used to run its own copy of this loop without the store filter.
 	!! Driven by the shared clothing_cat_build table below so this can
 	!! never drift from store_detail.
-	!! Captured before the nested gs call - $ARGS is one shared array in
-	!! QSP, not scoped per gosub, so calling clothing_cat_build would
-	!! clobber ARGS[1] before we get to read it.
 	$glqs_sb_store = $ARGS[1]
 	gs 'mod_GLQS_main', 'clothing_cat_build'
 	glqs_sb_i = 0
+	glqs_sb_total = arrsize('$glqs_cc')
 	:glqs_store_buy_loop
-	if glqs_sb_i < glqs_cc_total:
-		$glqs_sb_row = $glqs_cc[glqs_sb_i]
-		glqs_sb_p1 = instr($glqs_sb_row, '|')
-		$glqs_sb_rowstore = $mid($glqs_sb_row, 1, glqs_sb_p1 - 1)
-		if $glqs_sb_store = '' or $glqs_sb_rowstore = $glqs_sb_store:
-			!! Row format is store|type|key|label - four fields. The label is there
-			!! for the build-time picker expansion, and taking everything after the
-			!! second pipe as the key silently appended it, so every key handed to
-			!! clothing_totals and item_grant read like allure_swimsuit|Swimsuits.
-			!! The games totals handler does not recognise that, leaves total at its
-			!! previous value, and dyneval then writes to a nonsense array name.
-			$glqs_sb_rest = $mid($glqs_sb_row, glqs_sb_p1 + 1)
-			glqs_sb_p2 = instr($glqs_sb_rest, '|')
-			$glqs_sb_type = $mid($glqs_sb_rest, 1, glqs_sb_p2 - 1)
-			$glqs_sb_rest2 = $mid($glqs_sb_rest, glqs_sb_p2 + 1)
-			glqs_sb_p3 = instr($glqs_sb_rest2, '|')
-			$glqs_sb_key = $mid($glqs_sb_rest2, 1, glqs_sb_p3 - 1)
-			gs 'mod_GLQS_main', 'fill_by_type', $glqs_sb_type, $glqs_sb_key
+	if glqs_sb_i < glqs_sb_total:
+		!! Row format is store|type|key|label.
+		gs 'mod_GLQS_main', 'split_row', $glqs_cc[glqs_sb_i]
+		if $glqs_sb_store = '' or $glqs_field[0] = $glqs_sb_store:
+			gs 'mod_GLQS_main', 'fill_by_type', $glqs_field[1], $glqs_field[2]
 		end
 		glqs_sb_i += 1
 		jump 'glqs_store_buy_loop'
 	end
-
-	killvar 'glqs_sb_i' & killvar 'glqs_sb_p1' & killvar 'glqs_sb_p2'
-	killvar '$glqs_sb_row' & killvar '$glqs_sb_rowstore' & killvar '$glqs_sb_rest'
-	killvar '$glqs_sb_rest2' & killvar 'glqs_sb_p3'
-	killvar '$glqs_sb_type' & killvar '$glqs_sb_key' & killvar '$glqs_sb_store'
-	killvar '$glqs_cc' & killvar 'glqs_cc_total'
+	killvar 'glqs_sb_i'
+	killvar 'glqs_sb_total'
+	killvar '$glqs_sb_store'
+	killvar '$glqs_field'
+	killvar '$glqs_cc'
 end
 
 
@@ -49,14 +33,21 @@ if $ARGS[0] = 'store_detail':
 	!! Per-store category breakdown. Mirrors the store_buy dispatcher above,
 	!! but exposes each category the store carries as its own button instead
 	!! of buying everything in one shot.
-	!! Capture before any nested gs call - $ARGS is one shared array in QSP,
-	!! not scoped per gosub, so calling gs stat / gs themes below would
-	!! clobber ARGS[1] before we get to read it.
+	!! Copied into a global because the Buy All act below reads it at click
+	!! time, after this call and its $ARGS are gone.
 	$glqs_store = $ARGS[1]
 	gs 'mod_GLQS_main', 'screen_head'
 
 	!! GLQS_CLOTHING_LABELS_BEGIN
 	!! GLQS_CLOTHING_LABELS_END
+	$glqs_sicon = $func('$shop_icon_image', $glqs_store)
+
+	'<center><img src="<<$glqs_sicon>>" height="80"><br><b><font color="maroon"><<$glqs_label>></font></b></center>'
+	*nl
+	'Pick a category to browse it item-by-item, or grab everything this store carries.'
+	*nl
+	killvar '$glqs_sicon'
+	killvar '$glqs_label'
 
 	!! GLQS_CLOTHING_ACTIONS_BEGIN
 	!! GLQS_CLOTHING_ACTIONS_END

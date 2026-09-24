@@ -6,8 +6,7 @@
 !! route nothing ever called, so in practice there was no way to reach it.
 !! Default it on the first time it is ever seen (tracked by a companion flag,
 !! since 0 alone cannot distinguish never-set from explicitly-disabled), so the
-!! link works out of the box, with mod_GLQS_options below as the real way to
-!! hide it later.
+!! link works out of the box. The switch to hide it later is on the GLQS Index.
 if cheatVars['cheatsp_defaulted'] <> 1:
 	cheatVars['cheatsp'] = 1
 	cheatVars['cheatsp_defaulted'] = 1
@@ -36,28 +35,30 @@ end
 !! there. location_type = event marks the games own scripted scenes (sex
 !! scenes, big story beats) which can happen inside the bedroom itself
 !! and should not be interrupted with an unrelated UI link.
-!! gt $loc, $loc_arg (not curloc/menu_loc) is the games own idiom for
-!! returning to the exact screen the player is currently on (see the
-!! act Continue: gt $loc, $loc_arg pattern in core_library.qsrc), used
-!! here for the Return link so it works reliably from all three rooms.
+!! Every entry link calls enter (04_main_menu.qsps) with the screen to go
+!! back to. From a room that is $loc, $loc_arg - the games own idiom for the
+!! screen the player is on (the act Continue: gt $loc, $loc_arg pattern in
+!! core_library.qsrc).
 if opPRE = 0 and $location_type <> 'event' and cheatVars['cheatsp'] = 1 and ((func('homes_properties', 'is_current_home', $curloc) and $locclass = 'bedr') or ($loc = 'uni_dorm' and $curloc = 'uni_dorm' and $loc_arg = 'dorm_room') or ($loc = 'HotelRoom' and $curloc = 'HotelRoom' and $loc_arg = 'therapist')):
-	'<b> MOD <a href="exec: $shopreturn = $loc & $shoparg = $loc_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+	'<b> MOD <a href="exec: gs ''mod_GLQS_main'', ''enter'', $loc, $loc_arg & gt ''mod_GLQS_main'', ''start''">Quick Setup</a> MOD</b>'
+end
+
+!! Also offered under every tab of the games own cheat menu, which is reachable
+!! from anywhere. Every tab is a real gt into cheatmenu_din, and the hook gets
+!! the gt arguments, so ARGS[0] is the open tab and Return can come back to it.
+!! Not gated on the room-link toggle - that switch is about keeping ordinary
+!! gameplay screens clean, and the cheat menu is already a cheat screen.
+if opPRE = 0 and $curloc = 'cheatmenu_din':
+	'<br><b> MOD <a href="exec: gs ''mod_GLQS_main'', ''enter'', ''cheatmenu_din'', ''' + $ARGS[0] + ''' & gt ''mod_GLQS_main'', ''start''">Open GLQS</a> MOD</b>'
 end
 
 --- mod_GLQS ---------------------------------
 
 # mod_GLQS_options
-!! Reached from phone Settings > Mods > Options, which the base game renders
-!! for any mod setting $mod_info[4] ($mod_opt in mod_system.qsrc, linked from
-!! display_mod_table in _menu_settings.qsrc). The old permanent route put this
-!! toggle in the games own cheat menu, but nothing ever dispatched it -
-!! core_loop only ever passes the sleep and outfit argument set.
-*clr & cla
-'<center><b><font color="maroon">Quick Setup Mod</font></b></center>'
-*nl
-'Quick Setup link in your room: <a href="exec: cheatVars[''cheatsp''] = iif(cheatVars[''cheatsp''], 0, 1) & gs ''mod_GLQS_options''"><b><<iif(cheatVars[''cheatsp''], ''Enabled'', ''Disabled'')>></b></a>'
-*nl
-'Turning this off hides the link without uninstalling the mod.'
-*nl
-act 'Return': gt 'mod_setting'
+!! Reached from Settings > Mods, where the base game renders a link labelled
+!! $mod_info[4] for any mod that sets it ($mod_opt in mod_system.qsrc, linked
+!! from display_mod_table in _menu_settings.qsrc). It opens the GLQS menu
+!! directly; the room-link switch that used to live here is on the GLQS Index.
+gs 'mod_GLQS_main', 'enter', '$menu_settings', 'mods'
+gt 'mod_GLQS_main', 'start'
 --- mod_GLQS_options ---------------------------------

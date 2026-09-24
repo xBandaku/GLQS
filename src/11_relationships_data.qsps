@@ -15,121 +15,117 @@ end
 !! Roster is one flat pipe-delimited array shared by rel_menu (render) and
 !! max_category (maxing) so the two lists can never drift apart - each entry
 !! is category|gender|npc_rel_key|display_name. gender matches
-!! glqs_rel_filter (1=male, 2=female). QSP has no split function, so entries
-!! are parsed with instr/mid below, the same technique the base game itself
-!! uses (see mid(ARGS[0], 1, instr(ARGS[0], space) - 1) in its source).
+!! glqs_rel_filter (1=male, 2=female). Readers split rows with split_row.
 if $ARGS[0] = 'rel_roster':
-	glqs_n = 0
-	$glqs_npc[glqs_n] = 'family|1|A28|Dad (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|2|A29|Mother (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|2|A33|Sister (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|1|A34|Kolka (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|2|A30|Lyudmila (Aunt) (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|2|A31|Elena (Great Grandmother) (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|1|A32|Zlatek (Great Grandfather) (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|1|A35|Mikhail Kuznetsov (Father) (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|1|A54|Uncle Misha (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'family|1|A55|Olu (Aunts Boyfriend) (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A63|Mitka Ruslanov (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A61|Kolyamba Rostislav (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A62|Vasyan Makarovich (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A64|Afanasiy Maximov (Miras Father) (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A65|Vitaliy Maximov (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A221|Grigory Chekov (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A172|Andrei Saveliev (Hunter) (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A173|Igor Danilovich (Hunter) (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gadukino|1|A174|Sergei Kirillov (Hunter) (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|1|A1|Dimka (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|1|A4|Igor (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|2|A14|Katja (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|2|A15|Vicky (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|2|A17|Inna (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|2|A22|Bella (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|2|A25|Sonia (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|2|A139|Stasya (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|2|A140|Lizaveta (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|1|A146|Marcus (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|1|A147|Andrey (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'popular|1|A148|Mefodiy (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|1|A3|Ivan (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|1|A5|Fedor (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|1|A8|Svyatoslav (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|2|A13|Lariska (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|2|A18|Christina (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|2|A19|Lina (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|2|A23|Albina (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|2|A141|Ronnie (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|1|A149|Lazar (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|1|A150|Erast (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'athletes|1|A165|Vanya (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|1|A2|Artem (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|1|A6|Petka (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|2|A12|Julia (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|2|A16|Natasha (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|1|A151|Evgeny (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|1|A152|Feofan (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|1|A153|Gerasim (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|2|A142|Zina (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'nerds|2|A240|Nat (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A9|Vitek (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A10|Dan (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A11|Shulga (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|2|A20|Lena (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|2|A21|Lera (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|2|A24|Pauline (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|2|A143|Alyona (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|2|A144|Nush (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|2|A145|Katyusha (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A154|Radomir (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A155|Lavrenti (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A156|Arkadi (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A157|Roman (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A158|Valentin (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'gopniks|1|A189|Niko (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'outcasts|1|A7|Lesco (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'outcasts|1|A159|Petia (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|1|A26|Anatoly E. (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|1|A69|Coach (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|1|A128|Makar (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|1|A129|Serafim (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|1|A130|Ilya (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|1|A131|Viktor (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|1|A132|Ruslan (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|1|A133|Rolan (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|2|A134|Aleksandrina (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|2|A135|Yeva (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|2|A136|Olga (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|2|A137|Raven (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'teachers|2|A138|Arina (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A77|Tryndin Maximovich (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A82|Djibril Maina (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A83|Goshi Sidorov (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|2|A84|Kendra Abiodun (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A242|Lebo Kayode (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A243|Ermias Okeke (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A244|Farai Ihejirika (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A245|Haruna Babatunde (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A246|Arendse Idowu (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|2|A247|Liliya Lyubimova (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|2|A267|Mia Radimova (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|2|A268|Yana Radimova (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A254|Klim Kovalyov (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A255|Grigorii Pasternak (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|2|A256|Selena Kovalchuk (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|2|A269|Raina Marinova (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|2|A270|Olena Kudelina (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'university|1|A271|Nikita Borisov (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|2|A60|Mira (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|2|A219|Kat (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|2|A220|Vika (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|2|A93|Marisha (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|2|A43|Nika (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|1|A41|Fabiyan (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|1|A42|Ashot (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|2|A89|Eugene (F)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|1|A217|Pavlin (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|1|A216|Martin (M)' & glqs_n += 1
-	$glqs_npc[glqs_n] = 'others|1|A112|Sergey (M)' & glqs_n += 1
-	glqs_rel_total = glqs_n
-	killvar 'glqs_n'
+	killvar '$glqs_npc'
+	$glqs_npc[] = 'family|1|A28|Dad (M)'
+	$glqs_npc[] = 'family|2|A29|Mother (F)'
+	$glqs_npc[] = 'family|2|A33|Sister (F)'
+	$glqs_npc[] = 'family|1|A34|Kolka (M)'
+	$glqs_npc[] = 'family|2|A30|Lyudmila (Aunt) (F)'
+	$glqs_npc[] = 'family|2|A31|Elena (Great Grandmother) (F)'
+	$glqs_npc[] = 'family|1|A32|Zlatek (Great Grandfather) (M)'
+	$glqs_npc[] = 'family|1|A35|Mikhail Kuznetsov (Father) (M)'
+	$glqs_npc[] = 'family|1|A54|Uncle Misha (M)'
+	$glqs_npc[] = 'family|1|A55|Olu (Aunts Boyfriend) (M)'
+	$glqs_npc[] = 'gadukino|1|A63|Mitka Ruslanov (M)'
+	$glqs_npc[] = 'gadukino|1|A61|Kolyamba Rostislav (M)'
+	$glqs_npc[] = 'gadukino|1|A62|Vasyan Makarovich (M)'
+	$glqs_npc[] = 'gadukino|1|A64|Afanasiy Maximov (Miras Father) (M)'
+	$glqs_npc[] = 'gadukino|1|A65|Vitaliy Maximov (M)'
+	$glqs_npc[] = 'gadukino|1|A221|Grigory Chekov (M)'
+	$glqs_npc[] = 'gadukino|1|A172|Andrei Saveliev (Hunter) (M)'
+	$glqs_npc[] = 'gadukino|1|A173|Igor Danilovich (Hunter) (M)'
+	$glqs_npc[] = 'gadukino|1|A174|Sergei Kirillov (Hunter) (M)'
+	$glqs_npc[] = 'popular|1|A1|Dimka (M)'
+	$glqs_npc[] = 'popular|1|A4|Igor (M)'
+	$glqs_npc[] = 'popular|2|A14|Katja (F)'
+	$glqs_npc[] = 'popular|2|A15|Vicky (F)'
+	$glqs_npc[] = 'popular|2|A17|Inna (F)'
+	$glqs_npc[] = 'popular|2|A22|Bella (F)'
+	$glqs_npc[] = 'popular|2|A25|Sonia (F)'
+	$glqs_npc[] = 'popular|2|A139|Stasya (F)'
+	$glqs_npc[] = 'popular|2|A140|Lizaveta (F)'
+	$glqs_npc[] = 'popular|1|A146|Marcus (M)'
+	$glqs_npc[] = 'popular|1|A147|Andrey (M)'
+	$glqs_npc[] = 'popular|1|A148|Mefodiy (M)'
+	$glqs_npc[] = 'athletes|1|A3|Ivan (M)'
+	$glqs_npc[] = 'athletes|1|A5|Fedor (M)'
+	$glqs_npc[] = 'athletes|1|A8|Svyatoslav (M)'
+	$glqs_npc[] = 'athletes|2|A13|Lariska (F)'
+	$glqs_npc[] = 'athletes|2|A18|Christina (F)'
+	$glqs_npc[] = 'athletes|2|A19|Lina (F)'
+	$glqs_npc[] = 'athletes|2|A23|Albina (F)'
+	$glqs_npc[] = 'athletes|2|A141|Ronnie (F)'
+	$glqs_npc[] = 'athletes|1|A149|Lazar (M)'
+	$glqs_npc[] = 'athletes|1|A150|Erast (M)'
+	$glqs_npc[] = 'athletes|1|A165|Vanya (M)'
+	$glqs_npc[] = 'nerds|1|A2|Artem (M)'
+	$glqs_npc[] = 'nerds|1|A6|Petka (M)'
+	$glqs_npc[] = 'nerds|2|A12|Julia (F)'
+	$glqs_npc[] = 'nerds|2|A16|Natasha (F)'
+	$glqs_npc[] = 'nerds|1|A151|Evgeny (M)'
+	$glqs_npc[] = 'nerds|1|A152|Feofan (M)'
+	$glqs_npc[] = 'nerds|1|A153|Gerasim (M)'
+	$glqs_npc[] = 'nerds|2|A142|Zina (F)'
+	$glqs_npc[] = 'nerds|2|A240|Nat (F)'
+	$glqs_npc[] = 'gopniks|1|A9|Vitek (M)'
+	$glqs_npc[] = 'gopniks|1|A10|Dan (M)'
+	$glqs_npc[] = 'gopniks|1|A11|Shulga (M)'
+	$glqs_npc[] = 'gopniks|2|A20|Lena (F)'
+	$glqs_npc[] = 'gopniks|2|A21|Lera (F)'
+	$glqs_npc[] = 'gopniks|2|A24|Pauline (F)'
+	$glqs_npc[] = 'gopniks|2|A143|Alyona (F)'
+	$glqs_npc[] = 'gopniks|2|A144|Nush (F)'
+	$glqs_npc[] = 'gopniks|2|A145|Katyusha (F)'
+	$glqs_npc[] = 'gopniks|1|A154|Radomir (M)'
+	$glqs_npc[] = 'gopniks|1|A155|Lavrenti (M)'
+	$glqs_npc[] = 'gopniks|1|A156|Arkadi (M)'
+	$glqs_npc[] = 'gopniks|1|A157|Roman (M)'
+	$glqs_npc[] = 'gopniks|1|A158|Valentin (M)'
+	$glqs_npc[] = 'gopniks|1|A189|Niko (M)'
+	$glqs_npc[] = 'outcasts|1|A7|Lesco (M)'
+	$glqs_npc[] = 'outcasts|1|A159|Petia (M)'
+	$glqs_npc[] = 'teachers|1|A26|Anatoly E. (M)'
+	$glqs_npc[] = 'teachers|1|A69|Coach (M)'
+	$glqs_npc[] = 'teachers|1|A128|Makar (M)'
+	$glqs_npc[] = 'teachers|1|A129|Serafim (M)'
+	$glqs_npc[] = 'teachers|1|A130|Ilya (M)'
+	$glqs_npc[] = 'teachers|1|A131|Viktor (M)'
+	$glqs_npc[] = 'teachers|1|A132|Ruslan (M)'
+	$glqs_npc[] = 'teachers|1|A133|Rolan (M)'
+	$glqs_npc[] = 'teachers|2|A134|Aleksandrina (F)'
+	$glqs_npc[] = 'teachers|2|A135|Yeva (F)'
+	$glqs_npc[] = 'teachers|2|A136|Olga (F)'
+	$glqs_npc[] = 'teachers|2|A137|Raven (F)'
+	$glqs_npc[] = 'teachers|2|A138|Arina (F)'
+	$glqs_npc[] = 'university|1|A77|Tryndin Maximovich (M)'
+	$glqs_npc[] = 'university|1|A82|Djibril Maina (M)'
+	$glqs_npc[] = 'university|1|A83|Goshi Sidorov (M)'
+	$glqs_npc[] = 'university|2|A84|Kendra Abiodun (F)'
+	$glqs_npc[] = 'university|1|A242|Lebo Kayode (M)'
+	$glqs_npc[] = 'university|1|A243|Ermias Okeke (M)'
+	$glqs_npc[] = 'university|1|A244|Farai Ihejirika (M)'
+	$glqs_npc[] = 'university|1|A245|Haruna Babatunde (M)'
+	$glqs_npc[] = 'university|1|A246|Arendse Idowu (M)'
+	$glqs_npc[] = 'university|2|A247|Liliya Lyubimova (F)'
+	$glqs_npc[] = 'university|2|A267|Mia Radimova (F)'
+	$glqs_npc[] = 'university|2|A268|Yana Radimova (F)'
+	$glqs_npc[] = 'university|1|A254|Klim Kovalyov (M)'
+	$glqs_npc[] = 'university|1|A255|Grigorii Pasternak (M)'
+	$glqs_npc[] = 'university|2|A256|Selena Kovalchuk (F)'
+	$glqs_npc[] = 'university|2|A269|Raina Marinova (F)'
+	$glqs_npc[] = 'university|2|A270|Olena Kudelina (F)'
+	$glqs_npc[] = 'university|1|A271|Nikita Borisov (M)'
+	$glqs_npc[] = 'others|2|A60|Mira (F)'
+	$glqs_npc[] = 'others|2|A219|Kat (F)'
+	$glqs_npc[] = 'others|2|A220|Vika (F)'
+	$glqs_npc[] = 'others|2|A93|Marisha (F)'
+	$glqs_npc[] = 'others|2|A43|Nika (F)'
+	$glqs_npc[] = 'others|1|A41|Fabiyan (M)'
+	$glqs_npc[] = 'others|1|A42|Ashot (M)'
+	$glqs_npc[] = 'others|2|A89|Eugene (F)'
+	$glqs_npc[] = 'others|1|A217|Pavlin (M)'
+	$glqs_npc[] = 'others|1|A216|Martin (M)'
+	$glqs_npc[] = 'others|1|A112|Sergey (M)'
 end

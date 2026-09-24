@@ -8,8 +8,9 @@ if $ARGS[0] = 'item_picker':
 	!!           bare store name for every other type (e.g. bomba)
 	!! ARGS[3] = store - bare store name, used only for the Return button
 	!! ARGS[4] = label - display name for the category (e.g. Swimsuits)
-	!! All captured before any nested gs call - $ARGS and total are both
-	!! plain globals in QSP, clobbered by any nested gs call.
+	!! Copied into globals because the acts and links below read them at
+	!! click time, after this call and its $ARGS are gone. total is the games
+	!! scratch global, so it is copied straight after clothing_totals sets it.
 	$glqs_ptype = $ARGS[1]
 	$glqs_pkey = $ARGS[2]
 	$glqs_pstore = $ARGS[3]
@@ -26,51 +27,32 @@ if $ARGS[0] = 'item_picker':
 	*nl
 
 	$glqs_grid = '<div style="display:flex; flex-wrap:wrap; gap:8px;">'
-	glqs_i = 1
+	glqs_pi = 1
 	:glqs_item_picker_loop
-	if glqs_i <= glqs_ptotal:
-		if $glqs_ptype = 'clo': $glqs_pimg = $func('$clothing_image', $glqs_pkey, glqs_i)
-		if $glqs_ptype = 'shoe': $glqs_pimg = $func('$shoe_image', $glqs_pkey, glqs_i)
-		if $glqs_ptype = 'bra': $glqs_pimg = $func('$bra_image', $glqs_pkey, glqs_i)
-		if $glqs_ptype = 'panty': $glqs_pimg = $func('$panty_image', $glqs_pkey, glqs_i)
-		if $glqs_ptype = 'body': $glqs_pimg = $func('$bodysuit_image', $glqs_pkey, glqs_i)
-		if $glqs_ptype = 'coat': $glqs_pimg = $func('$coat_image', $glqs_pkey, glqs_i)
-		if $glqs_ptype = 'purse': $glqs_pimg = $func('$purse_image', $glqs_pkey, glqs_i)
+	if glqs_pi <= glqs_ptotal:
+		if $glqs_ptype = 'clo': $glqs_pimg = $func('$clothing_image', $glqs_pkey, glqs_pi)
+		if $glqs_ptype = 'shoe': $glqs_pimg = $func('$shoe_image', $glqs_pkey, glqs_pi)
+		if $glqs_ptype = 'bra': $glqs_pimg = $func('$bra_image', $glqs_pkey, glqs_pi)
+		if $glqs_ptype = 'panty': $glqs_pimg = $func('$panty_image', $glqs_pkey, glqs_pi)
+		if $glqs_ptype = 'body': $glqs_pimg = $func('$bodysuit_image', $glqs_pkey, glqs_pi)
+		if $glqs_ptype = 'coat': $glqs_pimg = $func('$coat_image', $glqs_pkey, glqs_pi)
+		if $glqs_ptype = 'purse': $glqs_pimg = $func('$purse_image', $glqs_pkey, glqs_pi)
 
-		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''mod_GLQS_main'', ''item_pick'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', <<glqs_i>> & gs ''stat'' & gt ''mod_GLQS_main'', ''item_picker'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', ''<<$glqs_pstore>>'', ''<<$glqs_plabel>>''"><img height="220" src="<<$glqs_pimg>>"></a></div>'
+		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''mod_GLQS_main'', ''item_grant'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', <<glqs_pi>> & gs ''stat'' & gt ''mod_GLQS_main'', ''item_picker'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', ''<<$glqs_pstore>>'', ''<<$glqs_plabel>>''"><img height="220" src="<<$glqs_pimg>>"></a></div>'
 
-		glqs_i += 1
+		glqs_pi += 1
 		jump 'glqs_item_picker_loop'
 	end
-	killvar 'glqs_i'
+	killvar 'glqs_pi'
 	$glqs_grid += '</div>'
 	$glqs_grid
+	killvar '$glqs_grid'
 	*nl
 
 	act 'Give All (this category)':
-		gs 'mod_GLQS_main', 'item_pick_all', $glqs_ptype, $glqs_pkey
+		gs 'mod_GLQS_main', 'fill_by_type', $glqs_ptype, $glqs_pkey
 		gt 'mod_GLQS_main', 'item_picker', $glqs_ptype, $glqs_pkey, $glqs_pstore, $glqs_plabel
 	end
 	act 'Return': gt 'mod_GLQS_main', 'store_detail', $glqs_pstore
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
-end
-
-
-
-if $ARGS[0] = 'item_pick':
-	$glqs_ip_type = $ARGS[1]
-	$glqs_ip_key = $ARGS[2]
-	glqs_ip_idx = ARGS[3]
-	gs 'mod_GLQS_main', 'item_grant', $glqs_ip_type, $glqs_ip_key, glqs_ip_idx
-	killvar '$glqs_ip_type' & killvar '$glqs_ip_key' & killvar 'glqs_ip_idx'
-end
-
-if $ARGS[0] = 'item_pick_all':
-	!! Convenience bulk option inside the picker - grants every item in the
-	!! category by dispatching to the existing fill_* helper for the type.
-	$glqs_ipa_type = $ARGS[1]
-	$glqs_ipa_key = $ARGS[2]
-	gs 'mod_GLQS_main', 'fill_by_type', $glqs_ipa_type, $glqs_ipa_key
-	killvar '$glqs_ipa_type'
-	killvar '$glqs_ipa_key'
 end

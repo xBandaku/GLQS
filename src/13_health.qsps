@@ -15,9 +15,10 @@ if $ARGS[0] = 'health_menu':
 	$glqs_tbl += '<tr><td>Hunger</td><td><<pcs_energy>></td></tr>'
 	$glqs_tbl += '<tr><td>Hydration</td><td><<pcs_hydra>></td></tr>'
 	$glqs_tbl += '<tr><td>Faith</td><td><<pcs_faith>></td></tr>'
-	$glqs_tbl += '<tr><td>Pregnant</td><td><<iif(preg > 0, ''Yes'', ''No'')>></td></tr>'
+	$glqs_tbl += '<tr><td>Pregnant</td><td><<$iif(preg > 0, ''Yes'', ''No'')>></td></tr>'
 	$glqs_tbl += '</table>'
 	$glqs_tbl
+	killvar '$glqs_tbl'
 	*nl
 
 	act 'Full Restore Everything':
@@ -26,7 +27,7 @@ if $ARGS[0] = 'health_menu':
 		pcs_willpwr = willpowermax
 		!! manamax is recomputed by gs stat from an algebraically identical
 		!! expression, so reading it back cannot drift from the games own
-		!! formula. 18_magic.qsps already does this.
+		!! formula. 16_magic.qsps already does this.
 		pcs_mana = manamax
 		pcs_sleep = 100
 		pcs_mood = 100
@@ -35,7 +36,6 @@ if $ARGS[0] = 'health_menu':
 		pcs_faith = 100
 		vgape = 0
 		agape = 0
-		nippain = 0
 		gs 'stat'
 		gt 'mod_GLQS_main', 'health_menu'
 	end
