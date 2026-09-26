@@ -1,0 +1,51 @@
+!! CLOTHING PICKER SORT AND FILTER DATA
+if $ARGS[0] = 'picker_filter_data':
+	!! One row per button in the item picker header: role|type|name|expr.
+	!! role is sort or filter. type is a picker type (clo / shoe / bra / panty /
+	!! body / coat / purse), or all for a row every type gets. name is both the
+	!! state key and the base games icon name under images/system/icons/clothing.
+	!! expr is read after item_attributes has loaded one item - a sort expr
+	!! gives the sort key, a filter expr is true when the item has that tag.
+	!! The filter exprs are copied from clothing_view.qsrc and shoe_view.qsrc,
+	!! so a tag means the same thing here as in the game shops. The game
+	!! stores no tags for underwear, coats or purses, so those only sort.
+	killvar '$glqs_pfd'
+	$glqs_pfd[] = 'sort|all|number|glqs_pi'
+	$glqs_pfd[] = 'sort|clo|quality|CloQuality'
+	$glqs_pfd[] = 'sort|clo|price|CloPrice'
+	$glqs_pfd[] = 'sort|clo|inhibition|CloInhibit'
+	$glqs_pfd[] = 'sort|shoe|quality|ShoQuality'
+	$glqs_pfd[] = 'sort|shoe|price|ShoPrice'
+	$glqs_pfd[] = 'sort|shoe|heels|ShoHeels'
+	$glqs_pfd[] = 'sort|bra|quality|BraQuality'
+	$glqs_pfd[] = 'sort|bra|price|BraPrice'
+	$glqs_pfd[] = 'sort|panty|quality|PanQuality'
+	$glqs_pfd[] = 'sort|panty|price|PanPrice'
+	$glqs_pfd[] = 'sort|body|quality|BraQuality'
+	$glqs_pfd[] = 'sort|body|price|BraPrice'
+	$glqs_pfd[] = 'sort|coat|quality|CoatQuality'
+	$glqs_pfd[] = 'sort|coat|price|CoatPrice'
+	$glqs_pfd[] = 'sort|purse|quality|PurseQuality'
+	$glqs_pfd[] = 'sort|purse|price|PursePrice'
+	$glqs_pfd[] = 'filter|clo|prostitute|CloStyle = 4 or CloProstitute = 1'
+	$glqs_pfd[] = 'filter|clo|stripper|CloStyle2 = 3 or CloStrip = 1'
+	$glqs_pfd[] = 'filter|clo|bimbo|CloBimbo'
+	$glqs_pfd[] = 'filter|clo|goth|CloGoth'
+	$glqs_pfd[] = 'filter|clo|preppy|CloPrep'
+	$glqs_pfd[] = 'filter|clo|prude|CloPrude'
+	$glqs_pfd[] = 'filter|clo|punk|CloPunk'
+	$glqs_pfd[] = 'filter|clo|conservative|CloInhibit <= pcs_inhib - 10'
+	$glqs_pfd[] = 'filter|clo|risque|(CloInhibit > pcs_inhib - 10) and (CloInhibit <= pcs_inhib)'
+	$glqs_pfd[] = 'filter|clo|too_risque|CloInhibit > pcs_inhib'
+	$glqs_pfd[] = 'filter|clo|loose|CloStyle = 5'
+	$glqs_pfd[] = 'filter|clo|school|CloStyle2 = 4 or CloSchool = 1'
+	$glqs_pfd[] = 'filter|shoe|stripper|ShoStrip'
+	$glqs_pfd[] = 'filter|shoe|bimbo|ShoBimbo'
+	$glqs_pfd[] = 'filter|shoe|goth|ShoGoth'
+	$glqs_pfd[] = 'filter|shoe|punk|ShoPunk'
+	$glqs_pfd[] = 'filter|shoe|alternative|ShoStyle = 1'
+	$glqs_pfd[] = 'filter|shoe|heels|ShoHeels > 1'
+	$glqs_pfd[] = 'filter|shoe|comfy_heels|pcs_heels >= ShoPain[''mild'']'
+	$glqs_pfd[] = 'filter|shoe|uncomfy_heels|pcs_heels >= ShoPain[''severe''] and pcs_heels < ShoPain[''mild'']'
+	$glqs_pfd[] = 'filter|shoe|extreme_heels|pcs_heels < ShoPain[''severe'']'
+end

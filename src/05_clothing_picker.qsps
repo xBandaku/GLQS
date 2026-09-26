@@ -2,7 +2,8 @@
 if $ARGS[0] = 'item_picker':
 	!! Image-grid item picker, same pattern as the tattoo/piercing design
 	!! pickers - shows every item in a category so a specific one can be
-	!! clicked instead of buying the whole category in one shot.
+	!! clicked instead of buying the whole category in one shot. The header
+	!! has the game shops sort and Include/Exclude buttons (picker_filters).
 	!! ARGS[1] = item type: clo / shoe / bra / panty / body / coat / purse
 	!! ARGS[2] = key - full category name for clo (e.g. allure_swimsuit),
 	!!           bare store name for every other type (e.g. bomba)
@@ -20,16 +21,63 @@ if $ARGS[0] = 'item_picker':
 	glqs_ptotal = total
 	$glqs_picon = $func('$shop_icon_image', $glqs_pkey)
 
+	$glqs_preload = 'gt ''mod_GLQS_main'', ''item_picker'', ''' + $glqs_ptype + ''', ''' + $glqs_pkey + ''', ''' + $glqs_pstore + ''', ''' + $glqs_plabel + ''''
+
 	gs 'mod_GLQS_main', 'screen_head'
 
 	'<center><img src="<<$glqs_picon>>" height="80"><br><b><font color="maroon"><<$glqs_plabel>></font></b></center>'
-	'<br><<glqs_ptotal>> items available. Click an image to add it to your wardrobe at full durability.'
+	gs 'mod_GLQS_main', 'picker_filters'
+
+	!! Keep the items that pass every active filter, in sort order. Insertion
+	!! sort into glqs_plist / glqs_psk - a category is at most a few hundred
+	!! items, and equal keys keep their catalog order.
+	killvar 'glqs_plist'
+	killvar 'glqs_psk'
+	glqs_pi = 1
+	:glqs_picker_collect_loop
+	if glqs_pi <= glqs_ptotal:
+		gs 'mod_GLQS_main', 'item_attributes', $glqs_ptype, $glqs_pkey, glqs_pi
+		glqs_pok = 1
+		glqs_pc = 0
+		:glqs_picker_check_loop
+		if glqs_pok and glqs_pc < arrsize('$glqs_pchk'):
+			if dyneval('result = ' + $glqs_pchk[glqs_pc]) = 0: glqs_pok = 0
+			glqs_pc += 1
+			jump 'glqs_picker_check_loop'
+		end
+		if glqs_pok:
+			glqs_pval = dyneval('result = ' + $glqs_psort_expr)
+			if glqs_psortdir: glqs_pval = -glqs_pval
+			glqs_pj = arrsize('glqs_plist')
+			:glqs_picker_insert_loop
+			if glqs_pj > 0:
+				if glqs_psk[glqs_pj - 1] > glqs_pval:
+					glqs_plist[glqs_pj] = glqs_plist[glqs_pj - 1]
+					glqs_psk[glqs_pj] = glqs_psk[glqs_pj - 1]
+					glqs_pj -= 1
+					jump 'glqs_picker_insert_loop'
+				end
+			end
+			glqs_plist[glqs_pj] = glqs_pi
+			glqs_psk[glqs_pj] = glqs_pval
+		end
+		glqs_pi += 1
+		jump 'glqs_picker_collect_loop'
+	end
+	glqs_pshown = arrsize('glqs_plist')
+
+	if glqs_pshown < glqs_ptotal:
+		'<br><<glqs_pshown>> of <<glqs_ptotal>> items shown. Click an image to add it to your wardrobe at full durability.'
+	else
+		'<br><<glqs_ptotal>> items available. Click an image to add it to your wardrobe at full durability.'
+	end
 	*nl
 
 	$glqs_grid = '<div style="display:flex; flex-wrap:wrap; gap:8px;">'
-	glqs_pi = 1
+	glqs_pn = 0
 	:glqs_item_picker_loop
-	if glqs_pi <= glqs_ptotal:
+	if glqs_pn < glqs_pshown:
+		glqs_pi = glqs_plist[glqs_pn]
 		if $glqs_ptype = 'clo': $glqs_pimg = $func('$clothing_image', $glqs_pkey, glqs_pi)
 		if $glqs_ptype = 'shoe': $glqs_pimg = $func('$shoe_image', $glqs_pkey, glqs_pi)
 		if $glqs_ptype = 'bra': $glqs_pimg = $func('$bra_image', $glqs_pkey, glqs_pi)
@@ -40,19 +88,148 @@ if $ARGS[0] = 'item_picker':
 
 		$glqs_grid += '<div style="flex:0 0 auto;"><a href="exec: gs ''mod_GLQS_main'', ''item_grant'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', <<glqs_pi>> & gs ''stat'' & gt ''mod_GLQS_main'', ''item_picker'', ''<<$glqs_ptype>>'', ''<<$glqs_pkey>>'', ''<<$glqs_pstore>>'', ''<<$glqs_plabel>>''"><img height="220" src="<<$glqs_pimg>>"></a></div>'
 
-		glqs_pi += 1
+		glqs_pn += 1
 		jump 'glqs_item_picker_loop'
 	end
 	killvar 'glqs_pi'
+	killvar 'glqs_pn'
+	killvar 'glqs_pj'
+	killvar 'glqs_pc'
+	killvar 'glqs_pok'
+	killvar 'glqs_pval'
+	killvar 'glqs_psk'
+	killvar '$glqs_pchk'
+	killvar '$glqs_psort_expr'
+	killvar '$glqs_preload'
 	$glqs_grid += '</div>'
 	$glqs_grid
 	killvar '$glqs_grid'
 	*nl
 
-	act 'Give All (this category)':
-		gs 'mod_GLQS_main', 'fill_by_type', $glqs_ptype, $glqs_pkey
-		gt 'mod_GLQS_main', 'item_picker', $glqs_ptype, $glqs_pkey, $glqs_pstore, $glqs_plabel
+	!! While a filter hides items, Give All grants only the shown ones, so
+	!! glqs_plist is kept for the act to read at click time. Every way off
+	!! this screen kills it, and each redraw rebuilds it.
+	if glqs_pshown < glqs_ptotal:
+		act 'Give All (shown)':
+			gs 'mod_GLQS_main', 'give_shown'
+			gt 'mod_GLQS_main', 'item_picker', $glqs_ptype, $glqs_pkey, $glqs_pstore, $glqs_plabel
+		end
+	else
+		act 'Give All (this category)':
+			gs 'mod_GLQS_main', 'fill_by_type', $glqs_ptype, $glqs_pkey
+			gt 'mod_GLQS_main', 'item_picker', $glqs_ptype, $glqs_pkey, $glqs_pstore, $glqs_plabel
+		end
 	end
-	act 'Return': gt 'mod_GLQS_main', 'store_detail', $glqs_pstore
-	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+	killvar 'glqs_pshown'
+	act 'Return':
+		killvar 'glqs_plist'
+		gt 'mod_GLQS_main', 'store_detail', $glqs_pstore
+	end
+	act 'Return to Top Menu':
+		killvar 'glqs_plist'
+		gt 'mod_GLQS_main', 'start'
+	end
+end
+
+
+if $ARGS[0] = 'give_shown':
+	!! Grants the items item_picker left in glqs_plist - the ones its filters
+	!! let through.
+	glqs_pg = 0
+	:glqs_give_shown_loop
+	if glqs_pg < arrsize('glqs_plist'):
+		gs 'mod_GLQS_main', 'item_grant', $glqs_ptype, $glqs_pkey, glqs_plist[glqs_pg]
+		glqs_pg += 1
+		jump 'glqs_give_shown_loop'
+	end
+	killvar 'glqs_pg'
+	killvar 'glqs_plist'
+end
+
+
+if $ARGS[0] = 'picker_filters':
+	!! Prints the Sort by and Include/Exclude buttons for the current picker
+	!! type from picker_filter_data, with the game shop icons. Leaves the
+	!! active filter tests in $glqs_pchk and the sort key in $glqs_psort_expr
+	!! for item_picker. The choices live in $glqs_psort, glqs_psortdir and
+	!! glqs_pfilt[name] (1 include, -1 exclude, 0 off, the same cycle as the
+	!! shops) and carry over between categories. A sort the current type
+	!! lacks, such as inhibition on shoes, shows number without forgetting it.
+	gs 'mod_GLQS_main', 'picker_filter_data'
+	killvar '$glqs_pchk'
+	$glqs_psort_cur = 'number'
+	glqs_pr = 0
+	:glqs_picker_sort_find_loop
+	if glqs_pr < arrsize('$glqs_pfd'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_pfd[glqs_pr]
+		if $glqs_field[0] = 'sort' and $glqs_field[2] = $glqs_psort:
+			if $glqs_field[1] = $glqs_ptype or $glqs_field[1] = 'all': $glqs_psort_cur = $glqs_psort
+		end
+		glqs_pr += 1
+		jump 'glqs_picker_sort_find_loop'
+	end
+
+	$glqs_palt = ''
+	$glqs_pinc_color = 'green'
+	if cheatVars['shop_alt_color']:
+		$glqs_palt = '_alt'
+		$glqs_pinc_color = 'blue'
+	end
+	$glqs_picons = 'images/system/icons/clothing/'
+	$glqs_psorts = ''
+	$glqs_pfilts = ''
+	glqs_pfn = 0
+	glqs_pr = 0
+	:glqs_picker_bar_loop
+	if glqs_pr < arrsize('$glqs_pfd'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_pfd[glqs_pr]
+		if $glqs_field[1] = $glqs_ptype or $glqs_field[1] = 'all':
+			$glqs_pname = $glqs_field[2]
+			$glqs_pexpr = $glqs_field[3]
+			if $glqs_field[0] = 'sort':
+				if $glqs_pname = $glqs_psort_cur:
+					$glqs_psort_expr = $glqs_pexpr
+					$glqs_psorts += '<img src="' + $glqs_picons + $glqs_pname + '_inc' + $glqs_palt + '.png">'
+				else
+					$glqs_psorts += '<a href="exec: $glqs_psort = ''' + $glqs_pname + ''' & ' + $glqs_preload + '"><img src="' + $glqs_picons + $glqs_pname + '_exc.png"></a>'
+				end
+			else
+				if glqs_pfn > 0 and glqs_pfn mod 6 = 0: $glqs_pfilts += '<br>'
+				glqs_pfn += 1
+				if glqs_pfilt[$glqs_pname] > 0:
+					$glqs_pchk[] = '(' + $glqs_pexpr + ')'
+					$glqs_pfilts += '<a href="exec: glqs_pfilt[''' + $glqs_pname + '''] = -1 & ' + $glqs_preload + '"><img src="' + $glqs_picons + $glqs_pname + '_inc' + $glqs_palt + '.png"></a>'
+				elseif glqs_pfilt[$glqs_pname] < 0:
+					$glqs_pchk[] = '(' + $glqs_pexpr + ') = 0'
+					$glqs_pfilts += '<a href="exec: glqs_pfilt[''' + $glqs_pname + '''] = 0 & ' + $glqs_preload + '"><img src="' + $glqs_picons + $glqs_pname + '_exc.png"></a>'
+				else
+					$glqs_pfilts += '<a href="exec: glqs_pfilt[''' + $glqs_pname + '''] = 1 & ' + $glqs_preload + '"><img src="' + $glqs_picons + $glqs_pname + '_off.png"></a>'
+				end
+			end
+		end
+		glqs_pr += 1
+		jump 'glqs_picker_bar_loop'
+	end
+
+	if glqs_psortdir:
+		$glqs_psorts += '<a href="exec: glqs_psortdir = 0 & ' + $glqs_preload + '"><img src="' + $glqs_picons + 'high_low.png"></a>'
+	else
+		$glqs_psorts += '<a href="exec: glqs_psortdir = 1 & ' + $glqs_preload + '"><img src="' + $glqs_picons + 'low_high.png"></a>'
+	end
+	'<center><b>Sort by</b><br>' + $glqs_psorts + '</center>'
+	if glqs_pfn > 0:
+		'<center><b><font color="' + $glqs_pinc_color + '">Include</font>/<font color="red">Exclude</font></b><br>' + $glqs_pfilts + '</center>'
+	end
+
+	killvar '$glqs_pfd'
+	killvar 'glqs_pr'
+	killvar 'glqs_pfn'
+	killvar '$glqs_psort_cur'
+	killvar '$glqs_palt'
+	killvar '$glqs_pinc_color'
+	killvar '$glqs_picons'
+	killvar '$glqs_psorts'
+	killvar '$glqs_pfilts'
+	killvar '$glqs_pname'
+	killvar '$glqs_pexpr'
 end
