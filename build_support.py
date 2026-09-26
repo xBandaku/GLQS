@@ -23,6 +23,7 @@ SHARED_FILES = [
     "05_clothing_data.qsps",
     "05_clothing.qsps",
     "05_clothing_store.qsps",
+    "05_clothing_filter_data.qsps",
     "05_clothing_picker.qsps",
     "05_clothing_grant.qsps",
     "06_consumables_data.qsps",

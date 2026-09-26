@@ -21,6 +21,20 @@ if $ARGS[0] = 'clothing_totals':
 	killvar '$glqs_ct_key'
 end
 
+if $ARGS[0] = 'item_attributes':
+	!! Loads one items attributes into the games Clo* / Sho* / Bra* / Pan* /
+	!! Coat* / Purse* globals, the same call each type makes in its own shop
+	!! view. item_grant reads MaxStrength from them and the picker sorts and
+	!! filters on them.
+	if $ARGS[1] = 'clo': gs 'clothing_attributes', $ARGS[2], ARGS[3]
+	if $ARGS[1] = 'shoe': gs 'shoe_attributes', $ARGS[2], ARGS[3]
+	if $ARGS[1] = 'bra': gs 'underwear_attributes', $ARGS[2] + '_bras', ARGS[3]
+	if $ARGS[1] = 'panty': gs 'underwear_attributes', $ARGS[2] + '_panties', ARGS[3]
+	if $ARGS[1] = 'body': gs 'underwear_attributes', $ARGS[2] + '_bodysuits', ARGS[3]
+	if $ARGS[1] = 'coat': gs 'coat_attributes', $ARGS[2], ARGS[3]
+	if $ARGS[1] = 'purse': gs 'purse_attributes', $ARGS[2], ARGS[3]
+end
+
 if $ARGS[0] = 'fill_by_type':
 	!! Own glqs_fill_ prefix so the nested clothing_totals and item_grant calls,
 	!! which set and kill their own globals, cannot overwrite these mid-loop.
@@ -45,10 +59,10 @@ if $ARGS[0] = 'item_grant':
 	$glqs_ip_type = $ARGS[1]
 	$glqs_ip_key = $ARGS[2]
 	glqs_ip_idx = ARGS[3]
+	gs 'mod_GLQS_main', 'item_attributes', $glqs_ip_type, $glqs_ip_key, glqs_ip_idx
 
 	if $glqs_ip_type = 'clo':
 		dyneval('<<$glqs_ip_key>>[glqs_ip_idx] = 1')
-		gs 'clothing_attributes', $glqs_ip_key, glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_h[glqs_ip_idx] = CloMaxStrength')
 		dyneval('<<$glqs_ip_key>>_b[glqs_ip_idx] = pcs_hips')
 		dyneval('<<$glqs_ip_key>>_s[glqs_ip_idx] = 0')
@@ -56,40 +70,34 @@ if $ARGS[0] = 'item_grant':
 	end
 	if $glqs_ip_type = 'shoe':
 		dyneval('<<$glqs_ip_key>>_shoe[glqs_ip_idx] = 1')
-		gs 'shoe_attributes', $glqs_ip_key, glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_shoe_h[glqs_ip_idx] = ShoMaxStrength')
 		dyneval('<<$glqs_ip_key>>_shoe_s[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'bra':
 		dyneval('<<$glqs_ip_key>>_bras[glqs_ip_idx] = 1')
-		gs 'underwear_attributes', $glqs_ip_key + '_bras', glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_bras_h[glqs_ip_idx] = BraMaxStrength')
 		dyneval('<<$glqs_ip_key>>_brasS[glqs_ip_idx] = 0')
 		dyneval('<<$glqs_ip_key>>_bras_dirt[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'panty':
 		dyneval('<<$glqs_ip_key>>_panties[glqs_ip_idx] = 1')
-		gs 'underwear_attributes', $glqs_ip_key + '_panties', glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_panties_h[glqs_ip_idx] = PanMaxStrength')
 		dyneval('<<$glqs_ip_key>>_pantiesS[glqs_ip_idx] = 0')
 		dyneval('<<$glqs_ip_key>>_panties_dirt[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'body':
 		dyneval('<<$glqs_ip_key>>_bodysuits[glqs_ip_idx] = 1')
-		gs 'underwear_attributes', $glqs_ip_key + '_bodysuits', glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_bodysuits_h[glqs_ip_idx] = BraMaxStrength')
 		dyneval('<<$glqs_ip_key>>_bodysuits_s[glqs_ip_idx] = 0')
 		dyneval('<<$glqs_ip_key>>_bodysuits_dirt[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'coat':
 		dyneval('<<$glqs_ip_key>>_coats[glqs_ip_idx] = 1')
-		gs 'coat_attributes', $glqs_ip_key, glqs_ip_idx
 		dyneval('<<$glqs_ip_key>>_coats_h[glqs_ip_idx] = CoatMaxStrength')
 		dyneval('<<$glqs_ip_key>>_coats_s[glqs_ip_idx] = 0')
 		dyneval('<<$glqs_ip_key>>_coats_w[glqs_ip_idx] = 0')
 	end
 	if $glqs_ip_type = 'purse':
-		gs 'purse_attributes', $glqs_ip_key, glqs_ip_idx
 		if PursePrice <> 0:
 			dyneval('<<$glqs_ip_key>>_purses[glqs_ip_idx] = 1')
 		end

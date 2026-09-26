@@ -1,7 +1,9 @@
 # mod_GLQS_readme
 *clr
 cla
-'<b>Version 0.38.0 - Current</b>'
+'<b>Version 0.39.0 - Current</b>'
+'- Added: The clothing item picker has the same Sort by and Include/Exclude buttons as the game shops. Clothing can be filtered by Prostitute, Stripper, Bimbo, Goth, Preppy, Prude, Punk, Conservative, Risque, Too Risque, Loose and School. Shoes can be filtered by Stripper, Bimbo, Goth, Punk, Alternative, Heels and three heel comfort levels. Underwear, coats and purses have no tags in the game, so they only sort. Click a filter once to show only matching items, again to hide them, and a third time to turn it off. Your choices carry over between categories. While a filter is hiding items, Give All becomes Give All (shown) and gives only the items you can see.'
+'<b>Version 0.38.0</b>'
 '- Added: Two more ways to open GLQS. Settings > Mods now has an Open GLQS link on the GLQS row, and every tab of the built-in cheat menu has one at the bottom. Return takes you back to where you came from, and that screen still exits to wherever you were before. The switch that hides the room link is now on the GLQS Index.'
 '- Fixed: Clothing store screens had lost the store icon, name and instructions.'
 '- Fixed: The Owned / Not owned links on Consumables never changed anything. Every click wrote to an empty inventory slot instead of the item.'

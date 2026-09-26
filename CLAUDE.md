@@ -78,8 +78,11 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   empty store to mean every store, which is what the clothing menu's Give
   Everything action calls), `05_clothing_picker.qsps` handles item picker
   routes, and `05_clothing_grant.qsps` owns `'item_grant'` (one item),
-  `'fill_by_type'` (every item in a category) and `'clothing_totals'`, the
-  routes every clothing grant goes through. `06_consumables_data.qsps` is the
+  `'fill_by_type'` (every item in a category), `'clothing_totals'` and
+  `'item_attributes'`, the routes every clothing grant goes through. The
+  picker's sort/filter buttons come from `05_clothing_filter_data.qsps`, one
+  `role|type|name|expr` row per button, with each filter expr copied from the
+  base game's `clothing_view.qsrc`/`shoe_view.qsrc`. `06_consumables_data.qsps` is the
   single consumable metadata table used by the menu and Set All, one row per
   item, each `stack` (any quantity) or `single` (owned or not).
 - **Layout convention:** a feature with a data table has an `NN_x_data.qsps`
