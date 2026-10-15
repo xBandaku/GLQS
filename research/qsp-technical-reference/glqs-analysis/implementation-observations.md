@@ -1,0 +1,49 @@
+# GLQS static checks leave runtime questions open
+
+The initial research snapshot identified several limits and two descriptions that overstate their code. Its observations below apply to the GLQS 0.39.0 and Girl Life pins in [project overview](project-overview.md) and [gameplay integration](gameplay-integration.md). The follow-up review changed the working tree as described next.
+
+## Follow-up fixes in GLQS 0.39.1
+
+The relationship counter leak and incomplete pain clearing were reproduced in QSP 5.9.5 before fixing them. Relationship changes now retire dating counters before ending a date, changing its status or marrying that person. Clear All Pain clears `vgape`, `agape` and `spanked` as well as the pain array, so recalculation leaves pain at zero. Block lint also rejects extra `end` statements whose negative depth was previously cancelled by later unclosed blocks. ([Relationship changes](../../../src/11_relationships.qsps), [pain clearing](../../../src/18_lifestyle.qsps), [block lint](../../../build_support.py))
+
+Jobs now calls its fixed-rank action Set Rank to 5; it still requests that exact rank rather than calculating a per-career maximum. The volleyball comment now acknowledges height and archetype effects. All 25 local tests passed and the mod compiled. Four runtime tests exercise the real upstream relationship bookkeeping and pain formulas with peripheral services isolated; they do not cover a full game save or QSP 5.7. CI now fetches the pinned game source and installs the runtime packages before testing; no remote CI run was performed here. ([Tests](../../../tests/test_build.py), [workflow](../../../.github/workflows/build.yml), [build details](build-and-validation.md))
+
+## Usability additions in GLQS 0.39.2
+
+Consumables now offers Restock to at Least 1,000, which preserves larger quantities; the exact Set All actions keep their previous behavior. Jobs displays the schedule-conflict setting and lets the player restore enforcement. The clothing picker has Reset Sort & Filters, which clears saved clothing and shoe filters and restores catalog order. ([Consumables](../../../src/06_consumables_menu.qsps), [jobs](../../../src/17_jobs.qsps), [picker](../../../src/05_clothing_picker.qsps))
+
+All 26 local tests passed and the mod compiled. The new restock regression checks repeated restocking, existing larger stacks, missing single items and the exact Set All behavior. Separate QSP 5.9.5 probes verified both job-toggle directions and reset a filtered 100-item clothing category using real upstream clothing attributes. No full-save gameplay run was performed.
+
+## Features added in GLQS 0.40.0
+
+Individual stat edits use the upstream progression setter, custom funds preserve the overflow components, and consumables support per-item quantities and category restocking. Ownership filtering and missing-only clothing grants use each item manager's `is_owned` API; existing condition, fit, storage and dirt remain untouched when the item is skipped. Favorites on the Index reuse the existing action routes. ([Quick tools](../../../src/04_quick_tools.qsps), [ownership checks](../../../src/05_clothing_grant.qsps), [quantity controls](../../../src/06_consumables_menu.qsps))
+
+Presets provide five named slots, selected apply groups and export/import between saves. Internal records use bounded, whitelisted keys. Compact transfer data includes a build-generated schema signature, and numbered parts have 100-character payloads. The engine regression initially exposed truncated input with longer parts; the shorter parts pass both ordinary and large-preset round trips. The complete import is validated before a slot or game state changes. ([Preset implementation](../../../src/19_presets.qsps), [schema generation](../../../build_support.py))
+
+All 37 local tests passed, and GLQS compiled. The QSP 5.9.5 harness covers typed input, selected-field application, cheat-handler side effects, missing-only grants for all seven item types, large and malformed transfers, cancellation, and save/reload for slots and favorites. Peripheral rendering, NPC, body, archetype and washing services remain isolated. No full-game save or QSP 5.7 runtime session was exercised. ([Tests](../../../tests/test_build.py))
+
+## Initial job rank and volleyball observations
+
+The Jobs link says `Max Rank`, but requests rank 5 for every job. Upstream `set_rank` assigns that number without calculating or clamping a per-career maximum. Career definitions use different rank meanings, including teacher ranks 1-2 and masseuse tiers 1-5. Record the operation as a fixed rank request until career-specific behavior is checked in-game. ([17_jobs.qsps:32](../../../src/17_jobs.qsps#L32), [jobs.qsrc:506](../../../reference/nightly/locations/jobs.qsrc#L506), [jobs_list.qsrc:997](../../../reference/nightly/locations/jobs_list.qsrc#L997), [jobs_list.qsrc:1159](../../../reference/nightly/locations/jobs_list.qsrc#L1159))
+
+GLQS correctly avoids direct writes to five derived volleyball stats, but its comment says maxing their skill/attribute inputs already maxes all five. Upstream formulas also apply archetype effects, and block includes height, so those values need not equal 100. `stat` recomputes them; direct writes would not persist through that refresh. ([07_stats_menu.qsps:48](../../../src/07_stats_menu.qsps#L48), [stat_sklattrib_lvlset.qsrc:163](../../../reference/nightly/locations/stat_sklattrib_lvlset.qsrc#L163), [stat.qsrc:848](../../../reference/nightly/locations/stat.qsrc#L848))
+
+Two other actions have narrow meanings. Grant Diploma sets a flag rather than recording completed semesters. Generic removal of a dating relationship changes its relationship state but does not decrement `stat['dating_current']`; the source already documents that caveat. Neither observation was changed or tested in a running save. ([09_grades.qsps:53](../../../src/09_grades.qsps#L53), [11_relationships.qsps:205](../../../src/11_relationships.qsps#L205), [lover.qsrc:96](../../../reference/nightly/locations/lover.qsrc#L96))
+
+## Delayed actions need persistent or embedded values
+
+Navigation and clothing category actions are generated as literals because click-time actions cannot use a completed loop's changing index. Other paths retain prefixed globals, including picker IDs and relationship selection, or embed values in HTML commands before clearing scratch state. Preserve those lifetimes when editing. Nested `gs` calls are a separate issue from delayed actions; do not describe them as overwriting the caller's argument slots. Item grant reads its numeric index from `ARGS[3]`, and the scalar assignment lint rejects the corresponding string-slot mistake. ([04_main_menu.qsps:176](../../../src/04_main_menu.qsps#L176), [05_clothing_picker.qsps:109](../../../src/05_clothing_picker.qsps#L109), [11_relationships.qsps:183](../../../src/11_relationships.qsps#L183), [05_clothing_grant.qsps:58](../../../src/05_clothing_grant.qsps#L58), [build_support.py:504](../../../build_support.py#L504))
+
+`$glqs_field` and upstream `total` are shared scratch state. The picker copies totals, bulk grant keeps its own prefixed loop state, and the shared row reader overwrites its fields on every call. The table shape and consumer must change together. ([04_main_menu.qsps:28](../../../src/04_main_menu.qsps#L28), [05_clothing_picker.qsps:20](../../../src/05_clothing_picker.qsps#L20), [05_clothing_grant.qsps:38](../../../src/05_clothing_grant.qsps#L38))
+
+## Regex checks cover recognized forms only
+
+Route validation recognizes literal internal calls and selected simple route definitions. It is not a QSP parser, cannot prove all dynamic calls resolve, and does not check every external API. Metadata regexes see the expected append syntax; rows outside it can escape individual-row checks. Dedicated validators do not cover every stats, grades, NPC, fame or filter key. ([build_support.py:67](../../../build_support.py#L67), [build_support.py:134](../../../build_support.py#L134), [build_support.py:329](../../../build_support.py#L329))
+
+Block lint checks a rough multiline `if`/`act`/`end` depth and does not establish expression grammar, labels, branch semantics or click-time state. `build.check` runs all lints after a validator error, but the sequential validator chain stops at its first raised error. A reported failure can therefore conceal later validator failures until it is fixed. ([build_support.py:557](../../../build_support.py#L557), [build.py:26](../../../build.py#L26))
+
+## Manual checks must exercise state transitions
+
+The next gameplay pass should exercise each room, cheat-menu and Settings entry and its full return chain, including the destination's next Exit. Both navigation modes, individual clothing grants, filtered Give All and repeated grants need player checks. Recurrent bulk operations need repeated enable/disable checks around their three special handlers; their 20-row table does not include every separate individual toggle. ([03_hook.qsps:42](../../../src/03_hook.qsps#L42), [04_main_menu.qsps:78](../../../src/04_main_menu.qsps#L78), [05_clothing_picker.qsps:109](../../../src/05_clothing_picker.qsps#L109), [08_recurrent.qsps:85](../../../src/08_recurrent.qsps#L85))
+
+Job hiring/rank/pay, university state, relationship removal and subscription renewal need checks after day transitions, followed by a save/reload. Body-mod selection and rendering remain open too. These are proposed checks based on the stateful paths, not completed test results. No game deployment or new CI run was performed. ([jobs.qsrc:335](../../../reference/nightly/locations/jobs.qsrc#L335), [uni_admin.qsrc:390](../../../reference/nightly/locations/uni_admin.qsrc#L390), [internet_mobile.qsrc:87](../../../reference/nightly/locations/internet_mobile.qsrc#L87), [12_bodymod.qsps:165](../../../src/12_bodymod.qsps#L165))

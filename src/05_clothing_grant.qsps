@@ -40,22 +40,25 @@ if $ARGS[0] = 'fill_by_type':
 	!! which set and kill their own globals, cannot overwrite these mid-loop.
 	$glqs_fill_type = $ARGS[1]
 	$glqs_fill_key = $ARGS[2]
+	glqs_fill_missing = ARGS[3]
 	gs 'mod_GLQS_main', 'clothing_totals', $glqs_fill_type, $glqs_fill_key
 	glqs_fill_total = total
 	glqs_fill_i = 1
 	:glqs_fill_loop
 	if glqs_fill_i <= glqs_fill_total:
-		gs 'mod_GLQS_main', 'item_grant', $glqs_fill_type, $glqs_fill_key, glqs_fill_i
+		gs 'mod_GLQS_main', 'item_grant', $glqs_fill_type, $glqs_fill_key, glqs_fill_i, glqs_fill_missing
 		glqs_fill_i += 1
 		jump 'glqs_fill_loop'
 	end
 	killvar 'glqs_fill_i'
 	killvar 'glqs_fill_total'
+	killvar 'glqs_fill_missing'
 	killvar '$glqs_fill_type'
 	killvar '$glqs_fill_key'
 end
 
 if $ARGS[0] = 'item_grant':
+	if ARGS[4] and func('mod_GLQS_main', 'item_owned', $ARGS[1], $ARGS[2], ARGS[3]): exit
 	$glqs_ip_type = $ARGS[1]
 	$glqs_ip_key = $ARGS[2]
 	glqs_ip_idx = ARGS[3]
@@ -105,4 +108,14 @@ if $ARGS[0] = 'item_grant':
 	killvar '$glqs_ip_type'
 	killvar '$glqs_ip_key'
 	killvar 'glqs_ip_idx'
+end
+
+if $ARGS[0] = 'item_owned':
+	if $ARGS[1] = 'clo': result = func('clothing', 'is_owned', $ARGS[2], ARGS[3])
+	if $ARGS[1] = 'shoe': result = func('shoes', 'is_owned', $ARGS[2], ARGS[3])
+	if $ARGS[1] = 'bra': result = func('bras', 'is_owned', $ARGS[2], ARGS[3])
+	if $ARGS[1] = 'panty': result = func('panties', 'is_owned', $ARGS[2], ARGS[3])
+	if $ARGS[1] = 'body': result = func('underwear_bodysuits', 'is_owned', $ARGS[2], ARGS[3])
+	if $ARGS[1] = 'coat': result = func('coats', 'is_owned', $ARGS[2], ARGS[3])
+	if $ARGS[1] = 'purse': result = func('purses', 'is_owned', $ARGS[2], ARGS[3])
 end

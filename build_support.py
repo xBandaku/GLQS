@@ -1,3 +1,4 @@
+import hashlib
 import re
 from pathlib import Path
 
@@ -20,6 +21,7 @@ STANDALONE_FILES = [
 # fragment that renders it.
 SHARED_FILES = [
     "04_main_menu.qsps",
+    "04_quick_tools.qsps",
     "05_clothing_data.qsps",
     "05_clothing.qsps",
     "05_clothing_store.qsps",
@@ -46,6 +48,7 @@ SHARED_FILES = [
     "17_jobs_data.qsps",
     "17_jobs.qsps",
     "18_lifestyle.qsps",
+    "19_presets.qsps",
 ]
 
 SHARED_LOCATION_NAME = "mod_GLQS_main"
@@ -63,6 +66,8 @@ CLOTHING_ACTIONS_BEGIN = "!! GLQS_CLOTHING_ACTIONS_BEGIN"
 CLOTHING_ACTIONS_END = "!! GLQS_CLOTHING_ACTIONS_END"
 CLOTHING_LABELS_BEGIN = "!! GLQS_CLOTHING_LABELS_BEGIN"
 CLOTHING_LABELS_END = "!! GLQS_CLOTHING_LABELS_END"
+PROFILE_SCHEMA_BEGIN = "!! GLQS_PROFILE_SCHEMA_BEGIN"
+PROFILE_SCHEMA_END = "!! GLQS_PROFILE_SCHEMA_END"
 
 # Every data table is a list of pipe-delimited rows appended with $name[] = '...'.
 NAV_ROW = re.compile(r"\$glqs_nb\[\]\s*=\s*'([^|']+)\|([^']+)'")
@@ -301,6 +306,19 @@ def expand_clothing_store(text, catalog_text, menu_text):
     return replace_marker_block(text, CLOTHING_ACTIONS_BEGIN, CLOTHING_ACTIONS_END, "\n".join(generated_actions), "\t")
 
 
+def profile_schema_signature():
+    stats = (SRC_DIR / "07_stats_data.qsps").read_text(encoding="utf-8")
+    stats_rows = re.findall(r"\$glqs_st\[\]\s*=\s*'([^']*)'", stats)
+    layout = [tuple(row.split("|")[1:3]) for row in stats_rows]
+    consumables = (SRC_DIR / CONSUMABLES_DATA_FILE).read_text(encoding="utf-8")
+    layout.extend((kind, key) for kind, _, _, key in extract_consumable_metadata(consumables))
+    recurrent = (SRC_DIR / "08_recurrent_data.qsps").read_text(encoding="utf-8")
+    layout.extend(tuple(row.split("|")[:3]) for row in RECURRENT_ROW.findall(recurrent))
+    presets = (SRC_DIR / "19_presets.qsps").read_text(encoding="utf-8")
+    layout.extend(re.findall(r"'profile_add', ('[STR]_[^']+'.*)", presets))
+    return hashlib.sha256(repr(layout).encode("utf-8")).hexdigest()[:16]
+
+
 def assemble(standalone_files, shared_files):
     parts = []
     for f in standalone_files:
@@ -309,7 +327,7 @@ def assemble(standalone_files, shared_files):
     parts.append(f"# {SHARED_LOCATION_NAME}\n")
     for f in shared_files:
         text = f.read_text(encoding="utf-8")
-        # Both expansions are selected by their marker, not by filename.
+        # Expansions are selected by their marker, not by filename.
         # Gating the clothing one on its filename meant renaming that file
         # (and dutifully updating SHARED_FILES) silently skipped it: the
         # markers survived as inert comments, the item picker assembled with 0
@@ -321,6 +339,11 @@ def assemble(standalone_files, shared_files):
             catalog = (SRC_DIR / CLOTHING_CATALOG_FILE).read_text(encoding="utf-8")
             menu = (SRC_DIR / CLOTHING_MENU_FILE).read_text(encoding="utf-8")
             text = expand_clothing_store(text, catalog, menu)
+        if PROFILE_SCHEMA_BEGIN in text:
+            text = replace_marker_block(
+                text, PROFILE_SCHEMA_BEGIN, PROFILE_SCHEMA_END,
+                f"\t$glqs_profile_signature = '{profile_schema_signature()}'", "\t",
+            )
         parts.append(text)
     parts.append(f"--- {SHARED_LOCATION_NAME} ---------------------------------\n")
     return "\n".join(p.rstrip("\n") + "\n" for p in parts)
@@ -561,6 +584,7 @@ def lint_block_balance(text):
     missing/extra end before you waste time in-game hunting for it."""
     depth = 0
     stack = []
+    unmatched_ends = []
     for i, line in enumerate(text.splitlines(), start=1):
         stripped = line.strip()
         if re.match(r"^if\s.*:$", stripped) or re.match(r"^act\s+'[^']*':$", stripped):
@@ -569,8 +593,10 @@ def lint_block_balance(text):
         elif stripped == "end":
             if stack:
                 stack.pop()
+            else:
+                unmatched_ends.append((i, "end without an open block"))
             depth -= 1
-    return depth, stack
+    return depth, unmatched_ends + stack
 
 
 def _line_hits(lint):
@@ -580,9 +606,9 @@ def _line_hits(lint):
 
 def _block_balance_hits(text):
     depth, stack = lint_block_balance(text)
-    if depth == 0:
+    if depth == 0 and not stack:
         return []
-    return [f"final depth {depth} (should be 0); unclosed blocks, most likely culprits first:"] + [
+    return [f"final depth {depth} (should be 0); unmatched blocks:"] + [
         f"line {lineno}: {snippet}" for lineno, snippet in stack
     ]
 

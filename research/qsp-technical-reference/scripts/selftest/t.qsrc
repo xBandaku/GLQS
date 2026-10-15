@@ -1,0 +1,7 @@
+# t
+if x = 0: ! note
+  y = 1
+end
+if a = 1: b = 2 elseif a = 2: b = 3
+else ! c
+--- t ---

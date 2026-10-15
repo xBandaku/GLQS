@@ -21,13 +21,13 @@ if $ARGS[0] = 'consumables_menu':
 		$glqs_con_k = $glqs_field[3]
 		if $glqs_field[0] = 'stack':
 			if $glqs_con_cat <> $glqs_con_last_stack:
-				$glqs_tbl += '<tr><td><b>' + $glqs_con_cat + '</b></td><td></td></tr>'
+				$glqs_tbl += '<tr><td><b>' + $glqs_con_cat + '</b> <a href="exec: gs ''mod_GLQS_main'', ''consumables'', 1000, 1, ''' + $glqs_con_cat + ''' & gt ''mod_GLQS_main'', ''consumables_menu''">Restock category</a></td><td></td></tr>'
 				$glqs_con_last_stack = $glqs_con_cat
 			end
-			$glqs_tbl += '<tr><td>' + $glqs_con_label + '</td><td>' + mc_inventory[$glqs_con_k] + '</td></tr>'
+			$glqs_tbl += '<tr><td>' + $glqs_con_label + '</td><td>' + mc_inventory[$glqs_con_k] + '</td><td><a href="exec: gs ''mod_GLQS_main'', ''consumable_edit'', ' + glqs_con_i + ' & gt ''mod_GLQS_main'', ''consumables_menu''">Set Quantity</a></td></tr>'
 		else
 			if $glqs_con_cat <> $glqs_con_last_single:
-				$glqs_tbl2 += '<tr><td><b>' + $glqs_con_cat + '</b></td><td></td></tr>'
+				$glqs_tbl2 += '<tr><td><b>' + $glqs_con_cat + '</b> <a href="exec: gs ''mod_GLQS_main'', ''consumables'', 1000, 1, ''' + $glqs_con_cat + ''' & gt ''mod_GLQS_main'', ''consumables_menu''">Restock category</a></td><td></td></tr>'
 				$glqs_con_last_single = $glqs_con_cat
 			end
 			!! The key is concatenated in here, so the link carries it literally. It
@@ -59,6 +59,11 @@ if $ARGS[0] = 'consumables_menu':
 	killvar '$glqs_field'
 	killvar '$glqs_con'
 
+	act 'Restock to at Least 1,000':
+		gs 'mod_GLQS_main', 'consumables', 1000, 1
+		gt 'mod_GLQS_main', 'consumables_menu'
+	end
+
 	act 'Set All to 10,000':
 		gs 'mod_GLQS_main', 'consumables', 10000
 		gt 'mod_GLQS_main', 'consumables_menu'
@@ -79,23 +84,37 @@ end
 
 
 if $ARGS[0] = 'consumables':
-	!! Set All: stack items to ARGS[1] (default 10000), single items to 1.
+	!! ARGS[1] is the stack target (default 10000); ARGS[2] selects raise-only.
 	gs 'mod_GLQS_main', 'consumables_data'
 	glqs_amt = iif(ARGS[1] > 0, ARGS[1], 10000)
 	glqs_con_i = 0
 	:glqs_consumables_loop
 	if glqs_con_i < arrsize('$glqs_con'):
 		gs 'mod_GLQS_main', 'split_row', $glqs_con[glqs_con_i]
-		if $glqs_field[0] = 'stack':
-			mc_inventory[$glqs_field[3]] = glqs_amt
-		else
-			mc_inventory[$glqs_field[3]] = 1
+		if $ARGS[3] = '' or $glqs_field[1] = $ARGS[3]:
+			glqs_con_target = iif($glqs_field[0] = 'stack', glqs_amt, 1)
+			if ARGS[2]: glqs_con_target = max(mc_inventory[$glqs_field[3]], glqs_con_target)
+			mc_inventory[$glqs_field[3]] = glqs_con_target
 		end
 		glqs_con_i += 1
 		jump 'glqs_consumables_loop'
 	end
 	killvar 'glqs_amt'
+	killvar 'glqs_con_target'
 	killvar 'glqs_con_i'
 	killvar '$glqs_field'
 	killvar '$glqs_con'
+end
+
+if $ARGS[0] = 'consumable_edit':
+	gs 'mod_GLQS_main', 'consumables_data'
+	gs 'mod_GLQS_main', 'split_row', $glqs_con[ARGS[1]]
+	$glqs_ce_key = $glqs_field[3]
+	$glqs_ce_label = $glqs_field[2]
+	killvar '$glqs_con'
+	killvar '$glqs_field'
+	gs 'mod_GLQS_main', 'ask_number', 0, 999999999, 'Set quantity: ' + $glqs_ce_label
+	if glqs_input_ok: mc_inventory[$glqs_ce_key] = glqs_input_value
+	killvar '$glqs_ce_key'
+	killvar '$glqs_ce_label'
 end

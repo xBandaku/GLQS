@@ -1,6 +1,6 @@
 !! MAIN MENU (start)
 if $ARGS[0] = 'nav_build':
-	!! One flat pipe-delimited array (key|label) of the 14 top-level
+	!! One flat pipe-delimited array (key|label) of the top-level
 	!! submenus, shared by start (Index) and navbar so the two navigation
 	!! renderers - buttons or text links, per glqs_nav_style - can never
 	!! drift apart or list a different set of menus.
@@ -22,6 +22,7 @@ if $ARGS[0] = 'nav_build':
 	$glqs_nb[] = 'consumables_menu|Consumables'
 	$glqs_nb[] = 'lifestyle_menu|Lifestyle'
 	$glqs_nb[] = 'recurrent|Recurrent Cheats'
+	$glqs_nb[] = 'presets|Character Presets'
 end
 
 
@@ -70,6 +71,8 @@ if $ARGS[0] = 'start':
 	*nl
 	'Quick Setup link in your room: <a href="exec: cheatVars[''cheatsp''] = iif(cheatVars[''cheatsp''], 0, 1) & gt ''mod_GLQS_main'', ''start''"><b><<$iif(cheatVars[''cheatsp''], ''Enabled'', ''Disabled'')>></b></a> (GLQS stays reachable from Settings > Mods and the cheat menu either way.)'
 	*nl
+	gs 'mod_GLQS_main', 'favorites_list', 0
+	act 'Manage Favorites': gt 'mod_GLQS_main', 'favorites'
 
 	act 'Return': gs 'mod_GLQS_main', 'leave'
 end
@@ -124,7 +127,7 @@ end
 
 
 if $ARGS[0] = 'navbar':
-	!! Quick-nav bar for the Index plus the 14 top-level submenus, shown
+	!! Quick-nav bar for the Index plus the top-level submenus, shown
 	!! under every ones own title (including the Index itself - previously
 	!! the Index rendered its own separate 14-item list with no self-entry
 	!! while every other page showed this 15-item one with one, so the bar

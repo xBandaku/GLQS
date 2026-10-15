@@ -22,21 +22,7 @@ if $ARGS[0] = 'health_menu':
 	*nl
 
 	act 'Full Restore Everything':
-		pcs_health = healthmax
-		pcs_stam = stammax
-		pcs_willpwr = willpowermax
-		!! manamax is recomputed by gs stat from an algebraically identical
-		!! expression, so reading it back cannot drift from the games own
-		!! formula. 16_magic.qsps already does this.
-		pcs_mana = manamax
-		pcs_sleep = 100
-		pcs_mood = 100
-		pcs_energy = 100
-		pcs_hydra = 200
-		pcs_faith = 100
-		vgape = 0
-		agape = 0
-		gs 'stat'
+		gs 'mod_GLQS_main', 'health_restore'
 		gt 'mod_GLQS_main', 'health_menu'
 	end
 
@@ -59,4 +45,19 @@ if $ARGS[0] = 'health_menu':
 	end
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+if $ARGS[0] = 'health_restore':
+	pcs_health = healthmax
+	pcs_stam = stammax
+	pcs_willpwr = willpowermax
+	pcs_mana = manamax
+	pcs_sleep = 100
+	pcs_mood = 100
+	pcs_energy = 100
+	pcs_hydra = 200
+	pcs_faith = 100
+	vgape = 0
+	agape = 0
+	gs 'stat'
 end

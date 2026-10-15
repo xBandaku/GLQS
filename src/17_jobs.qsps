@@ -4,6 +4,8 @@ if $ARGS[0] = 'jobs_menu':
 	'<center><b><font color="maroon">Jobs & Career</font></b></center>'
 	gs 'mod_GLQS_main', 'navbar', 'jobs_menu'
 	*nl
+	'Job schedule conflicts: <b><<$iif(cheatVars[''work''], ''Ignored'', ''Enforced'')>></b>'
+	*nl
 
 	gs 'mod_GLQS_main', 'job_list_build'
 	!! Row format is id|title. One pass builds an id -> title lookup for the
@@ -29,7 +31,7 @@ if $ARGS[0] = 'jobs_menu':
 			$glqs_jm_title = $glqs_jm_titles[$glqs_jm_id]
 			if $glqs_jm_title = '': $glqs_jm_title = $glqs_jm_id
 			$glqs_tbl += '<tr><td>' + $glqs_jm_title + '</td><td>' + job_rank[$glqs_jm_id] + '</td><td>' + job_pay_rate[$glqs_jm_id] + '</td><td>'
-			$glqs_tbl += '<a href="exec: gs ''jobs'', ''set_rank'', ''' + $glqs_jm_id + ''', 5 & gt ''mod_GLQS_main'', ''jobs_menu''">Max Rank</a> '
+			$glqs_tbl += '<a href="exec: gs ''jobs'', ''set_rank'', ''' + $glqs_jm_id + ''', 5 & gt ''mod_GLQS_main'', ''jobs_menu''">Set Rank to 5</a> '
 			$glqs_tbl += '<a href="exec: job_pay_rate[''' + $glqs_jm_id + '''] = job_pay_rate[''' + $glqs_jm_id + '''] * 10 & gt ''mod_GLQS_main'', ''jobs_menu''">Boost Pay</a> '
 			$glqs_tbl += '<a href="exec: job_missed_total[''' + $glqs_jm_id + '''] = 0 & job_miss_acknowledged[''' + $glqs_jm_id + '''] = 0 & job_booking_debt[''' + $glqs_jm_id + '''] = 0 & job_docked_pay[''' + $glqs_jm_id + '''] = 0 & gt ''mod_GLQS_main'', ''jobs_menu''">Clear Penalties</a>'
 			$glqs_tbl += '</td></tr>'
@@ -69,11 +71,17 @@ if $ARGS[0] = 'jobs_menu':
 	killvar '$glqs_field'
 	killvar '$glqs_jb'
 
-	act 'Ignore Job Schedule Conflicts':
-		!! Reuses the games own existing debug hook (jobs.qsrc
-		!! check_employment_possible) rather than reimplementing it.
-		cheatVars['work'] = 1
-		gt 'mod_GLQS_main', 'jobs_menu'
+	!! This flag is read by the upstream employment conflict check.
+	if cheatVars['work']:
+		act 'Enforce Job Schedule Conflicts':
+			cheatVars['work'] = 0
+			gt 'mod_GLQS_main', 'jobs_menu'
+		end
+	else
+		act 'Ignore Job Schedule Conflicts':
+			cheatVars['work'] = 1
+			gt 'mod_GLQS_main', 'jobs_menu'
+		end
 	end
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'

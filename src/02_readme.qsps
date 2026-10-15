@@ -1,7 +1,22 @@
 # mod_GLQS_readme
 *clr
 cla
-'<b>Version 0.39.0 - Current</b>'
+'<b>Version 0.40.0 - Current</b>'
+'- Added: Set individual skills and attributes through the game progression API. Normal levels accept 0-100; maximum willpower accepts 50-200. Cancel leaves the value unchanged.'
+'- Added: Five named character preset slots with separate Stats, Consumables, Funds and Cheats selections. Export numbered code parts and import them into another save. Invalid or canceled imports leave the slot unchanged.'
+'- Added: Manage Favorites on the Index pins common cheats for direct use. Pins and preset slots are stored in the save.'
+'- Added: All, Owned and Unowned clothing filters, plus Give Missing for shown items, a store or every store. Missing-only grants preserve existing item condition, fit, storage and dirt.'
+'- Added: Custom cash and bank grants, per-item consumable quantities and category restocking. Cash and bank grants preserve overflow balances.'
+'<b>Version 0.39.2</b>'
+'- Added: Restock to at Least 1,000 fills consumable stacks without reducing larger quantities and gives missing single items. Set All still sets exact quantities.'
+'- Added: Reset Sort & Filters restores catalog order and clears every saved clothing and shoe filter.'
+'- Changed: Jobs shows whether schedule conflicts are ignored and lets you switch the checks back on.'
+'<b>Version 0.39.1</b>'
+'- Fixed: Ending a dating relationship, changing its status or marrying that person now retires the old dating counters, so repeated changes no longer inflate the number of current lovers.'
+'- Fixed: Clear All Pain also clears gaping and spanking, which otherwise immediately restore pain even after the pain array is cleared.'
+'- Changed: Jobs now labels its fixed-rank action Set Rank to 5. The game has no universal maximum rank.'
+'- Changed: Block lint rejects unmatched end statements even when a later unclosed block cancels their depth. Tests now exercise relationship changes and pain clearing in the QSP engine; CI runs them against a pinned game reference.'
+'<b>Version 0.39.0</b>'
 '- Added: The clothing item picker has the same Sort by and Include/Exclude buttons as the game shops. Clothing can be filtered by Prostitute, Stripper, Bimbo, Goth, Preppy, Prude, Punk, Conservative, Risque, Too Risque, Loose and School. Shoes can be filtered by Stripper, Bimbo, Goth, Punk, Alternative, Heels and three heel comfort levels. Underwear, coats and purses have no tags in the game, so they only sort. Click a filter once to show only matching items, again to hide them, and a third time to turn it off. Your choices carry over between categories. While a filter is hiding items, Give All becomes Give All (shown) and gives only the items you can see.'
 '<b>Version 0.38.0</b>'
 '- Added: Two more ways to open GLQS. Settings > Mods now has an Open GLQS link on the GLQS row, and every tab of the built-in cheat menu has one at the bottom. Return takes you back to where you came from, and that screen still exits to wherever you were before. The switch that hides the room link is now on the GLQS Index.'

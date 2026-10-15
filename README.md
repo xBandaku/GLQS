@@ -14,12 +14,13 @@
 
 GLQS is a quick-setup cheat mod for **Girl Life**. Once installed, you can
 open it from your own room, from the game's cheat menu, or from Settings >
-Mods. It covers 14 top-level screens - no save editing or outside tools
+Mods. It covers 15 top-level screens - no save editing or outside tools
 required.
 
 This guide covers everything a player needs: getting the mod, installing it,
 and turning it on in-game. (Developers who want to build GLQS from
-source instead of downloading it should see [`CLAUDE.md`](CLAUDE.md) - not
+source instead of downloading it should see [`CLAUDE.md`](CLAUDE.md) and the
+[technical research](research/qsp-technical-reference/README.md) - not
 needed for normal play.)
 
 ## What's in the Menu
@@ -30,11 +31,34 @@ needed for normal play.)
 - Relationships - status overview plus marry/divorce controls
 - Fame & Reputation, Jobs & Career, Housing & Property - your homes and your car
 - Magic, Lifestyle - casino chips, pain, and fetish preferences
+- Character Presets - five named slots with export/import between saves
 
 The Consumables screen lists every item Set All touches: stackable items
 with their counts, and single items (things you either own or don't) with a
 click-to-toggle link. Set All fills stacks to the chosen amount and gives one
 of each single item.
+
+**Restock to at Least 1,000** fills smaller stacks and gives missing single items
+while preserving quantities you already have above that target.
+Each category also has a restock link. Set Quantity beside a stack lets you
+change that item alone, including setting it to zero. Money offers custom cash
+and bank grants, and Skills & Attributes has a Set Value link for each stat.
+
+The clothing picker can show All, Owned or Unowned items. Give Missing is
+available for the shown items, one store or every store. It preserves clothes
+you already own, including their condition, fit and storage location.
+
+Use Manage Favorites on the Index to pin common cheats there. Favorites are
+stored in the save. Character Presets captures stats, consumables, available
+funds and cheat toggles; open a slot and choose which parts to apply. Applying
+a preset replaces the selected values. Skills accept 0-100 and maximum
+willpower accepts 50-200.
+
+To move a preset to another character, open Show Export Code and copy each
+numbered part to a text file. In the destination save, open an empty preset
+slot, choose Import into This Slot, and paste the parts in order. Presets do
+not copy story progress, clothing, jobs or debts. Incompatible preset schemas
+are rejected before anything is applied.
 
 ## Contents
 

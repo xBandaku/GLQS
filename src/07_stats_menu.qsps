@@ -21,7 +21,7 @@ if $ARGS[0] = 'stats_menu':
 		else
 			glqs_sm_val = dyneval('result = <<$glqs_field[2]>>')
 		end
-		$glqs_tbl += '<tr><td>' + $glqs_field[3] + '</td><td><<glqs_sm_val>></td></tr>'
+		$glqs_tbl += '<tr><td>' + $glqs_field[3] + '</td><td><<glqs_sm_val>></td><td><a href="exec: gs ''mod_GLQS_main'', ''stat_edit'', ' + glqs_sm_i + ' & gt ''mod_GLQS_main'', ''stats_menu''">Set Value</a></td></tr>'
 		glqs_sm_i += 1
 		jump 'glqs_stats_tbl_loop'
 	end
@@ -43,13 +43,33 @@ if $ARGS[0] = 'stats_menu':
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end
 
+if $ARGS[0] = 'stat_edit':
+	gs 'mod_GLQS_main', 'stats_data'
+	gs 'mod_GLQS_main', 'split_row', $glqs_st[ARGS[1]]
+	$glqs_se_kind = $glqs_field[1]
+	$glqs_se_key = $glqs_field[2]
+	$glqs_se_label = $glqs_field[3]
+	killvar '$glqs_field'
+	killvar '$glqs_st'
+	gs 'mod_GLQS_main', 'ask_number', iif($glqs_se_kind = 'cap', 50, 0), iif($glqs_se_kind = 'cap', 200, 100), 'Set ' + $glqs_se_label
+	if glqs_input_ok: gs 'mod_GLQS_main', 'stat_set', $glqs_se_kind, $glqs_se_key, glqs_input_value
+	killvar '$glqs_se_kind'
+	killvar '$glqs_se_key'
+	killvar '$glqs_se_label'
+end
+
+if $ARGS[0] = 'stat_set':
+	if $ARGS[1] = 'lvl': gs 'shortgs', 'setStat', $ARGS[2], ARGS[3]
+	if $ARGS[1] = 'cap': willpowermax = ARGS[3]
+end
+
 
 if $ARGS[0] = 'stats':
 	!! Max All. No direct pcs_vball_block/rec/serve/set/spike writes here -
 	!! those five are derived stats, recomputed from vball_lvl plus attributes
 	!! by stat_sklattrib_lvlset on every single gs stat call, so writing them
-	!! directly is overwritten immediately. Maxing vball and the attributes
-	!! already maxes all five.
+	!! directly is overwritten immediately. Height and archetype effects also
+	!! affect the derived values, so maxed inputs do not guarantee 100.
 	gs 'mod_GLQS_main', 'stats_data'
 	glqs_sa_i = 0
 	:glqs_stats_all_loop

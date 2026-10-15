@@ -1,0 +1,82 @@
+if $ARGS[0] = 'ask_number':
+	glqs_input_ok = 0
+	glqs_input_value = 0
+	:glqs_number_prompt
+	$glqs_input_text = $trim($input($ARGS[3] + ' (' + ARGS[1] + '-' + ARGS[2] + '). Cancel leaves it unchanged.'))
+	if $glqs_input_text = '': killvar '$glqs_input_text' & exit
+	if strcomp($glqs_input_text, '[0-9]{1,9}'):
+		glqs_input_value = val($glqs_input_text)
+		if glqs_input_value >= ARGS[1] and glqs_input_value <= ARGS[2]:
+			glqs_input_ok = 1
+			killvar '$glqs_input_text'
+			exit
+		end
+	end
+	msg 'Enter a whole number within the shown range.'
+	jump 'glqs_number_prompt'
+end
+
+if $ARGS[0] = 'html_escape':
+	$result = $replace($ARGS[1], '&', '&amp;')
+	$result = $replace($result, '<', '&lt;')
+	$result = $replace($result, '>', '&gt;')
+	$result = $replace($result, '"', '&quot;')
+	$result = $replace($result, "'", '&#39;')
+end
+
+if $ARGS[0] = 'favorites_data':
+	killvar '$glqs_fav_rows'
+	$glqs_fav_rows[] = 'restore|Full Restore Everything'
+	$glqs_fav_rows[] = 'restock|Restock Consumables to at Least 1,000'
+	$glqs_fav_rows[] = 'cash|Give 1,000,000 Cash'
+	$glqs_fav_rows[] = 'stats|Max All Skills & Attributes'
+	$glqs_fav_rows[] = 'grades|Set All Grades to 100'
+	$glqs_fav_rows[] = 'pain|Clear All Pain'
+	$glqs_fav_rows[] = 'addiction|Clear Addiction Levels'
+end
+
+if $ARGS[0] = 'favorites':
+	gs 'mod_GLQS_main', 'screen_head'
+	'<center><b><font color="maroon">Favorite Cheats</font></b></center>'
+	'Pin the cheats you want to run directly from the Index.'
+	gs 'mod_GLQS_main', 'favorites_list', 1
+	act 'Return to Index': gt 'mod_GLQS_main', 'start'
+end
+
+if $ARGS[0] = 'favorites_list':
+	gs 'mod_GLQS_main', 'favorites_data'
+	if ARGS[1] = 0: '<b>Favorites</b>'
+	glqs_fav_i = 0
+	glqs_fav_count = 0
+	$glqs_fav_table = '<table cellpadding=4>'
+	:glqs_favorite_loop
+	if glqs_fav_i < arrsize('$glqs_fav_rows'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_fav_rows[glqs_fav_i]
+		if ARGS[1]:
+			$glqs_fav_table += '<tr><td>' + $glqs_field[1] + '</td><td><a href="exec: glqs_favorites[''' + $glqs_field[0] + '''] = iif(glqs_favorites[''' + $glqs_field[0] + '''], 0, 1) & gt ''mod_GLQS_main'', ''favorites''">' + $iif(glqs_favorites[$glqs_field[0]], 'Unpin', 'Pin') + '</a></td></tr>'
+		elseif glqs_favorites[$glqs_field[0]]:
+			$glqs_fav_table += '<tr><td><a href="exec: gs ''mod_GLQS_main'', ''favorite_run'', ''' + $glqs_field[0] + ''' & gt ''mod_GLQS_main'', ''start''">' + $glqs_field[1] + '</a></td></tr>'
+			glqs_fav_count += 1
+		end
+		glqs_fav_i += 1
+		jump 'glqs_favorite_loop'
+	end
+	$glqs_fav_table += '</table>'
+	$glqs_fav_table
+	if ARGS[1] = 0 and glqs_fav_count = 0: 'Use Manage Favorites to pin cheats here.'
+	killvar '$glqs_fav_table'
+	killvar 'glqs_fav_i'
+	killvar 'glqs_fav_count'
+	killvar '$glqs_fav_rows'
+	killvar '$glqs_field'
+end
+
+if $ARGS[0] = 'favorite_run':
+	if $ARGS[1] = 'restore': gs 'mod_GLQS_main', 'health_restore'
+	if $ARGS[1] = 'restock': gs 'mod_GLQS_main', 'consumables', 1000, 1
+	if $ARGS[1] = 'cash': gs 'mod_GLQS_main', 'money_add', 'cash', 1000000
+	if $ARGS[1] = 'stats': gs 'mod_GLQS_main', 'stats'
+	if $ARGS[1] = 'grades': gs 'mod_GLQS_main', 'grades_max'
+	if $ARGS[1] = 'pain': gs 'mod_GLQS_main', 'pain_clear'
+	if $ARGS[1] = 'addiction': gs 'mod_GLQS_main', 'clear_addiction'
+end

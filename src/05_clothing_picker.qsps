@@ -38,6 +38,11 @@ if $ARGS[0] = 'item_picker':
 	if glqs_pi <= glqs_ptotal:
 		gs 'mod_GLQS_main', 'item_attributes', $glqs_ptype, $glqs_pkey, glqs_pi
 		glqs_pok = 1
+		if glqs_powned <> 0:
+			glqs_pisowned = func('mod_GLQS_main', 'item_owned', $glqs_ptype, $glqs_pkey, glqs_pi)
+			if glqs_powned = 1 and glqs_pisowned = 0: glqs_pok = 0
+			if glqs_powned = 2 and glqs_pisowned <> 0: glqs_pok = 0
+		end
 		glqs_pc = 0
 		:glqs_picker_check_loop
 		if glqs_pok and glqs_pc < arrsize('$glqs_pchk'):
@@ -96,6 +101,7 @@ if $ARGS[0] = 'item_picker':
 	killvar 'glqs_pj'
 	killvar 'glqs_pc'
 	killvar 'glqs_pok'
+	killvar 'glqs_pisowned'
 	killvar 'glqs_pval'
 	killvar 'glqs_psk'
 	killvar '$glqs_pchk'
@@ -121,6 +127,17 @@ if $ARGS[0] = 'item_picker':
 		end
 	end
 	killvar 'glqs_pshown'
+	act 'Give Missing (shown)':
+		gs 'mod_GLQS_main', 'give_shown', 1
+		gt 'mod_GLQS_main', 'item_picker', $glqs_ptype, $glqs_pkey, $glqs_pstore, $glqs_plabel
+	end
+	act 'Reset Sort & Filters':
+		killvar '$glqs_psort'
+		killvar 'glqs_psortdir'
+		killvar 'glqs_pfilt'
+		killvar 'glqs_powned'
+		gt 'mod_GLQS_main', 'item_picker', $glqs_ptype, $glqs_pkey, $glqs_pstore, $glqs_plabel
+	end
 	act 'Return':
 		killvar 'glqs_plist'
 		gt 'mod_GLQS_main', 'store_detail', $glqs_pstore
@@ -138,7 +155,7 @@ if $ARGS[0] = 'give_shown':
 	glqs_pg = 0
 	:glqs_give_shown_loop
 	if glqs_pg < arrsize('glqs_plist'):
-		gs 'mod_GLQS_main', 'item_grant', $glqs_ptype, $glqs_pkey, glqs_plist[glqs_pg]
+		gs 'mod_GLQS_main', 'item_grant', $glqs_ptype, $glqs_pkey, glqs_plist[glqs_pg], ARGS[1]
 		glqs_pg += 1
 		jump 'glqs_give_shown_loop'
 	end
@@ -148,6 +165,7 @@ end
 
 
 if $ARGS[0] = 'picker_filters':
+	'Ownership: <a href="exec: glqs_powned = 0 & <<$glqs_preload>>">All</a> | <a href="exec: glqs_powned = 1 & <<$glqs_preload>>">Owned</a> | <a href="exec: glqs_powned = 2 & <<$glqs_preload>>">Unowned</a> (<<$iif(glqs_powned = 1, ''Owned'', $iif(glqs_powned = 2, ''Unowned'', ''All''))>> shown)'
 	!! Prints the Sort by and Include/Exclude buttons for the current picker
 	!! type from picker_filter_data, with the game shop icons. Leaves the
 	!! active filter tests in $glqs_pchk and the sort key in $glqs_psort_expr

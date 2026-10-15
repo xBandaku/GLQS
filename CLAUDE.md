@@ -17,7 +17,10 @@ file and compiled to a binary `.qsp`.
 python build.py
 ```
 
-(`python3` resolves to a broken Windows Store shim on this machine — use `python`, which is the real 3.13 interpreter, confirmed 2026-09-18.)
+Use `python` on this machine: it resolves to Python 3.12.10, checked 2026-10-14.
+CI uses Python 3.13. The ignored local compiler installation can be used in
+PowerShell with `$env:PATH = (Resolve-Path 'build/tooling/node_modules/.bin').Path + ';' + $env:PATH`
+before running the build.
 
 Requires the QSP compiler once: `npm install -g @qsp/cli@1.0.5` (the version CI pins)
 
@@ -30,17 +33,25 @@ Requires the QSP compiler once: `npm install -g @qsp/cli@1.0.5` (the version CI 
   before any check runs (as UTF-8, so a non-ASCII character is reported by lint
   rather than crashing the write), so it is there for inspection. Only a
   manifest or assembly error (`Build FAILED:`) stops before it is written.
-- `build.py`, the tests and the `.claude/hooks/lint_check.py` edit hook all
-  call the same `build_support.validate_assembled()` and `run_lints()`. Add a
-  new whole-build check there, not in one caller - the three copies had
-  drifted apart before (2026-09-23), so CI's test job skipped most lints.
-- The build-contract tests cover static assembly assumptions; manual in-game
-  testing is still required for QSP runtime behavior.
+- `build.py` and the tests call the same
+  `build_support.validate_assembled()` and `run_lints()`. Add a new whole-build
+  check there, not in one caller. Earlier guidance also described an edit hook,
+  but `.claude/` is absent from this checkout; no hook runs automatically here.
+- The build-contract tests cover static assembly assumptions. Optional QSP 5.9.5
+  engine tests cover relationship transitions, pain clearing and consumable
+  restocking. They use real upstream relationship and pain code with isolated
+  rendering, NPC and phone services. Full-save behavior and QSP 5.7 still need
+  in-game checks.
 - `python -m unittest discover -s tests -v` runs build-contract tests without
   requiring the QSP compiler. These cover fragment wrappers, route references,
   generated navigation actions, the recurrent data table, every lint rule, and
   a full run of the real source tree through `validate_assembled()` and
   `run_lints()`.
+- To enable the runtime tests locally, keep the pinned reference present and
+  run `npm install --prefix build/tooling @qsp/converters@1.0.1 @qsp/wasm-engine@1.6.1 --no-audit --no-fund`.
+  The same unittest command then runs them through Node. They report a skip when
+  Node, either package or the required upstream files are absent. CI installs the
+  packages and fetches the pinned reference before testing.
 - Recurrent Cheats: `'recurrent_data'` in `08_recurrent_data.qsps` holds one
   `role|key|arg|label` row per toggle, and both the on-screen table and
   Enable/Disable All (`'recurrent_set'`) loop over it, so the two cannot
@@ -158,6 +169,30 @@ at runtime, so almost everything lives inside **one shared QSP location**,
   IDs and rows are still rejected. Route coverage recognises `gt`, `gs`,
   `func` and `$func` calls into `mod_GLQS_main`.
 
+## Value editors, favorites and presets
+
+`04_quick_tools.qsps` contains `ask_number`, which returns its accepted value
+through `glqs_input_value` and its cancellation/validation status through
+`glqs_input_ok`. Callers must check that status before changing game state.
+Numeric input permits at most nine digits. Stat edits reuse `shortgs/setStat`;
+money grants split whole millions into overflow counters before normalization.
+
+Favorites use a fixed registry of common cheats and call the same routes as
+their menus. `glqs_favorites[key]` stores pins. `19_presets.qsps` stores five
+named slots in `$glqs_preset_codes` and `$glqs_preset_names`; the selected apply
+groups are separate flags. Internal presets have whitelisted, bounded keyed
+fields. Parse the complete preset before applying any group, and use the
+upstream handlers for cheat switches with side effects.
+
+The build fills `GLQS_PROFILE_SCHEMA_BEGIN` / `GLQS_PROFILE_SCHEMA_END` with a
+signature of the ordered metadata layout and fixed preset fields. Compact
+exports include that signature and use numbered parts with 100-character
+payloads to fit native and wasm input limits. Reordering fields changes the
+signature; cosmetic stat labels do not. Import rejects incompatible layouts,
+bad values, duplicate keys and out-of-order parts. The runtime suite exercises
+export/import, partial application, cancellation and save/reload in an isolated
+game. Existing full-game saves have not been tested.
+
 ## Branch history: this line was reset once, then restored
 
 `main` was hard-reset from v0.36.1 back to v0.34.4 in September 2026, and the
@@ -224,8 +259,9 @@ generated output and gets overwritten every build).
 
 ## Runtime gotchas (now caught by build.py's lint)
 
-`qsp-cli` compiling with `SUCCESS` only means the syntax is well-formed - it does not
-execute the code, so these used to surface as in-game errors only when you actually
+`qsp-cli` printing `SUCCESS` means conversion produced a binary; it does not fully
+validate QSP statement syntax or execute the code, so these used to appear as
+in-game errors only when you actually
 opened the affected menu. Both are now checked by `build.py` (see
 `lint_unbalanced_template_markers` / `lint_empty_template_markers`), but the
 reasoning is worth knowing when lint flags them:
@@ -277,35 +313,20 @@ source for how the screen is invoked.
 
 ## Reference: the base game's own source
 
-`reference/` (gitignored, not tracked) holds shallow clones of the game's real
-developer source, <https://gitlab.com/kevinsmartstfg/girl-life>. Only
-`reference/nightly/` is currently on disk:
+`reference/` is ignored and holds upstream source from
+<https://gitlab.com/kevinsmartstfg/girl-life>. On 2026-10-14,
+`reference/nightly/` is a detached checkout pinned to
+`83b164f64224f1ba88fd409469c1a9379ad34f86` (2026-10-09). The directory name
+is historical: this checkout does not automatically follow `master` or establish
+which source revision an installed game uses. `reference/0.9.8.3/` is absent.
+Treat the reference as read-only and use the pinned checkout for reproducible
+lookups. Check a target game's exact source revision separately before claiming
+compatibility with it.
 
-- **`reference/nightly/`** — `master` branch HEAD, matching the `Dev Life` folder's
-  newer nightly build (its filename embeds the exact commit hash it was built from,
-  e.g. `dev_glife-...-<hash>.qsp` — confirm `git -C reference/nightly log -1
-  --format=%H` still equals that hash before trusting a lookup for Dev-Life-only
-  behavior; `master` moves fast so this drifts and needs a re-clone periodically).
-  **This is the primary and default reference for all lookups going forward** —
-  grep here first and only, unless a task is specifically and only about the
-  stable `Girl Life` build.
-- **`reference/0.9.8.3/`** — **not currently on disk** (removed after nightly
-  became the sole default reference; confirmed absent during the 2026-07 full
-  audit). It was a clone checked out at tag `0.9.8.3`, matching the `.qsp`
-  installed in the `Girl Life` (stable) game folder (`Girl Life 0.9.8.3.qsp`).
-  Only re-clone it (shallow, at that tag, using the refresh command below) if a
-  task is explicitly about stable-only behavior — and even then remember the two
-  builds have diverged in real, substantive ways in places (e.g. an
-  archetype-system rewrite affecting `BimboCloth`/`CalcAppearance`, and
-  character creation being restructured entirely from
-  `intro_sg_select`/`intro_city_select` into `intro_character_creation` on
-  nightly), so do not assume a stable lookup still matches nightly or vice
-  versa.
-
-This replaced an earlier approach of decompiling the installed `.qsp` with
-`qsp-cli` into one flat `glife_dev_build.qsps` file — the real source here is much
-better organized (one `.qsrc` file per location/system under `locations/`, original
-comments intact) and doesn't need re-decompiling by hand.
+The [GLQS research](research/qsp-technical-reference/glqs-analysis/project-overview.md)
+records the current source measurements and integration checks. The shared QSP,
+engine and Girl Life reference was carried over from GLSS research dated
+2026-10-14; inherited GLSS results do not validate GLQS.
 
 **Before assuming a variable name, array name, or subsystem exists, grep
 `reference/nightly/` first** — most of the bug-fix version bumps in
@@ -317,20 +338,17 @@ reference/nightly/locations/homes_properties.qsrc` for the property system, or
 search for an item's in-game display string across `reference/nightly/locations/*.qsrc`
 to find its `mc_inventory[...]` key.
 
-To refresh `nightly` if a lookup seems stale (or to re-create the `0.9.8.3`
-clone if a stable-only task ever needs it):
-`cd reference/<0.9.8.3-or-nightly> && git fetch --depth 1 origin <tag-or-branch> &&
-git checkout <tag-or-branch>` (or just re-clone the same way these were set up,
-matching whatever version string/commit hash the corresponding installed `.qsp`
-filename shows).
+Check the active pin with `git -C reference/nightly rev-parse HEAD`.
+When a task requires another upstream revision, choose and record that revision
+explicitly. Do not refresh this checkout to a moving branch during an unrelated
+change or infer an installed game's revision from this directory's name.
 
 ## Adding functionality
 
-**New submenu inside `mod_GLQS_main`:** use the `/new-submenu` skill (see Automation
-below) — it scaffolds the router block, and correctly handles the difference between
-a top-level menu (registered in `04_main_menu.qsps`'s `$glqs_nb` nav array) and a
-nested submenu (a plain `act` link from its parent, no nav entry), which is easy to
-get wrong by hand.
+**New submenu inside `mod_GLQS_main`:** add a router block in the appropriate
+shared fragment. Register a top-level menu in `04_main_menu.qsps`'s `$glqs_nb`
+nav array; link a nested submenu from its parent without adding a nav entry.
+The previously documented `/new-submenu` skill is unavailable in this checkout.
 
 **New standalone QSP location (rare — only for something outside `mod_GLQS_main`):**
 create `src/NN_name.qsps` with its own full `# location_name` / `--- location_name ---`
@@ -338,22 +356,13 @@ wrapper, and add `"NN_name.qsps"` to `STANDALONE_FILES` in `build_support.py`.
 
 ## Automation
 
-Project-local Claude Code config under `.claude/` (set up 2026-09-18):
-
-- **`reference-lookup` subagent** — searches `reference/nightly/locations/*.qsrc`
-  for game-engine internals before writing new `src/` code. Use it instead of
-  grepping the reference tree inline for anything beyond a one-off lookup.
-- **`/release <patch|minor> <what changed>` skill** — bumps `$mod_info[1]` +
-  changelog together, builds, commits, tags, pushes, and publishes the GitHub
-  release in one pass. Runs `avoiding-ai-code-tells` and `avoiding-ai-writing-tells`
-  at both the commit and the release-notes step.
-- **`/new-submenu` skill** — scaffolds a new cheat-menu screen (see "Adding
-  functionality" above).
-- **PostToolUse hook** on `src/*.qsps` edits — re-runs `build.py`'s lint checks
-  immediately after the edit (`.claude/hooks/lint_check.py`).
-- **PreToolUse hook** — blocks edits to `build/GLQS.qsps`/`build/GLQS.qsp`
-  (generated output, overwritten every build) with a pointer to edit the `src/`
-  fragment instead (`.claude/hooks/protect_build_output.py`).
+Earlier project guidance described `.claude/` configuration created on
+2026-09-18: a `reference-lookup` subagent, `/release` and `/new-submenu` skills,
+and edit-time lint and generated-output protection hooks. That directory is
+ignored and absent from this checkout, checked 2026-10-14. Those entries are
+historical descriptions, not available automation. Run the build and tests
+explicitly, search the upstream source directly, and edit source fragments
+rather than generated output.
 
 ## Keeping this file accurate
 

@@ -1,0 +1,368 @@
+if $ARGS[0] = 'profile_add':
+	$glqs_profile_keys[] = $ARGS[1]
+	glqs_profile_now[$ARGS[1]] = max(ARGS[4], min(ARGS[3], ARGS[2]))
+	glqs_profile_max[$ARGS[1]] = ARGS[3]
+	glqs_profile_min[$ARGS[1]] = ARGS[4]
+	$glqs_profile_handler[$ARGS[1]] = $ARGS[5]
+end
+
+if $ARGS[0] = 'profile_data':
+	!! GLQS_PROFILE_SCHEMA_BEGIN
+	!! GLQS_PROFILE_SCHEMA_END
+	killvar '$glqs_profile_keys'
+	killvar 'glqs_profile_now'
+	killvar 'glqs_profile_max'
+	killvar 'glqs_profile_min'
+	killvar '$glqs_profile_handler'
+	gs 'mod_GLQS_main', 'stats_data'
+	glqs_schema_i = 0
+	:glqs_profile_stats
+	if glqs_schema_i < arrsize('$glqs_st'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_st[glqs_schema_i]
+		if $glqs_field[1] = 'lvl':
+			glqs_schema_value = dyneval('result = ' + $glqs_field[2] + '_lvl')
+			gs 'mod_GLQS_main', 'profile_add', 'S_' + $glqs_field[2], glqs_schema_value, 100
+		else
+			gs 'mod_GLQS_main', 'profile_add', 'S_willpowermax', willpowermax, 200, 50
+		end
+		glqs_schema_i += 1
+		jump 'glqs_profile_stats'
+	end
+	gs 'mod_GLQS_main', 'consumables_data'
+	glqs_schema_i = 0
+	:glqs_profile_inventory
+	if glqs_schema_i < arrsize('$glqs_con'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_con[glqs_schema_i]
+		gs 'mod_GLQS_main', 'profile_add', 'I_' + $glqs_field[3], mc_inventory[$glqs_field[3]], iif($glqs_field[0] = 'stack', 999999999, 1)
+		glqs_schema_i += 1
+		jump 'glqs_profile_inventory'
+	end
+	gs 'mod_GLQS_main', 'recurrent_data'
+	glqs_schema_i = 0
+	:glqs_profile_cheats
+	if glqs_schema_i < arrsize('$glqs_rc'):
+		gs 'mod_GLQS_main', 'split_row', $glqs_rc[glqs_schema_i]
+		glqs_schema_on = iif($glqs_field[0] = 'special', 1, val($glqs_field[2]))
+		$glqs_schema_handler = ''
+		if $glqs_field[0] = 'special': $glqs_schema_handler = $glqs_field[2]
+		glqs_schema_value = iif(cheatVars[$glqs_field[1]] > 0, glqs_schema_on, 0)
+		if $glqs_field[1] = 'suc_bimbo' and cheatVars['bimbo']: glqs_schema_value = 0
+		gs 'mod_GLQS_main', 'profile_add', 'T_' + $glqs_field[1], glqs_schema_value, glqs_schema_on, 0, $glqs_schema_handler
+		glqs_schema_i += 1
+		jump 'glqs_profile_cheats'
+	end
+	gs 'mod_GLQS_main', 'profile_add', 'T_bimbo', cheatVars['bimbo'], 1, 0, 'BimboCloth'
+	gs 'mod_GLQS_main', 'profile_add', 'T_no_periods', cheatVars['no_periods'], 1, 0, 'slutshot'
+	gs 'mod_GLQS_main', 'profile_add', 'T_no_pregnancy', cheatVars['no_pregnancy'], 1
+	gs 'mod_GLQS_main', 'profile_add', 'T_no_lactation', cheatVars['no_lactation'], 1
+	gs 'mod_GLQS_main', 'profile_add', 'T_no_cum_leak', cheatVars['no_cum_leak'], 1
+	gs 'mod_GLQS_main', 'profile_add', 'T_std', cheatVars['std'], 1
+	gs 'mod_GLQS_main', 'profile_add', 'T_work', cheatVars['work'], 1
+	gs 'mod_GLQS_main', 'profile_add', 'T_cheatsp', cheatVars['cheatsp'], 1
+	gs 'mod_GLQS_main', 'profile_add', 'R_money', money, 999999999
+	gs 'mod_GLQS_main', 'profile_add', 'R_money_overflow', money_overflow, 999999999
+	gs 'mod_GLQS_main', 'profile_add', 'R_karta', max(0, karta - bankDebtLimit), 999999999
+	gs 'mod_GLQS_main', 'profile_add', 'R_karta_overflow', karta_overflow, 999999999
+	gs 'mod_GLQS_main', 'profile_add', 'R_bankAccount', bankAccount, 1
+	killvar '$glqs_st'
+	killvar '$glqs_con'
+	killvar '$glqs_rc'
+	killvar '$glqs_field'
+	killvar 'glqs_schema_i'
+	killvar 'glqs_schema_on'
+	killvar 'glqs_schema_value'
+	killvar '$glqs_schema_handler'
+end
+
+if $ARGS[0] = 'profile_clear':
+	killvar '$glqs_profile_keys'
+	killvar 'glqs_profile_now'
+	killvar 'glqs_profile_max'
+	killvar 'glqs_profile_min'
+	killvar '$glqs_profile_handler'
+	killvar 'glqs_profile_loaded'
+	killvar 'glqs_profile_seen'
+	killvar '$glqs_field'
+	killvar 'glqs_parse_i'
+	killvar 'glqs_parse_value'
+	killvar '$glqs_parse_key'
+	killvar '$glqs_parse_value'
+end
+
+if $ARGS[0] = 'preset_capture':
+	gs 'money'
+	gs 'mod_GLQS_main', 'profile_data'
+	$glqs_preset_export = 'GLQS1'
+	glqs_capture_i = 0
+	:glqs_preset_capture_loop
+	if glqs_capture_i < arrsize('$glqs_profile_keys'):
+		$glqs_capture_key = $glqs_profile_keys[glqs_capture_i]
+		$glqs_preset_export += '|' + $glqs_capture_key + '=' + glqs_profile_now[$glqs_capture_key]
+		glqs_capture_i += 1
+		jump 'glqs_preset_capture_loop'
+	end
+	killvar 'glqs_capture_i'
+	killvar '$glqs_capture_key'
+	gs 'mod_GLQS_main', 'profile_clear'
+end
+
+if $ARGS[0] = 'preset_parse':
+	glqs_preset_valid = 0
+	gs 'mod_GLQS_main', 'profile_data'
+	killvar 'glqs_profile_loaded'
+	killvar 'glqs_profile_seen'
+	gs 'mod_GLQS_main', 'split_row', $replace($ARGS[1], '=', '|')
+	if $glqs_field[0] <> 'GLQS1': exit
+	if arrsize('$glqs_field') <> 1 + 2 * arrsize('$glqs_profile_keys'): exit
+	glqs_parse_i = 1
+	:glqs_preset_parse_loop
+	if glqs_parse_i < arrsize('$glqs_field'):
+		$glqs_parse_key = $glqs_field[glqs_parse_i]
+		$glqs_parse_value = $glqs_field[glqs_parse_i + 1]
+		if arrpos('$glqs_profile_keys', $glqs_parse_key) < 0: exit
+		if glqs_profile_seen[$glqs_parse_key]: exit
+		if strcomp($glqs_parse_value, '[0-9]{1,9}') = 0: exit
+		glqs_parse_value = val($glqs_parse_value)
+		if glqs_parse_value < glqs_profile_min[$glqs_parse_key] or glqs_parse_value > glqs_profile_max[$glqs_parse_key]: exit
+		if $glqs_parse_key = 'T_no_dream_chance' and glqs_parse_value <> 0 and glqs_parse_value <> 100: exit
+		glqs_profile_loaded[$glqs_parse_key] = glqs_parse_value
+		glqs_profile_seen[$glqs_parse_key] = 1
+		glqs_parse_i += 2
+		jump 'glqs_preset_parse_loop'
+	end
+	if glqs_profile_loaded['T_bimbo'] and glqs_profile_loaded['T_suc_bimbo']: exit
+	glqs_preset_valid = 1
+	killvar 'glqs_parse_i'
+	killvar 'glqs_parse_value'
+	killvar '$glqs_parse_key'
+	killvar '$glqs_parse_value'
+	killvar '$glqs_field'
+end
+
+if $ARGS[0] = 'presets':
+	gs 'mod_GLQS_main', 'screen_head'
+	'<center><b><font color="maroon">Character Presets</font></b></center>'
+	gs 'mod_GLQS_main', 'navbar', 'presets'
+	'Capture stats, consumables, available funds and cheat toggles. Choose which parts to apply. Export/import moves a preset between saves; it does not copy story progress, clothing, jobs or debts.'
+	$glqs_slots_table = '<table cellpadding=4>'
+	glqs_slots_i = 1
+	:glqs_preset_slots_loop
+	if glqs_slots_i <= 5:
+		$glqs_slots_title = 'Empty slot'
+		if $glqs_preset_codes[glqs_slots_i] <> '': $glqs_slots_title = $func('mod_GLQS_main', 'html_escape', $glqs_preset_names[glqs_slots_i])
+		$glqs_slots_table += '<tr><td>Slot ' + glqs_slots_i + ': ' + $glqs_slots_title + '</td><td><a href="exec: gt ''mod_GLQS_main'', ''preset_detail'', ' + glqs_slots_i + '">Open</a></td></tr>'
+		glqs_slots_i += 1
+		jump 'glqs_preset_slots_loop'
+	end
+	$glqs_slots_table += '</table>'
+	$glqs_slots_table
+	killvar '$glqs_slots_table'
+	killvar '$glqs_slots_title'
+	killvar 'glqs_slots_i'
+	act 'Return to Index': gt 'mod_GLQS_main', 'start'
+end
+
+if $ARGS[0] = 'preset_detail':
+	glqs_preset_slot = ARGS[1]
+	if glqs_preset_slot < 1 or glqs_preset_slot > 5: gt 'mod_GLQS_main', 'presets'
+	gs 'mod_GLQS_main', 'screen_head'
+	'<center><b>Preset Slot <<glqs_preset_slot>></b></center>'
+	if glqs_preset_choices_init = 0:
+		glqs_preset_stats = 1
+		glqs_preset_inventory = 1
+		glqs_preset_funds = 1
+		glqs_preset_cheats = 1
+		glqs_preset_choices_init = 1
+	end
+	if $glqs_preset_codes[glqs_preset_slot] <> '':
+		$func('mod_GLQS_main', 'html_escape', $glqs_preset_names[glqs_preset_slot])
+		'Applying replaces the selected values. Available bank funds are copied only when the preset includes an open account; a closed account is never imposed on the destination.'
+		'<p>Apply: <a href="exec: glqs_preset_stats = iif(glqs_preset_stats, 0, 1) & gt ''mod_GLQS_main'', ''preset_detail'', glqs_preset_slot">Stats [<<$iif(glqs_preset_stats, ''yes'', ''no'')>>]</a> | <a href="exec: glqs_preset_inventory = iif(glqs_preset_inventory, 0, 1) & gt ''mod_GLQS_main'', ''preset_detail'', glqs_preset_slot">Consumables [<<$iif(glqs_preset_inventory, ''yes'', ''no'')>>]</a> | <a href="exec: glqs_preset_funds = iif(glqs_preset_funds, 0, 1) & gt ''mod_GLQS_main'', ''preset_detail'', glqs_preset_slot">Funds [<<$iif(glqs_preset_funds, ''yes'', ''no'')>>]</a> | <a href="exec: glqs_preset_cheats = iif(glqs_preset_cheats, 0, 1) & gt ''mod_GLQS_main'', ''preset_detail'', glqs_preset_slot">Cheats [<<$iif(glqs_preset_cheats, ''yes'', ''no'')>>]</a></p>'
+		act 'Apply Selected Parts':
+			gs 'mod_GLQS_main', 'preset_apply', $glqs_preset_codes[glqs_preset_slot]
+			gt 'mod_GLQS_main', 'preset_detail', glqs_preset_slot
+		end
+		act 'Show Export Code': gt 'mod_GLQS_main', 'preset_export'
+	end
+	act 'Capture Current Character into This Slot':
+		$glqs_preset_newname = $trim($input('Name for this preset (up to 40 characters). Cancel leaves the slot unchanged.'))
+		if $glqs_preset_newname <> '':
+			gs 'mod_GLQS_main', 'preset_capture'
+			$glqs_preset_codes[glqs_preset_slot] = $glqs_preset_export
+			$glqs_preset_names[glqs_preset_slot] = $mid($glqs_preset_newname, 1, 40)
+		end
+		killvar '$glqs_preset_newname'
+		killvar '$glqs_preset_export'
+		gt 'mod_GLQS_main', 'preset_detail', glqs_preset_slot
+	end
+	act 'Import into This Slot':
+		gs 'mod_GLQS_main', 'preset_import'
+		gt 'mod_GLQS_main', 'preset_detail', glqs_preset_slot
+	end
+	act 'Return to Presets': gt 'mod_GLQS_main', 'presets'
+end
+
+if $ARGS[0] = 'preset_export':
+	gs 'mod_GLQS_main', 'screen_head'
+	'<b>Export preset</b>'
+	'Copy each numbered part to a text file. On the other save, open a preset slot, choose Import, and paste these parts in order.'
+	gs 'mod_GLQS_main', 'preset_parse', $glqs_preset_codes[glqs_preset_slot]
+	if glqs_preset_valid = 0:
+		gs 'mod_GLQS_main', 'profile_clear'
+		msg 'This preset uses a different schema. Capture or import it again.'
+		gt 'mod_GLQS_main', 'preset_detail', glqs_preset_slot
+	end
+	!! Compact values carry a schema signature so reordered metadata cannot
+	!! silently map a quantity or skill value to a different key.
+	$glqs_export_body = 'GLQSC1;' + $glqs_profile_signature
+	glqs_export_i = 0
+	:glqs_export_values_loop
+	if glqs_export_i < arrsize('$glqs_profile_keys'):
+		$glqs_export_body += ';' + glqs_profile_loaded[$glqs_profile_keys[glqs_export_i]]
+		glqs_export_i += 1
+		jump 'glqs_export_values_loop'
+	end
+	gs 'mod_GLQS_main', 'profile_clear'
+	!! Short parts also fit the wasm wrappers narrower input buffer.
+	glqs_export_total = (len($glqs_export_body) + 99) / 100
+	glqs_export_i = 1
+	:glqs_export_parts_loop
+	if glqs_export_i <= glqs_export_total:
+		'<p>Part <<glqs_export_i>> of <<glqs_export_total>></p>'
+		'<p style="word-wrap:break-word;"><code>GLQSP1~<<glqs_export_total>>~<<glqs_export_i>>~<<$mid($glqs_export_body, (glqs_export_i - 1) * 100 + 1, 100)>></code></p>'
+		glqs_export_i += 1
+		jump 'glqs_export_parts_loop'
+	end
+	killvar '$glqs_export_body'
+	killvar 'glqs_export_total'
+	killvar 'glqs_export_i'
+	act 'Back to Preset': gt 'mod_GLQS_main', 'preset_detail', glqs_preset_slot
+end
+
+if $ARGS[0] = 'preset_import':
+	$glqs_import_body = ''
+	glqs_import_i = 1
+	glqs_import_total = 1
+	:glqs_import_parts_loop
+	$glqs_import_part = $trim($input('Paste preset part ' + glqs_import_i + '. Cancel discards this import.'))
+	if $glqs_import_part = '': gs 'mod_GLQS_main', 'preset_import_clear' & exit
+	gs 'mod_GLQS_main', 'split_row', $replace($glqs_import_part, '~', '|')
+	glqs_import_ok = 0
+	if arrsize('$glqs_field') = 4 and $glqs_field[0] = 'GLQSP1':
+		if strcomp($glqs_field[1], '[0-9]{1,2}') and strcomp($glqs_field[2], '[0-9]{1,2}'):
+			if glqs_import_i = 1: glqs_import_total = val($glqs_field[1])
+			if glqs_import_total >= 1 and glqs_import_total <= 64 and val($glqs_field[1]) = glqs_import_total and val($glqs_field[2]) = glqs_import_i and len($glqs_field[3]) > 0 and len($glqs_field[3]) <= 100:
+				glqs_import_ok = 1
+			end
+		end
+	end
+	if glqs_import_ok = 0:
+		msg 'Invalid or out-of-order preset part. The slot was not changed.'
+		gs 'mod_GLQS_main', 'preset_import_clear'
+		exit
+	end
+	$glqs_import_body += $glqs_field[3]
+	glqs_import_i += 1
+	if glqs_import_i <= glqs_import_total: jump 'glqs_import_parts_loop'
+	gs 'mod_GLQS_main', 'preset_unpack', $glqs_import_body
+	if glqs_preset_valid:
+		$glqs_import_name = $trim($input('Name for this imported preset (up to 40 characters). Cancel leaves the slot unchanged.'))
+		if $glqs_import_name <> '':
+			$glqs_preset_codes[glqs_preset_slot] = $glqs_unpack_code
+			$glqs_preset_names[glqs_preset_slot] = $mid($glqs_import_name, 1, 40)
+		end
+	else
+		msg 'Preset data is invalid or uses a different GLQS schema. The slot was not changed.'
+	end
+	gs 'mod_GLQS_main', 'profile_clear'
+	gs 'mod_GLQS_main', 'preset_import_clear'
+end
+
+if $ARGS[0] = 'preset_import_clear':
+	killvar '$glqs_import_body'
+	killvar '$glqs_import_part'
+	killvar '$glqs_import_name'
+	killvar 'glqs_import_i'
+	killvar 'glqs_import_total'
+	killvar 'glqs_import_ok'
+	killvar '$glqs_field'
+	killvar '$glqs_unpack_code'
+end
+
+if $ARGS[0] = 'preset_unpack':
+	glqs_preset_valid = 0
+	gs 'mod_GLQS_main', 'profile_data'
+	gs 'mod_GLQS_main', 'split_row', $replace($ARGS[1], ';', '|')
+	if $glqs_field[0] <> 'GLQSC1' or $glqs_field[1] <> $glqs_profile_signature: exit
+	if arrsize('$glqs_field') <> 2 + arrsize('$glqs_profile_keys'): exit
+	$glqs_unpack_code = 'GLQS1'
+	glqs_unpack_i = 0
+	:glqs_unpack_values_loop
+	if glqs_unpack_i < arrsize('$glqs_profile_keys'):
+		$glqs_unpack_code += '|' + $glqs_profile_keys[glqs_unpack_i] + '=' + $glqs_field[glqs_unpack_i + 2]
+		glqs_unpack_i += 1
+		jump 'glqs_unpack_values_loop'
+	end
+	killvar 'glqs_unpack_i'
+	gs 'mod_GLQS_main', 'preset_parse', $glqs_unpack_code
+end
+
+if $ARGS[0] = 'preset_cheat_set':
+	$glqs_pc_key = $mid($ARGS[1], 3)
+	if $glqs_profile_handler[$ARGS[1]] <> '':
+		if (cheatVars[$glqs_pc_key] > 0) <> (glqs_profile_loaded[$ARGS[1]] > 0): gs 'cheatmenu_din', $glqs_profile_handler[$ARGS[1]]
+	else
+		cheatVars[$glqs_pc_key] = glqs_profile_loaded[$ARGS[1]]
+	end
+	killvar '$glqs_pc_key'
+end
+
+if $ARGS[0] = 'preset_apply':
+	gs 'mod_GLQS_main', 'preset_parse', $ARGS[1]
+	if glqs_preset_valid = 0:
+		msg 'Preset data is invalid or uses a different GLQS schema. Nothing was applied.'
+		gs 'mod_GLQS_main', 'profile_clear'
+		exit
+	end
+	!! Apply archetype/cycle switches before dependent flags.
+	if glqs_preset_cheats:
+		gs 'mod_GLQS_main', 'preset_cheat_set', 'T_bimbo'
+		gs 'mod_GLQS_main', 'preset_cheat_set', 'T_no_periods'
+	end
+	glqs_apply_i = 0
+	:glqs_preset_apply_loop
+	if glqs_apply_i < arrsize('$glqs_profile_keys'):
+		$glqs_apply_key = $glqs_profile_keys[glqs_apply_i]
+		$glqs_apply_group = $mid($glqs_apply_key, 1, 1)
+		$glqs_apply_name = $mid($glqs_apply_key, 3)
+		if $glqs_apply_group = 'S' and glqs_preset_stats:
+			gs 'mod_GLQS_main', 'stat_set', $iif($glqs_apply_name = 'willpowermax', 'cap', 'lvl'), $glqs_apply_name, glqs_profile_loaded[$glqs_apply_key]
+		elseif $glqs_apply_group = 'I' and glqs_preset_inventory:
+			mc_inventory[$glqs_apply_name] = glqs_profile_loaded[$glqs_apply_key]
+		elseif $glqs_apply_group = 'T' and glqs_preset_cheats:
+			gs 'mod_GLQS_main', 'preset_cheat_set', $glqs_apply_key
+		end
+		glqs_apply_i += 1
+		jump 'glqs_preset_apply_loop'
+	end
+	if glqs_preset_funds:
+		money = glqs_profile_loaded['R_money']
+		money_overflow = glqs_profile_loaded['R_money_overflow']
+		if glqs_profile_loaded['R_bankAccount']:
+			if bankAccount = 0:
+				bankAccount = 1
+				bankShortCutMoney = 1000
+				bankDebtLimit = 0
+			end
+			karta = glqs_profile_loaded['R_karta'] + bankDebtLimit
+			karta_overflow = glqs_profile_loaded['R_karta_overflow']
+		end
+		gs 'money'
+	end
+	gs 'stat'
+	gs 'mod_GLQS_main', 'profile_clear'
+	killvar 'glqs_apply_i'
+	killvar '$glqs_apply_key'
+	killvar '$glqs_apply_group'
+	killvar '$glqs_apply_name'
+end

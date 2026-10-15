@@ -120,13 +120,13 @@ if $ARGS[0] = 'rel_actions':
 		if $npc_rel_type[$ARGS[1]] = 'husband':
 			$result = '<a href="exec: gs ''lover'', ''remove_husband'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a> | '
 		elseif $husID = '':
-			$result = '<a href="exec: gs ''lover'', ''add_husband'', ''' + $ARGS[1] + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a> | '
+			$result = '<a href="exec: gs ''mod_GLQS_main'', ''rel_change'', ''add_husband'', ''' + $ARGS[1] + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a> | '
 		end
 	elseif ARGS[2] = 2:
 		if $npc_rel_type[$ARGS[1]] = 'wife':
 			$result = '<a href="exec: gs ''lover'', ''remove_wife'' & gt ''mod_GLQS_main'', ''rel_menu''">Divorce</a> | '
 		elseif $wifID = '':
-			$result = '<a href="exec: gs ''lover'', ''add_wife'', ''' + $ARGS[1] + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a> | '
+			$result = '<a href="exec: gs ''mod_GLQS_main'', ''rel_change'', ''add_wife'', ''' + $ARGS[1] + ''' & gt ''mod_GLQS_main'', ''rel_menu''">Marry</a> | '
 		end
 	end
 	$result += '<a href="exec: gt ''mod_GLQS_main'', ''rel_status'', ''' + $ARGS[1] + '''">Status</a>'
@@ -180,6 +180,16 @@ if $ARGS[0] = 'max_generated':
 end
 
 
+if $ARGS[0] = 'rel_change':
+	!! Upstream has no change_dating or remove_dating counter cleanup.
+	if $npc_rel_type[$ARGS[2]] = 'dating' and $ARGS[1] <> 'add_dating':
+		stat['dating_current'] -= 1
+		stat['total_lovers_current'] -= 1
+	end
+	gs 'lover', $ARGS[1], $ARGS[2]
+end
+
+
 if $ARGS[0] = 'rel_status':
 	!! $glqs_rs_key is NOT killed below - the Set/Clear acts reference it
 	!! directly and QSP resolves act bodies at click time, not at definition
@@ -195,16 +205,15 @@ if $ARGS[0] = 'rel_status':
 	killvar '$glqs_rs_current'
 	*nl
 
-	if $npc_rel_type[$glqs_rs_key] <> 'dating': act 'Set to Dating': gs 'lover', 'add_dating', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
-	if $npc_rel_type[$glqs_rs_key] <> 'boyfriend': act 'Set to Boyfriend': gs 'lover', 'add_boyfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
-	if $npc_rel_type[$glqs_rs_key] <> 'girlfriend': act 'Set to Girlfriend': gs 'lover', 'add_girlfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
-	if $npc_rel_type[$glqs_rs_key] <> 'fuckbuddy': act 'Set to Fuckbuddy': gs 'lover', 'add_fuckbuddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
-	if $npc_rel_type[$glqs_rs_key] <> 'sugar_daddy': act 'Set to Sugar Daddy': gs 'lover', 'add_sugar_daddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'dating': act 'Set to Dating': gs 'mod_GLQS_main', 'rel_change', 'add_dating', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'boyfriend': act 'Set to Boyfriend': gs 'mod_GLQS_main', 'rel_change', 'add_boyfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'girlfriend': act 'Set to Girlfriend': gs 'mod_GLQS_main', 'rel_change', 'add_girlfriend', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'fuckbuddy': act 'Set to Fuckbuddy': gs 'mod_GLQS_main', 'rel_change', 'add_fuckbuddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+	if $npc_rel_type[$glqs_rs_key] <> 'sugar_daddy': act 'Set to Sugar Daddy': gs 'mod_GLQS_main', 'rel_change', 'add_sugar_daddy', $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
 
 	!! The base game has remove_boyfriend/girlfriend/fuckbuddy/sugar_daddy but no
-	!! remove_dating (lover.qsrc) - the generic remove still correctly
-	!! ex-prefixes $npc_rel_type, it just leaves stat[dating_current]
-	!! uncorrected, same as vanilla.
+	!! remove_dating (lover.qsrc). rel_change accounts for dating before the
+	!! generic remove ex-prefixes the relationship type.
 	$glqs_rs_type = $npc_rel_type[$glqs_rs_key]
 	if $glqs_rs_type = 'boyfriend' or $glqs_rs_type = 'girlfriend' or $glqs_rs_type = 'fuckbuddy' or $glqs_rs_type = 'sugar_daddy':
 		$glqs_rs_remove = 'remove_' + $glqs_rs_type
@@ -216,7 +225,7 @@ if $ARGS[0] = 'rel_status':
 	killvar '$glqs_rs_type'
 	!! $glqs_rs_remove is read by the act at click time, like $glqs_rs_key.
 	if $glqs_rs_remove <> '':
-		act 'Clear / End Relationship': gs 'lover', $glqs_rs_remove, $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
+		act 'Clear / End Relationship': gs 'mod_GLQS_main', 'rel_change', $glqs_rs_remove, $glqs_rs_key & gt 'mod_GLQS_main', 'rel_status', $glqs_rs_key
 	end
 
 	act 'Return to Relationships': gt 'mod_GLQS_main', 'rel_menu'

@@ -26,12 +26,7 @@ if $ARGS[0] = 'lifestyle_menu':
 	end
 
 	act 'Clear All Pain':
-		!! Reuses the base games own cheat handler exactly - pain[total] is
-		!! recomputed from every pain[<bodypart>] entry plus vgape/agape/
-		!! spanked, not an independent value, so killvar-ing the whole array
-		!! and recalculating is the real reset, not just zeroing total.
-		killvar 'pain'
-		gs 'pain', 'calc'
+		gs 'mod_GLQS_main', 'pain_clear'
 		gt 'mod_GLQS_main', 'lifestyle_menu'
 	end
 
@@ -87,6 +82,15 @@ if $ARGS[0] = 'lifestyle_menu':
 	end
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+if $ARGS[0] = 'pain_clear':
+	!! Gaping and spanking contribute pain outside the pain array.
+	killvar 'pain'
+	vgape = 0
+	agape = 0
+	spanked = 0
+	gs 'pain', 'calc'
 end
 
 

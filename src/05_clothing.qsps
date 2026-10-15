@@ -13,6 +13,7 @@ if $ARGS[0] = 'clothing_menu':
 	end
 
 	act 'Buy By Store': gt 'mod_GLQS_main', 'store_menu'
+	act 'Give Missing (all stores)': gs 'mod_GLQS_main', 'store_buy', '', 1 & gt 'mod_GLQS_main', 'clothing_menu'
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
 end

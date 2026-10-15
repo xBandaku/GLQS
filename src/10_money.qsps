@@ -30,21 +30,23 @@ if $ARGS[0] = 'money_menu':
 	end
 
 	act 'Give 1,000,000 Cash':
-		money += 1000000
+		gs 'mod_GLQS_main', 'money_add', 'cash', 1000000
 		gt 'mod_GLQS_main', 'money_menu'
 	end
+	act 'Give Custom Cash Amount': gs 'mod_GLQS_main', 'money_custom', 'cash' & gt 'mod_GLQS_main', 'money_menu'
 
 	if bankAccount = 1:
 		act 'Give 1,000,000 to Bank':
-			karta += 1000000
+			gs 'mod_GLQS_main', 'money_add', 'bank', 1000000
 			gt 'mod_GLQS_main', 'money_menu'
 		end
 
 		act 'Give 1,000,000 to Both':
-			money += 1000000
-			karta += 1000000
+			gs 'mod_GLQS_main', 'money_add', 'cash', 1000000
+			gs 'mod_GLQS_main', 'money_add', 'bank', 1000000
 			gt 'mod_GLQS_main', 'money_menu'
 		end
+		act 'Give Custom Bank Amount': gs 'mod_GLQS_main', 'money_custom', 'bank' & gt 'mod_GLQS_main', 'money_menu'
 	end
 
 	if policeQW['legal_fine'] > 0 or policeQW['missed_court_dates'] > 0 or policeQW['missed_fine_deadlines'] > 0 or policeQW['arrest_gameover_flag'] > 0:
@@ -74,4 +76,21 @@ if $ARGS[0] = 'money_menu':
 	end
 
 	act 'Return to Top Menu': gt 'mod_GLQS_main', 'start'
+end
+
+if $ARGS[0] = 'money_custom':
+	gs 'mod_GLQS_main', 'ask_number', 1, 999999999, 'Amount to give to ' + $ARGS[1]
+	if glqs_input_ok: gs 'mod_GLQS_main', 'money_add', $ARGS[1], glqs_input_value
+end
+
+if $ARGS[0] = 'money_add':
+	!! Pack whole millions before adding the remainder to avoid 5.7 overflow.
+	if $ARGS[1] = 'cash':
+		money_overflow += ARGS[2] / 1000000
+		money += ARGS[2] mod 1000000
+	elseif $ARGS[1] = 'bank' and bankAccount = 1:
+		karta_overflow += ARGS[2] / 1000000
+		karta += ARGS[2] mod 1000000
+	end
+	gs 'money'
 end
