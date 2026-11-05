@@ -1,4 +1,8 @@
-build/
+build/*
+!build/tooling/
+build/tooling/*
+!build/tooling/package.json
+!build/tooling/package-lock.json
 reference/
 __pycache__/
 .claude/

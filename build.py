@@ -10,7 +10,7 @@ Usage:
     python build.py
 
 Requirements:
-    npm install -g @qsp/cli@1.0.5      (only needed once)
+    See REQUIREMENTS.md for local installation and PATH setup.
 
 The fragment manifests (STANDALONE_FILES, SHARED_FILES), validators and lint
 rules all live in build_support.py. CLAUDE.md describes how the fragments

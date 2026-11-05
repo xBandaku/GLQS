@@ -1,0 +1,12 @@
+{
+  "name": "glqs-development-tools",
+  "private": true,
+  "engines": {
+    "node": "24.x"
+  },
+  "devDependencies": {
+    "@qsp/cli": "1.0.5",
+    "@qsp/converters": "1.0.1",
+    "@qsp/wasm-engine": "1.6.1"
+  }
+}
