@@ -22,7 +22,8 @@ CI uses Python 3.13. The ignored local compiler installation can be used in
 PowerShell with `$env:PATH = (Resolve-Path 'build/tooling/node_modules/.bin').Path + ';' + $env:PATH`
 before running the build.
 
-Requires the QSP compiler once: `npm install -g @qsp/cli@1.0.5` (the version CI pins)
+See [REQUIREMENTS.md](REQUIREMENTS.md) for prerequisites and the locked local
+compiler and runtime test installation.
 
 - Reads the explicit `SHARED_FILES` manifest in `build_support.py`, assembles
   `build/GLQS.qsps`, runs `validate_assembled()` and the lint checks, then

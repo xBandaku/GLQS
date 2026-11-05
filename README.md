@@ -190,6 +190,9 @@ Check the [Releases page](https://github.com/xBandaku/GLQS/releases) on
 GitHub for the full changelog, or, in-game, click the small info icon next to
 GLQS's entry in your installed mods list.
 
+For development setup, dependency installation and validation commands, see
+[REQUIREMENTS.md](REQUIREMENTS.md).
+
 ## License
 
 GLQS's own source code is licensed under the [MIT License](LICENSE). This
